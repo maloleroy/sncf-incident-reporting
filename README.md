@@ -24,7 +24,7 @@ A React Native mobile application for SNCF's on-board personnel to report incide
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url> # Replace <repository-url> with the actual URL
+    git clone ssh://git@paris-digital-lab.com:2012/sncf/s2025p2-mobile-app-incidents.git
     cd app
     ```
 
