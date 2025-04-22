@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+.expo
+dist
+build
+
+# Version control
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Expo
+.expo-shared
+.expo
+web-build/
+
+# Android
+android/app/build
+android/build
+android/.gradle
+android/local.properties
+android/*.keystore
+
+# iOS
+ios/Pods
+ios/build
+ios/*.xcworkspace
+ios/*.xcodeproj
+ios/*.xcuserdata 

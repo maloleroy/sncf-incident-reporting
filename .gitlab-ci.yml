@@ -1,4 +1,4 @@
-image: node:18
+image: node:18-alpine
 
 # Define stages
 stages:
@@ -11,34 +11,24 @@ stages:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - node_modules/
-    - .gradle/
-    - android/app/build/
-    - android/.gradle/
-
-# Variables
-variables:
-  ANDROID_COMPILE_SDK: "33"
-  ANDROID_BUILD_TOOLS: "33.0.0"
-  ANDROID_SDK_TOOLS: "9477386"
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+    - app/node_modules/
 
 # Setup stage
 setup:
   stage: setup
+  before_script:
+    - apk add --no-cache python3 make g++
   script:
-    - npm install
-    - cd android && ./gradlew wrapper
+    - cd app
+    - npm ci
   artifacts:
-    paths:
-      - node_modules/
-      - android/.gradle/
     expire_in: 1 week
 
 # Lint and type checking
 lint:
   stage: test
   script:
+    - cd app
     - npm run lint
     - npm run type-check
   dependencies:
@@ -48,31 +38,34 @@ lint:
 test:
   stage: test
   script:
-    - npm test
+    - cd app
+    - npm test -- --ci
   dependencies:
     - setup
 
-# Android build
-android_build:
+# Web build
+web_build:
   stage: build
-  image: openjdk:11
-  before_script:
-    - apt-get update && apt-get install -y curl unzip
-    - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
-    - unzip -q android-sdk.zip -d android-sdk
-    - export ANDROID_HOME=$PWD/android-sdk
-    - export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin
-    - yes | sdkmanager --licenses
-    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}"
   script:
-    - cd android
-    - ./gradlew assembleRelease
+    - cd app
+    - npm run build
   artifacts:
     paths:
-      - android/app/build/outputs/apk/release/
+      - app/build/
     expire_in: 1 week
   dependencies:
     - setup
+
+# Deploy web app
+deploy_web:
+  stage: deploy
+  script:
+    - cd app
+    - npm run web
+  dependencies:
+    - web_build
+  only:
+    - main
 
 # Rules for when to run pipelines
 workflow:

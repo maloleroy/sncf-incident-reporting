@@ -13,20 +13,15 @@ A React Native mobile application for SNCF's on-board personnel to report incide
 
 ## Prerequisites
 
-- Node.js (v14 or later) and npm (usually comes with Node.js)
-- Cursor IDE (latest version recommended)
-- Android SDK Command Line Tools (download from [Android Studio](https://developer.android.com/studio))
-- Java Development Kit (JDK) (version 11 or later)
-- React Native CLI: `npm install -g react-native-cli`
-- Android Debug Bridge (adb) installed and in your PATH
-- An Android Virtual Device (AVD) or a physical Android device with USB debugging enabled
+- Node.js (v18) and npm (usually comes with Node.js)
+- Expo CLI: `npm install -g expo-cli`
+- For development builds: Expo Go app on your device
 
 ## Installation
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url> # Replace <repository-url> with the actual URL
-    cd SNCFIncidents
+    git clone ssh://git@paris-digital-lab.com:2012/sncf/s2025p2-mobile-app-incidents.git
     ```
 
 2.  **Install dependencies:**
@@ -37,92 +32,61 @@ A React Native mobile application for SNCF's on-board personnel to report incide
 
 3.  **Install Vosk Language Model:**
     - Download the Vosk French model (`vosk-model-small-fr-0.22` or a similar small French model) from the [Vosk models page](https://alphacephei.com/vosk/models). Look for the `tiny-fr` or `small-fr` model for mobile use.
-    - Unzip the downloaded model archive.
-    - Create the following directory structure inside the `android` folder if it doesn't exist: `android/app/src/main/assets/`.
-    - Rename the unzipped model folder to `model` (if it's not already named that).
-    - Move the `model` folder (containing the Vosk model files) into `android/app/src/main/assets/`. The final path should look like `SNCFIncidents/android/app/src/main/assets/model/`.
+    - The model will be loaded dynamically during runtime through Expo's asset system.
 
-4.  **Set up Android Development Environment:**
-    - Install Android SDK Command Line Tools
-    - Set up environment variables:
-      ```bash
-      export ANDROID_HOME=$HOME/Android/Sdk
-      export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-      ```
-    - Install required Android SDK components:
-      ```bash
-      sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
-      ```
-    - If using an emulator:
-      ```bash
-      sdkmanager "system-images;android-33;google_apis;x86_64"
-      avdmanager create avd -n test_device -k "system-images;android-33;google_apis;x86_64"
-      ```
-    - If using a physical device:
-      - Enable Developer Options and USB Debugging on your device
-      - Connect device via USB
-      - Verify connection: `adb devices`
-    - **Permissions:** Ensure the app will have microphone permissions. This is typically handled by the Android OS prompting the user on the first run, but ensure the `AndroidManifest.xml` includes the `RECORD_AUDIO` permission (it should be there by default).
+## Running the App
 
-## Running the App Locally
+### With Docker
 
-1.  **Start the Metro Bundler:** Open Cursor and run in the integrated terminal:
+The app has full Docker support:
+```bash
+cd app
+docker build -t sncfincidents:dev --target development .
+```
+
+### Running Locally
+
+1.  **Start the Expo development server:**
     ```bash
-    npm start
+    npx expo start
     ```
-    *Keep this terminal open. It serves your JavaScript code to the app.*
+    *Keep this terminal window open. It serves your JavaScript code to the app.*
 
-2.  **Start Emulator (if using):**
-    ```bash
-    emulator -avd test_device
-    ```
-    *Wait for the emulator to fully boot.*
+2.  **Choose your development environment:**
+    - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
+    - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
 
-3.  **Build and Run the Android App:** In another Cursor terminal:
-    ```bash
-    npm run android
-    ```
-    *This command will compile the Android native code (including the Vosk module), install the app on your emulator/device, and launch it.*
-
-4.  **First Launch:** The app should build and launch on your selected emulator or device. It might take a few minutes the first time. If prompted, grant microphone permissions for the speech-to-text feature.
-
-## Troubleshooting
-
-- **Build Fails:**
-    - Ensure all prerequisites are correctly installed and configured.
-    - Clean the Android build: `cd android && ./gradlew clean && cd ..` then try `npm run android` again.
-    - Check for errors in the terminal output from `npm run android`.
-- **App Crashes on Start:**
-    - Verify the Vosk model was placed correctly in `android/app/src/main/assets/model/`.
-    - Check the device logs: `adb logcat | grep ReactNative`
-- **Metro Bundler Issues:**
-    - Try resetting the cache: `npm start -- --reset-cache`.
-    - Ensure no other process is using port 8081.
-- **Device Connection Issues:**
-    - Check device connection: `adb devices`
-    - Restart adb server: `adb kill-server && adb start-server`
-    - For emulator issues: `emulator -list-avds` to list available devices
+3.  **First Launch:** The app should build and launch on your selected device. If prompted, grant microphone permissions for the speech-to-text feature.
 
 ## Project Structure
 
 ```
-SNCFIncidents/
-├── android/                 # Android native code
-├── ios/                     # iOS native code
-├── src/
-│   ├── screens/            # App screens
-│   ├── services/           # Business logic and services
-│   ├── types/              # TypeScript type definitions
-│   └── utils/              # Utility functions
-├── App.tsx                 # Main app component
-└── package.json            # Project dependencies
+app/
+├── assets/                 # Static assets (images, fonts, etc.)
+├── components/             # Reusable React components
+├── constants/             # App-wide constants and configurations
+├── hooks/                 # Custom React hooks
+├── lib/                   # Third-party libraries and utilities
+├── services/             # Business logic and services
+├── types/                # TypeScript type definitions
+├── scripts/              # Build and utility scripts
+├── src/                  # Main source code directory
+├── .expo/                # Expo configuration files
+├── app.json             # Expo app configuration
+├── app.tsx              # Main app component
+├── package.json         # Project dependencies
+└── tsconfig.json        # TypeScript configuration
 ```
 
 ## Key Technologies
 
 - React Native
 - TypeScript
-- Cursor IDE
+- Vosk (Speech-to-text)
+- AsyncStorage (Local storage)
+- React Navigation
+- NetInfo (Network status)
+- Expo
 
 ## Contributing
 
