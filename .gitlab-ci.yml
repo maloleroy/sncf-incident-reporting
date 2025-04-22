@@ -1,0 +1,84 @@
+image: node:18
+
+# Define stages
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+# Cache configuration
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .gradle/
+    - android/app/build/
+    - android/.gradle/
+
+# Variables
+variables:
+  ANDROID_COMPILE_SDK: "33"
+  ANDROID_BUILD_TOOLS: "33.0.0"
+  ANDROID_SDK_TOOLS: "9477386"
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+# Setup stage
+setup:
+  stage: setup
+  script:
+    - npm install
+    - cd android && ./gradlew wrapper
+  artifacts:
+    paths:
+      - node_modules/
+      - android/.gradle/
+    expire_in: 1 week
+
+# Lint and type checking
+lint:
+  stage: test
+  script:
+    - npm run lint
+    - npm run type-check
+  dependencies:
+    - setup
+
+# Unit tests
+test:
+  stage: test
+  script:
+    - npm test
+  dependencies:
+    - setup
+
+# Android build
+android_build:
+  stage: build
+  image: openjdk:11
+  before_script:
+    - apt-get update && apt-get install -y curl unzip
+    - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
+    - unzip -q android-sdk.zip -d android-sdk
+    - export ANDROID_HOME=$PWD/android-sdk
+    - export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin
+    - yes | sdkmanager --licenses
+    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}"
+  script:
+    - cd android
+    - ./gradlew assembleRelease
+  artifacts:
+    paths:
+      - android/app/build/outputs/apk/release/
+    expire_in: 1 week
+  dependencies:
+    - setup
+
+# Rules for when to run pipelines
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "develop"
+    - if: $CI_COMMIT_BRANCH =~ /^feature\/.*$/
+    - if: $CI_COMMIT_BRANCH =~ /^bugfix\/.*$/
+    - if: $CI_COMMIT_TAG 
