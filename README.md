@@ -14,11 +14,12 @@ A React Native mobile application for SNCF's on-board personnel to report incide
 ## Prerequisites
 
 - Node.js (v14 or later) and npm (usually comes with Node.js)
-- Android Studio (latest stable version recommended)
-- Android SDK (specifically API level 31 or higher, installable via Android Studio's SDK Manager)
-- Java Development Kit (JDK) (version 11 or later, usually included with Android Studio)
+- Cursor IDE (latest version recommended)
+- Android SDK Command Line Tools (download from [Android Studio](https://developer.android.com/studio))
+- Java Development Kit (JDK) (version 11 or later)
 - React Native CLI: `npm install -g react-native-cli`
-- An Android Virtual Device (AVD) set up in Android Studio, or a physical Android device with USB debugging enabled.
+- Android Debug Bridge (adb) installed and in your PATH
+- An Android Virtual Device (AVD) or a physical Android device with USB debugging enabled
 
 ## Installation
 
@@ -42,27 +43,46 @@ A React Native mobile application for SNCF's on-board personnel to report incide
     - Move the `model` folder (containing the Vosk model files) into `android/app/src/main/assets/`. The final path should look like `app/android/app/src/main/assets/model/`.
 
 4.  **Set up Android Development Environment:**
-    - Launch Android Studio.
-    - Ensure you have an Android SDK Platform installed (e.g., Android 12 - API 31). You can check this via `Tools > SDK Manager`.
-    - If using an emulator: Create an AVD via `Tools > AVD Manager`. Choose a device definition and an appropriate system image (API 31 or higher).
-    - If using a physical device: Enable Developer Options and USB Debugging on your device, then connect it to your computer via USB. Make sure your computer recognizes the device (`adb devices` command in the terminal should list your device).
+    - Install Android SDK Command Line Tools
+    - Set up environment variables:
+      ```bash
+      export ANDROID_HOME=$HOME/Android/Sdk
+      export PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+      ```
+    - Install required Android SDK components:
+      ```bash
+      sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+      ```
+    - If using an emulator:
+      ```bash
+      sdkmanager "system-images;android-33;google_apis;x86_64"
+      avdmanager create avd -n test_device -k "system-images;android-33;google_apis;x86_64"
+      ```
+    - If using a physical device:
+      - Enable Developer Options and USB Debugging on your device
+      - Connect device via USB
+      - Verify connection: `adb devices`
     - **Permissions:** Ensure the app will have microphone permissions. This is typically handled by the Android OS prompting the user on the first run, but ensure the `AndroidManifest.xml` includes the `RECORD_AUDIO` permission (it should be there by default).
 
 ## Running the App Locally
 
-1.  **Ensure Emulator/Device is Running:** Start your AVD from Android Studio or ensure your physical device is connected and recognized (`adb devices`).
-
-2.  **Start the Metro Bundler:** Metro is the JavaScript bundler for React Native. Open a terminal in the project root (`app/`) and run:
+1.  **Start the Metro Bundler:** Open Cursor and run in the integrated terminal:
     ```bash
     npm start
     ```
-    *Keep this terminal window open. It serves your JavaScript code to the app.*
+    *Keep this terminal open. It serves your JavaScript code to the app.*
 
-3.  **Build and Run the Android App:** Open *another* terminal window in the project root (`app/`) and run:
+2.  **Start Emulator (if using):**
+    ```bash
+    emulator -avd test_device
+    ```
+    *Wait for the emulator to fully boot.*
+
+3.  **Build and Run the Android App:** In another Cursor terminal:
     ```bash
     npm run android
     ```
-    *This command will compile the Android native code (including the Vosk module), install the app on your emulator/device, and launch it. The app will then connect to the Metro bundler you started in the previous step.*
+    *This command will compile the Android native code (including the Vosk module), install the app on your emulator/device, and launch it.*
 
 4.  **First Launch:** The app should build and launch on your selected emulator or device. It might take a few minutes the first time. If prompted, grant microphone permissions for the speech-to-text feature.
 
@@ -74,10 +94,14 @@ A React Native mobile application for SNCF's on-board personnel to report incide
     - Check for errors in the terminal output from `npm run android`.
 - **App Crashes on Start:**
     - Verify the Vosk model was placed correctly in `android/app/src/main/assets/model/`.
-    - Check the device logs using Android Studio's Logcat or `adb logcat`.
+    - Check the device logs: `adb logcat | grep ReactNative`
 - **Metro Bundler Issues:**
     - Try resetting the cache: `npm start -- --reset-cache`.
     - Ensure no other process is using port 8081.
+- **Device Connection Issues:**
+    - Check device connection: `adb devices`
+    - Restart adb server: `adb kill-server && adb start-server`
+    - For emulator issues: `emulator -list-avds` to list available devices
 
 ## Project Structure
 
@@ -98,10 +122,7 @@ app/
 
 - React Native
 - TypeScript
-- Vosk (Speech-to-text)
-- AsyncStorage (Local storage)
-- React Navigation
-- NetInfo (Network status)
+- Cursor IDE
 
 ## Contributing
 
