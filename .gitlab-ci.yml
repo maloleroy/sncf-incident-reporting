@@ -22,8 +22,6 @@ setup:
     - cd app
     - npm ci
   artifacts:
-    paths:
-      - app/node_modules/
     expire_in: 1 week
 
 # Lint and type checking
