@@ -1,4 +1,4 @@
-image: node:18
+image: node:18-alpine
 
 # Define stages
 stages:
@@ -12,8 +12,6 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - app/node_modules/
-    - app/android/.gradle/
-    - app/android/app/build/
     - app/android/.gradle/
 
 # Variables
@@ -29,7 +27,7 @@ variables:
 setup:
   stage: setup
   before_script:
-    - apt-get update && apt-get install -y curl unzip openjdk-11-jdk gradle
+    - apk add --no-cache python3 make g++ curl unzip openjdk11 gradle
     - mkdir -p /opt/android-sdk
     - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
     - unzip -q android-sdk.zip -d /opt/android-sdk
@@ -37,8 +35,7 @@ setup:
     - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" || true
   script:
     - cd app
-    - npx react-native init . --template react-native-template-typescript
-    - npm install
+    - npm ci
     - cd android
     - gradle wrapper --gradle-version 7.5.1
   artifacts:
@@ -66,12 +63,25 @@ test:
   dependencies:
     - setup
 
+# Web build
+web_build:
+  stage: build
+  script:
+    - cd app
+    - npm run build
+  artifacts:
+    paths:
+      - app/build/
+    expire_in: 1 week
+  dependencies:
+    - setup
+
 # Android build
 android_build:
   stage: build
-  image: openjdk:11
+  image: openjdk:11-alpine
   before_script:
-    - apt-get update && apt-get install -y curl unzip
+    - apk add --no-cache curl unzip
     - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
     - unzip -q android-sdk.zip -d android-sdk
     - export ANDROID_HOME=$PWD/android-sdk
@@ -87,6 +97,17 @@ android_build:
     expire_in: 1 week
   dependencies:
     - setup
+
+# Deploy web app
+deploy_web:
+  stage: deploy
+  script:
+    - cd app
+    - npm run web
+  dependencies:
+    - web_build
+  only:
+    - main
 
 # Rules for when to run pipelines
 workflow:
