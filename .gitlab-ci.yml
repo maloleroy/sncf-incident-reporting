@@ -39,7 +39,7 @@ test:
   stage: test
   script:
     - cd app
-    - npm test
+    - npm test -- --ci
   dependencies:
     - setup
 
