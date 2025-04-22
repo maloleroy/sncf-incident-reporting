@@ -12,36 +12,18 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - app/node_modules/
-    - app/android/.gradle/
-
-# Variables
-variables:
-  ANDROID_COMPILE_SDK: "33"
-  ANDROID_BUILD_TOOLS: "33.0.0"
-  ANDROID_SDK_TOOLS: "9477386"
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  ANDROID_HOME: "/opt/android-sdk"
-  PATH: "$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
 
 # Setup stage
 setup:
   stage: setup
   before_script:
-    - apk add --no-cache python3 make g++ curl unzip openjdk11 gradle
-    - mkdir -p /opt/android-sdk
-    - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
-    - unzip -q android-sdk.zip -d /opt/android-sdk
-    - yes | sdkmanager --licenses || true
-    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" || true
+    - apk add --no-cache python3 make g++
   script:
     - cd app
     - npm ci
-    - cd android
-    - gradle wrapper --gradle-version 7.5.1
   artifacts:
     paths:
       - app/node_modules/
-      - app/android/.gradle/
     expire_in: 1 week
 
 # Lint and type checking
@@ -72,28 +54,6 @@ web_build:
   artifacts:
     paths:
       - app/build/
-    expire_in: 1 week
-  dependencies:
-    - setup
-
-# Android build
-android_build:
-  stage: build
-  image: openjdk:11-alpine
-  before_script:
-    - apk add --no-cache curl unzip
-    - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
-    - unzip -q android-sdk.zip -d android-sdk
-    - export ANDROID_HOME=$PWD/android-sdk
-    - export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin
-    - yes | sdkmanager --licenses || true
-    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" || true
-  script:
-    - cd app/android
-    - ./gradlew assembleRelease
-  artifacts:
-    paths:
-      - app/android/app/build/outputs/apk/release/
     expire_in: 1 week
   dependencies:
     - setup
