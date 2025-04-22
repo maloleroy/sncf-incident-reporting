@@ -11,10 +11,10 @@ stages:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - node_modules/
-    - .gradle/
-    - android/app/build/
-    - android/.gradle/
+    - app/node_modules/
+    - app/android/.gradle/
+    - app/android/app/build/
+    - app/android/.gradle/
 
 # Variables
 variables:
@@ -27,18 +27,20 @@ variables:
 setup:
   stage: setup
   script:
+    - cd app
     - npm install
     - cd android && ./gradlew wrapper
   artifacts:
     paths:
-      - node_modules/
-      - android/.gradle/
+      - app/node_modules/
+      - app/android/.gradle/
     expire_in: 1 week
 
 # Lint and type checking
 lint:
   stage: test
   script:
+    - cd app
     - npm run lint
     - npm run type-check
   dependencies:
@@ -48,6 +50,7 @@ lint:
 test:
   stage: test
   script:
+    - cd app
     - npm test
   dependencies:
     - setup
@@ -65,11 +68,11 @@ android_build:
     - yes | sdkmanager --licenses
     - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}"
   script:
-    - cd android
+    - cd app/android
     - ./gradlew assembleRelease
   artifacts:
     paths:
-      - android/app/build/outputs/apk/release/
+      - app/android/app/build/outputs/apk/release/
     expire_in: 1 week
   dependencies:
     - setup
