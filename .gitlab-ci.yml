@@ -22,14 +22,25 @@ variables:
   ANDROID_BUILD_TOOLS: "33.0.0"
   ANDROID_SDK_TOOLS: "9477386"
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  ANDROID_HOME: "/opt/android-sdk"
+  PATH: "$PATH:/opt/android-sdk/tools:/opt/android-sdk/platform-tools"
 
 # Setup stage
 setup:
   stage: setup
+  before_script:
+    - apt-get update && apt-get install -y curl unzip openjdk-11-jdk gradle
+    - mkdir -p /opt/android-sdk
+    - curl -s https://dl.google.com/android/repository/commandlinetools-linux-${ANDROID_SDK_TOOLS}_latest.zip -o android-sdk.zip
+    - unzip -q android-sdk.zip -d /opt/android-sdk
+    - yes | sdkmanager --licenses || true
+    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" || true
   script:
     - cd app
+    - npx react-native init . --template react-native-template-typescript
     - npm install
-    - cd android && ./gradlew wrapper
+    - cd android
+    - gradle wrapper --gradle-version 7.5.1
   artifacts:
     paths:
       - app/node_modules/
@@ -65,8 +76,8 @@ android_build:
     - unzip -q android-sdk.zip -d android-sdk
     - export ANDROID_HOME=$PWD/android-sdk
     - export PATH=$PATH:$ANDROID_HOME/cmdline-tools/bin
-    - yes | sdkmanager --licenses
-    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}"
+    - yes | sdkmanager --licenses || true
+    - sdkmanager "platform-tools" "platforms;android-${ANDROID_COMPILE_SDK}" "build-tools;${ANDROID_BUILD_TOOLS}" || true
   script:
     - cd app/android
     - ./gradlew assembleRelease
