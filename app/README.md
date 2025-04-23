@@ -45,19 +45,37 @@ docker build -t sncfincidents:dev --target development .
 docker run -p 19000:19000 sncfincidents:dev
 ```
 
-### Running Locally
+### Running Locally (web version)
 
-1.  **Start the Expo development server:**
+1. **Install the dependencies**
     ```bash
-    npx expo start
+    npm install
     ```
-    *Keep this terminal window open. It serves your JavaScript code to the app.*
+    *This will install all required packages listed in package.json*
 
-2.  **Choose your development environment:**
-    - [Development build](https://docs.expo.dev/develop/development-builds/introduction/)
-    - [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+2.  **Start the Expo development server:**
+    ```bash
+    npx expo start --web
+    ```
+    *Keep this terminal window open. It serves your JavaScript code to the app and opens it in your default web browser.*
 
-3.  **First Launch:** The app should build and launch on your selected device. If prompted, grant microphone permissions for the speech-to-text feature.
+## Expo Go
+
+1. **Install Expo Go on your Android device**
+    - Download Expo Go from the Google Play Store
+    - Open the app and sign in (optional but recommended)
+
+2. **Install the dependencies**
+    ```bash
+    npm install
+    ```
+    *Ensure all dependencies are properly installed*
+
+3. **Start the app with Expo Go**
+    ```bash
+    CI='false' npx expo start --tunnel
+    ```
+    *Scan the QR code shown in the terminal with your Android device's Expo Go app to launch the application*
 
 ## Project Structure
 
