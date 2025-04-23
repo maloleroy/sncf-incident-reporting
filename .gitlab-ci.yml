@@ -49,9 +49,10 @@ web_build:
   script:
     - cd app
     - npm run build
+    - if [ ! -d "dist" ]; then echo "Web build failed"; exit 1; fi
   artifacts:
     paths:
-      - app/build/
+      - dist/
     expire_in: 1 week
   dependencies:
     - setup
