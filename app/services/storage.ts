@@ -109,7 +109,7 @@ class StorageService {
   }
 
   // Sync methods
-  private async addToPendingSync(type: 'incident' | 'trip' | 'feedback', data: any): Promise<void> {
+  private async addToPendingSync(type: 'incident' | 'trip' | 'feedback', data: Incident | Trip | Feedback): Promise<void> {
     try {
       const pendingSync = await this.getPendingSync();
       pendingSync.push({ type, data, timestamp: new Date().toISOString() });
@@ -119,7 +119,7 @@ class StorageService {
     }
   }
 
-  private async getPendingSync(): Promise<Array<{ type: string; data: any; timestamp: string }>> {
+  private async getPendingSync(): Promise<Array<{ type: string; data: Incident | Trip | Feedback; timestamp: string }>> {
     try {
       const pendingSyncJson = await AsyncStorage.getItem(STORAGE_KEYS.PENDING_SYNC);
       return pendingSyncJson ? JSON.parse(pendingSyncJson) : [];
