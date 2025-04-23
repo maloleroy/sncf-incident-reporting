@@ -42,7 +42,7 @@ The app has full Docker support:
 ```bash
 cd app
 docker build -t sncfincidents:dev --target development .
-docker run -p 19000:19000 -p 19001:19001 -p 19002:19002 sncfincidents:dev
+docker run -p 19000:19000 sncfincidents:dev
 ```
 
 ### Running Locally

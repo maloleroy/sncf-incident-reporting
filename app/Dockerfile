@@ -30,8 +30,6 @@ COPY . .
 
 # Expose development port
 EXPOSE 19000
-EXPOSE 19001
-EXPOSE 19002
 
 # Start development server
 CMD ["npm", "start", "--", "--port", "19000"]
