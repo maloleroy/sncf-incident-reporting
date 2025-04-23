@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 
 const AccountScreen = () => {
   const [feedback, setFeedback] = useState('');
-  const [isConnected, setIsConnected] = useState(true); // This would come from NetInfo
+  const [isConnected, _setIsConnected] = useState(true); // This would come from NetInfo
 
   const handleSubmitFeedback = () => {
     // Here we would send the feedback to the server
