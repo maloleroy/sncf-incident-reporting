@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SafeArea } from '@/components/SafeArea';
+
+type RootStackParamList = {
+  'new-incident': undefined;
+  'incident-details': { incident: Incident };
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type Incident = {
   id: string;
@@ -11,7 +20,7 @@ type Incident = {
 };
 
 const IncidentsScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
 
@@ -50,7 +59,7 @@ const IncidentsScreen = () => {
   const renderIncidentItem = ({ item }: { item: Incident }) => (
     <TouchableOpacity 
       style={styles.incidentItem}
-      onPress={() => navigation.navigate('IncidentDetails', { incident: item })}
+      onPress={() => navigation.navigate('incident-details', { incident: item })}
     >
       <Text style={styles.incidentTitle}>{item.title}</Text>
       <Text style={styles.incidentDate}>{item.date}</Text>
@@ -64,50 +73,58 @@ const IncidentsScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Rechercher un incident..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <View style={styles.filterContainer}>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'all' && styles.activeFilter]}
-            onPress={() => setFilterStatus('all')}
-          >
-            <Text style={styles.filterText}>Tous</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'En cours' && styles.activeFilter]}
-            onPress={() => setFilterStatus('En cours')}
-          >
-            <Text style={styles.filterText}>En cours</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'Résolu' && styles.activeFilter]}
-            onPress={() => setFilterStatus('Résolu')}
-          >
-            <Text style={styles.filterText}>Résolus</Text>
-          </TouchableOpacity>
+    <SafeArea>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Rechercher un incident..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <View style={styles.filterContainer}>
+            <TouchableOpacity 
+              style={[styles.filterButton, filterStatus === 'all' && styles.activeFilter]}
+              onPress={() => setFilterStatus('all')}
+            >
+              <Text style={styles.filterText}>Tous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.filterButton, filterStatus === 'En cours' && styles.activeFilter]}
+              onPress={() => setFilterStatus('En cours')}
+            >
+              <Text style={styles.filterText}>En cours</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.filterButton, filterStatus === 'Résolu' && styles.activeFilter]}
+              onPress={() => setFilterStatus('Résolu')}
+            >
+              <Text style={styles.filterText}>Résolus</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <FlatList
-        data={filteredIncidents}
-        renderItem={renderIncidentItem}
-        keyExtractor={item => item.id}
-        style={styles.list}
-      />
-    </View>
+        <TouchableOpacity 
+          style={styles.newIncidentButton}
+          onPress={() => navigation.navigate('new-incident')}
+        >
+          <Text style={styles.newIncidentButtonText}>Nouvel Incident</Text>
+        </TouchableOpacity>
+
+        <FlatList
+          data={filteredIncidents}
+          renderItem={renderIncidentItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
+      </View>
+    </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   searchContainer: {
     padding: 16,
@@ -153,6 +170,18 @@ const styles = StyleSheet.create({
   incidentStatus: {
     marginTop: 4,
     fontWeight: '500',
+  },
+  newIncidentButton: {
+    backgroundColor: '#007AFF',
+    padding: 16,
+    margin: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  newIncidentButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

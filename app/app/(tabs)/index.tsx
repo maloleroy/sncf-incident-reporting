@@ -1,6 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SafeArea } from '@/components/SafeArea';
+
+type RootStackParamList = {
+  'new-incident': undefined;
+  'incident-details': { incident: Incident };
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type Incident = {
   id: string;
@@ -16,7 +25,7 @@ type Trip = {
 };
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   // Temporary mock data
   const recentIncidents: Incident[] = [
@@ -45,30 +54,32 @@ const HomeScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.addButton}
-        onPress={() => navigation.navigate('NewIncident')}
-      >
-        <Text style={styles.addButtonText}>Ajouter un incident</Text>
-      </TouchableOpacity>
+    <SafeArea>
+      <View style={styles.container}>
+        <TouchableOpacity 
+          style={styles.addButton}
+          onPress={() => navigation.navigate('new-incident')}
+        >
+          <Text style={styles.addButtonText}>Ajouter un incident</Text>
+        </TouchableOpacity>
 
-      <Text style={styles.sectionTitle}>Incidents récents</Text>
-      <FlatList
-        data={recentIncidents}
-        renderItem={renderIncidentItem}
-        keyExtractor={item => item.id}
-        style={styles.list}
-      />
+        <Text style={styles.sectionTitle}>Incidents récents</Text>
+        <FlatList
+          data={recentIncidents}
+          renderItem={renderIncidentItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
 
-      <Text style={styles.sectionTitle}>Trajets récents</Text>
-      <FlatList
-        data={recentTrips}
-        renderItem={renderTripItem}
-        keyExtractor={item => item.id}
-        style={styles.list}
-      />
-    </View>
+        <Text style={styles.sectionTitle}>Trajets récents</Text>
+        <FlatList
+          data={recentTrips}
+          renderItem={renderTripItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
+      </View>
+    </SafeArea>
   );
 };
 
@@ -76,7 +87,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff',
   },
   addButton: {
     backgroundColor: '#007AFF',
