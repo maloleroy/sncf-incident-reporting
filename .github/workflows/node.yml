@@ -1,0 +1,75 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/*'
+      - 'bugfix/*'
+    tags:
+      - '*'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    container: node:23-alpine
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: apk add --no-cache python3 make g++
+
+      - name: Install npm dependencies
+        run: |
+            cd app
+            npm ci
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: app/node_modules
+          key: ${{ github.ref }}
+
+  lint:
+    runs-on: ubuntu-latest
+    container: node:23-alpine
+    needs: setup
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore node modules cache
+        uses: actions/cache@v4
+        with:
+          path: app/node_modules
+          key: ${{ github.ref }}
+
+      - name: Lint and type check
+        run: |
+          cd app
+          npm run lint
+          npm run type-check
+
+  test:
+    runs-on: ubuntu-latest
+    container: node:23-alpine
+    needs: setup
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Restore node modules cache
+        uses: actions/cache@v4
+        with:
+          path: app/node_modules
+          key: ${{ github.ref }}
+
+      - name: Run unit tests
+        run: |
+          cd app
+          npm test -- --ci
