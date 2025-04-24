@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:23-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache python3 make g++
@@ -17,7 +17,7 @@ RUN npm ci
 COPY . .
 
 # Development stage
-FROM node:18-alpine AS development
+FROM node:23-alpine AS development
 
 WORKDIR /app
 
@@ -35,7 +35,7 @@ EXPOSE 19000
 CMD ["npm", "start", "--", "--port", "19000"]
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:23-alpine AS production
 
 WORKDIR /app
 
