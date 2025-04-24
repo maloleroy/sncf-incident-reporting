@@ -1,4 +1,4 @@
-image: node:18-alpine
+image: node:23-alpine
 
 # Define stages
 stages:
@@ -56,17 +56,6 @@ web_build:
     expire_in: 1 week
   dependencies:
     - setup
-
-# Deploy web app
-deploy_web:
-  stage: deploy
-  script:
-    - cd app
-    - npm run web
-  dependencies:
-    - web_build
-  only:
-    - main
 
 # Rules for when to run pipelines
 workflow:
