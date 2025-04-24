@@ -57,17 +57,6 @@ web_build:
   dependencies:
     - setup
 
-# Deploy web app
-deploy_web:
-  stage: deploy
-  script:
-    - cd app
-    - npm run web
-  dependencies:
-    - web_build
-  only:
-    - main
-
 # Rules for when to run pipelines
 workflow:
   rules:
