@@ -17,17 +17,15 @@ const adapter = new SQLiteAdapter({
     // additional installation steps have to be taken - disable if you run into issues...)
     jsi: Platform.OS === 'ios',
     // (optional, but you should implement this method)
-    onSetUpError: _error => {
+    onSetUpError: error => {
         // Database failed to load -- offer the user to reload the app or log out
     }
 })
 
 // Then, make a Watermelon database from it!
-const _database = new Database({
+const database = new Database({
     adapter,
     modelClasses: [
         // Post, // ⬅️ You'll add Models to Watermelon here
     ],
 })
-
-export default _database

@@ -1,9 +1,5 @@
-/* eslint-disable no-undef */
-// For Jest compatibility
-const config = {
-    presets: [
-        ['babel-preset-expo'],
-    ],
+module.exports = {
+    presets: ['babel-preset-expo'],
     plugins: [
         ['@babel/plugin-proposal-decorators', { legacy: true }],
     ],
