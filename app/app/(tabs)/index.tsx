@@ -67,7 +67,7 @@ const HomeScreen = () => {
   return (
     <SafeArea>
       <View style={styles.container}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('new-incident')}
         >
