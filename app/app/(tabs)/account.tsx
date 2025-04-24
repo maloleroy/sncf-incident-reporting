@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, ScrollView, GestureResponderEvent } from 'react-native';
+import { SafeArea } from '@/components/SafeArea';
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useTheme } from '@react-navigation/native';
 
 const AccountScreen = () => {
   const [feedback, setFeedback] = useState('');
   const [isConnected, _setIsConnected] = useState(true); // This would come from NetInfo
+  const colorScheme = useColorScheme();
 
   const handleSubmitFeedback = () => {
     // Here we would send the feedback to the server
@@ -16,69 +23,93 @@ const AccountScreen = () => {
     console.log('Logout');
   };
 
+  function toggleTheme(event: GestureResponderEvent): void {
+    throw new Error('Function not implemented.');
+  }
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Mon Compte</Text>
-        <View style={styles.connectionStatus}>
-          <View style={[
-            styles.statusDot,
-            { backgroundColor: isConnected ? '#34C759' : '#FF3B30' }
-          ]} />
-          <Text style={styles.statusText}>
-            {isConnected ? 'Connecté' : 'Hors ligne'}
-          </Text>
+    <SafeArea>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <ThemedText style={styles.title}>Mon Compte</ThemedText>
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              style={styles.themeButton}
+              onPress={toggleTheme}
+            >
+              <IconSymbol
+                name={'exclamationmark.triangle.fill'}
+                size={24}
+                color={Colors[useColorScheme() ?? 'light'].text}
+              />
+            </TouchableOpacity>
+            <View style={styles.connectionStatus}>
+              <View style={[
+                styles.statusDot,
+                { backgroundColor: isConnected ? '#34C759' : '#FF3B30' }
+              ]} />
+              <ThemedText style={styles.statusText}>
+                {isConnected ? 'Connecté' : 'Hors ligne'}
+              </ThemedText>
+            </View>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Informations personnelles</Text>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Nom</Text>
-          <Text style={styles.infoValue}>Dupont</Text>
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>Informations personnelles</ThemedText>
+          <View style={styles.infoItem}>
+            <ThemedText style={styles.infoLabel}>Nom</ThemedText>
+            <ThemedText style={styles.infoValue}>Dupont</ThemedText>
+          </View>
+          <View style={styles.infoItem}>
+            <ThemedText style={styles.infoLabel}>Prénom</ThemedText>
+            <ThemedText style={styles.infoValue}>Jean</ThemedText>
+          </View>
+          <View style={styles.infoItem}>
+            <ThemedText style={styles.infoLabel}>Matricule</ThemedText>
+            <ThemedText style={styles.infoValue}>12345</ThemedText>
+          </View>
         </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Prénom</Text>
-          <Text style={styles.infoValue}>Jean</Text>
-        </View>
-        <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Matricule</Text>
-          <Text style={styles.infoValue}>12345</Text>
-        </View>
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Suggestions d'amélioration</Text>
-        <TextInput
-          style={styles.feedbackInput}
-          placeholder="Vos suggestions pour améliorer l'application..."
-          value={feedback}
-          onChangeText={setFeedback}
-          multiline
-          numberOfLines={4}
-        />
-        <TouchableOpacity 
-          style={styles.submitButton}
-          onPress={handleSubmitFeedback}
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>Suggestions d'amélioration</ThemedText>
+          <TextInput
+            style={[
+              styles.feedbackInput,
+              {
+                color: Colors[useColorScheme() ?? 'light'].text,
+                backgroundColor: Colors[useColorScheme() ?? 'light'].background
+              }
+            ]}
+            placeholder="Vos suggestions pour améliorer l'application..."
+            placeholderTextColor={Colors[useColorScheme() ?? 'light'].icon}
+            value={feedback}
+            onChangeText={setFeedback}
+            multiline
+            numberOfLines={4}
+          />
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmitFeedback}
+          >
+            <ThemedText style={styles.submitButtonText}>Envoyer</ThemedText>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
         >
-          <Text style={styles.submitButtonText}>Envoyer</Text>
+          <ThemedText style={styles.logoutButtonText}>Se déconnecter</ThemedText>
         </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity 
-        style={styles.logoutButton}
-        onPress={handleLogout}
-      >
-        <Text style={styles.logoutButtonText}>Se déconnecter</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     padding: 16,
@@ -92,6 +123,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  themeButton: {
+    padding: 8,
+    borderRadius: 8,
+  },
   connectionStatus: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -104,7 +144,6 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontSize: 14,
-    color: '#666',
   },
   section: {
     padding: 16,
@@ -121,7 +160,6 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 14,
-    color: '#666',
     marginBottom: 4,
   },
   infoValue: {

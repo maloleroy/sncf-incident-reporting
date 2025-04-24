@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { SafeArea } from '@/components/SafeArea';
 
 const NewIncidentScreen = () => {
   const navigation = useNavigation();
@@ -27,63 +28,64 @@ const NewIncidentScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.form}>
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Titre de l'incident *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Entrez le titre de l'incident"
-            value={title}
-            onChangeText={setTitle}
-          />
-        </View>
+    <SafeArea>
+      <ScrollView style={styles.container}>
+        <View style={styles.form}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Titre de l'incident *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Entrez le titre de l'incident"
+              value={title}
+              onChangeText={setTitle}
+            />
+          </View>
 
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Description *</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            placeholder="Décrivez l'incident en détail"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-            numberOfLines={4}
-          />
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Description *</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="Décrivez l'incident en détail"
+              value={description}
+              onChangeText={setDescription}
+              multiline
+              numberOfLines={4}
+            />
+            <TouchableOpacity
+              style={styles.recordButton}
+              onPress={handleRecord}
+            >
+              <Text style={styles.recordButtonText}>
+                {isRecording ? 'Arrêter l\'enregistrement' : 'Enregistrer la description'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Localisation *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Où l'incident s'est-il produit ?"
+              value={location}
+              onChangeText={setLocation}
+            />
+          </View>
+
           <TouchableOpacity
-            style={styles.recordButton}
-            onPress={handleRecord}
+            style={styles.submitButton}
+            onPress={handleSubmit}
           >
-            <Text style={styles.recordButtonText}>
-              {isRecording ? 'Arrêter l\'enregistrement' : 'Enregistrer la description'}
-            </Text>
+            <Text style={styles.submitButtonText}>Soumettre l'incident</Text>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Localisation *</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Où l'incident s'est-il produit ?"
-            value={location}
-            onChangeText={setLocation}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleSubmit}
-        >
-          <Text style={styles.submitButtonText}>Soumettre l'incident</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   form: {
     padding: 16,
@@ -132,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewIncidentScreen; 
+export default NewIncidentScreen;

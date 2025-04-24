@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { SafeArea } from '@/components/SafeArea';
 
 type Trip = {
   id: string;
@@ -15,24 +16,24 @@ const TripsScreen = () => {
 
   // Temporary mock data
   const trips: Trip[] = [
-    { 
-      id: '1', 
-      route: 'Paris - Lyon', 
-      date: '2024-04-21', 
+    {
+      id: '1',
+      route: 'Paris - Lyon',
+      date: '2024-04-21',
       status: 'Terminé',
       trainNumber: 'TGV 1234'
     },
-    { 
-      id: '2', 
-      route: 'Lyon - Marseille', 
-      date: '2024-04-20', 
+    {
+      id: '2',
+      route: 'Lyon - Marseille',
+      date: '2024-04-20',
       status: 'En cours',
       trainNumber: 'TGV 5678'
     },
-    { 
-      id: '3', 
-      route: 'Marseille - Nice', 
-      date: '2024-04-19', 
+    {
+      id: '3',
+      route: 'Marseille - Nice',
+      date: '2024-04-19',
       status: 'Terminé',
       trainNumber: 'TGV 9012'
     },
@@ -40,7 +41,7 @@ const TripsScreen = () => {
 
   const filteredTrips = trips.filter(trip => {
     const matchesSearch = trip.route.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         trip.trainNumber.toLowerCase().includes(searchQuery.toLowerCase());
+      trip.trainNumber.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = filterStatus === 'all' || trip.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -62,50 +63,51 @@ const TripsScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Rechercher un trajet..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <View style={styles.filterContainer}>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'all' && styles.activeFilter]}
-            onPress={() => setFilterStatus('all')}
-          >
-            <Text style={styles.filterText}>Tous</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'En cours' && styles.activeFilter]}
-            onPress={() => setFilterStatus('En cours')}
-          >
-            <Text style={styles.filterText}>En cours</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.filterButton, filterStatus === 'Terminé' && styles.activeFilter]}
-            onPress={() => setFilterStatus('Terminé')}
-          >
-            <Text style={styles.filterText}>Terminés</Text>
-          </TouchableOpacity>
+    <SafeArea>
+      <View style={styles.container}>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Rechercher un trajet..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <View style={styles.filterContainer}>
+            <TouchableOpacity
+              style={[styles.filterButton, filterStatus === 'all' && styles.activeFilter]}
+              onPress={() => setFilterStatus('all')}
+            >
+              <Text style={styles.filterText}>Tous</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.filterButton, filterStatus === 'En cours' && styles.activeFilter]}
+              onPress={() => setFilterStatus('En cours')}
+            >
+              <Text style={styles.filterText}>En cours</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.filterButton, filterStatus === 'Terminé' && styles.activeFilter]}
+              onPress={() => setFilterStatus('Terminé')}
+            >
+              <Text style={styles.filterText}>Terminés</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <FlatList
-        data={filteredTrips}
-        renderItem={renderTripItem}
-        keyExtractor={item => item.id}
-        style={styles.list}
-      />
-    </View>
+        <FlatList
+          data={filteredTrips}
+          renderItem={renderTripItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
+      </View>
+    </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   searchContainer: {
     padding: 16,
@@ -162,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TripsScreen; 
+export default TripsScreen;
