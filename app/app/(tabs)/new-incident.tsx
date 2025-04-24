@@ -49,7 +49,7 @@ const NewIncidentScreen = () => {
             multiline
             numberOfLines={4}
           />
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.recordButton}
             onPress={handleRecord}
           >
@@ -69,7 +69,7 @@ const NewIncidentScreen = () => {
           />
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.submitButton}
           onPress={handleSubmit}
         >

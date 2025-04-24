@@ -31,6 +31,7 @@ const HomeScreen = () => {
   const recentIncidents: Incident[] = [
     { id: '1', title: 'Retard sur la ligne A', date: '2024-04-21', status: 'En cours' },
     { id: '2', title: 'Problème technique', date: '2024-04-20', status: 'Résolu' },
+    { id: '3', title: 'Problème technique 2', date: '2024-04-20', status: 'Delayed' },
   ];
 
   const recentTrips: Trip[] = [
@@ -56,7 +57,7 @@ const HomeScreen = () => {
   return (
     <SafeArea>
       <View style={styles.container}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('new-incident')}
         >
