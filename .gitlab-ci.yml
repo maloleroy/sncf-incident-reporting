@@ -1,4 +1,4 @@
-image: node:18-alpine
+image: node:23-alpine
 
 # Define stages
 stages:
@@ -49,23 +49,13 @@ web_build:
   script:
     - cd app
     - npm run build
+    - if [ ! -d "dist" ]; then echo "Web build failed"; exit 1; fi
   artifacts:
     paths:
-      - app/build/
+      - dist/
     expire_in: 1 week
   dependencies:
     - setup
-
-# Deploy web app
-deploy_web:
-  stage: deploy
-  script:
-    - cd app
-    - npm run web
-  dependencies:
-    - web_build
-  only:
-    - main
 
 # Rules for when to run pipelines
 workflow:

@@ -38,6 +38,12 @@ export default function RootLayout() {
             title: 'Nouvel Incident'
           }} 
         />
+        <Stack.Screen 
+          name="incident-details" 
+          options={{ 
+            title: 'Détails de l\'incident'
+          }} 
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
