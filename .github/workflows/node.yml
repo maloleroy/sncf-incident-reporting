@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: apk add --no-cache python3 make g++
+        run: apk add --no-cache tar # required for caching
 
       - name: Install npm dependencies
         run: |
