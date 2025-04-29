@@ -1,10 +1,12 @@
-package com.example.appv1.ui.screens
+package com.example.appv1.ui.screens.report
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -38,6 +40,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.appv1.api.ChatMessage
+import com.example.appv1.api.MistralChatRequest
+import com.example.appv1.api.RetrofitInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -110,9 +119,12 @@ fun NewReportScreen(onBack: () -> Unit) {
                         ContextCompat.checkSelfPermission(
                             context, Manifest.permission.RECORD_AUDIO
                         ) == PackageManager.PERMISSION_GRANTED -> {
+                            // Permission déjà accordée
                             launchSpeech(speechLauncher)
                         }
+
                         else -> {
+                            // On demande la permission
                             permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
                         }
                     }
@@ -123,11 +135,62 @@ fun NewReportScreen(onBack: () -> Unit) {
                 Spacer(Modifier.width(8.dp))
                 Text("Speech-to-Text")
             }
+            Button(
+                onClick = {
+                    sendReportToMistral(reportText, context)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            ) {
+                Text("Générer le rapport")
+            }
         }
     }
 }
 
-/* ---------- Fonction utilitaire pour lancer l’intent ---------- */
+
+private fun sendReportToMistral(reportText: String, context: Context) {
+    if (reportText.isBlank()) {
+        Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
+        return
+    }
+
+    // Construire la requête pour Mistral Chat API
+    val chatRequest = MistralChatRequest(
+        model = "mistral-small-latest", // Ou un autre modèle
+        messages = listOf(
+            ChatMessage(
+                role = "system",
+                content = "Tu es un assistant SNCF qui reformule les signalements des chefs de bord."
+            ), // Instruction système (optionnel)
+            ChatMessage(role = "user", content = reportText) // Le texte du chef de bord
+        )
+    )
+
+    // Utilisation de CoroutineScope pour effectuer l'appel réseau
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            // Appeler le nouvel endpoint
+            val response = RetrofitInstance.api.generateChatCompletion(chatRequest)
+
+            // Traiter la réponse (prendre le premier choix par exemple)
+            val generatedText =
+                response.choices.firstOrNull()?.message?.content ?: "Aucune réponse générée."
+
+            withContext(Dispatchers.Main) {
+                Toast.makeText(context, "Réponse : $generatedText", Toast.LENGTH_LONG).show()
+                // Mettre à jour l'UI avec generatedText si nécessaire
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                Log.e("MistralAPI", "Error calling Mistral API", e) // Log l'erreur pour le débogage
+                Toast.makeText(context, "Erreur réseau : ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
+
 private fun launchSpeech(
     launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
 ) {
@@ -147,4 +210,5 @@ private fun launchSpeech(
     }
     launcher.launch(intent)
 }
+
 
