@@ -1,46 +1,14 @@
 package com.example.appv1
 
-import android.Manifest // Keep this if used for permissions
-import android.app.Activity // <-- Add this import
-import android.content.Context
-import android.content.Intent // Keep this if used for speech intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognizerIntent // Keep this if used for speech intent
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Mic
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import android.util.Log // <-- Import pour le Log
-import com.example.appv1.api.ChatMessage // <-- Import pour ChatMessage
-import com.example.appv1.api.MistralChatRequest // <-- Import pour MistralChatRequest
-//import com.example.appv1.api.ReportRequest
-import com.example.appv1.api.RetrofitInstance
+import com.example.appv1.ui.screens.home.HomeScreen
+import com.example.appv1.ui.screens.NewReportScreen
 import com.example.appv1.ui.theme.AppV1Theme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.* // Keep this if used for Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,26 +181,6 @@ fun NewReportScreen(onBack: () -> Unit) {
     }
 }
 
-/* ---------- Fonction utilitaire pour lancer l’intent ---------- */
-private fun launchSpeech(
-    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
-) {
-    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-        putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
-        putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE,
-            Locale.getDefault()
-        )
-        putExtra(
-            RecognizerIntent.EXTRA_PROMPT,
-            "Parlez maintenant"
-        )
-    }
-    launcher.launch(intent)
-}
 
 private fun sendReportToMistral(reportText: String, context: Context) {
     if (reportText.isBlank()) {
