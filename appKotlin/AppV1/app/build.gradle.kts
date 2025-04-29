@@ -1,7 +1,21 @@
+import java.util.Properties // <-- Import ajouté
+import java.io.FileInputStream // <-- Import ajouté
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+}
+
+// Fonction pour lire les propriétés locales
+fun getApiKey(propertyKey: String): String {
+    val properties = Properties() // Use the imported class directly
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(FileInputStream(localPropertiesFile)) // Use the imported class directly
+        return properties.getProperty(propertyKey, "")
+    }
+    return ""
 }
 
 android {
@@ -14,7 +28,8 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        val mistralApiKey = getApiKey("MISTRAL_API_KEY")
+        buildConfigField("String", "MISTRAL_API_KEY", "\"$mistralApiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true // Ensure this is present
     }
 }
 
