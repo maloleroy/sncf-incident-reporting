@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appv1.ui.screens.home.HomeScreen
-import com.example.appv1.ui.screens.NewReportScreen
+import com.example.appv1.ui.screens.report.NewReportScreen
 import com.example.appv1.ui.theme.AppV1Theme
 
 class MainActivity : ComponentActivity() {
