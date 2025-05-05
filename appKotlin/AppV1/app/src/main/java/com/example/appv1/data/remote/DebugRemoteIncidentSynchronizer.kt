@@ -1,11 +1,9 @@
 package com.example.appv1.data.remote
 
 import android.util.Log
-import android.util.Log
 import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.data.SynchronizationCallback
 import com.example.appv1.data.SynchronizationStatus
-import com.example.appv1.domain.model.Incident
 import kotlinx.coroutines.delay
 import com.example.appv1.domain.model.Incident // Using the provided Incident definition
 import kotlinx.coroutines.flow.Flow
