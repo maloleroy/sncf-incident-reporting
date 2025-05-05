@@ -12,6 +12,8 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.rememberScrollState // Pour rendre la colonne scrollable
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +27,10 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme // <-- AJOUTER CET IMPORT
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.CircularProgressIndicator // Pour l'indicateur de chargement
+import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,6 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.compose.runtime.DisposableEffect // Assurez-vous que cet import est présent
+import androidx.compose.runtime.rememberCoroutineScope // Assurez-vous que cet import est présent
+import androidx.compose.material3.TextField // Import pour le TextField de Material 3
+import com.example.appv1.GemmaEngine // Import pour votre classe GemmaEngine
 import com.example.appv1.api.ChatMessage
 import com.example.appv1.api.MistralChatRequest
 import com.example.appv1.api.RetrofitInstance
@@ -54,6 +63,8 @@ import java.util.Locale
 fun NewReportScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     var reportText by remember { mutableStateOf("") }
+    var generatedReportText by remember { mutableStateOf<String?>(null) }
+    var isLoadingMistral by remember { mutableStateOf(false) }
 
     /* ---------- 1) launcher pour l’Intent de reconnaissance vocale ---------- */
     val speechLauncher = rememberLauncherForActivityResult(
@@ -101,6 +112,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
             OutlinedTextField(
                 value = reportText,
@@ -108,7 +120,9 @@ fun NewReportScreen(onBack: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp),
-                placeholder = { Text("Décrivez votre signalement ici…") }
+                placeholder = { Text("Décrivez votre signalement ici…") },
+                label = { Text("Description initiale") } // Ajout d'un label
+
             )
 
             Spacer(Modifier.height(16.dp))
@@ -136,21 +150,108 @@ fun NewReportScreen(onBack: () -> Unit) {
                 Text("Speech-to-Text")
             }
             Button(
+                // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                    sendReportToMistral(reportText, context)
+                    if (reportText.isNotBlank()) {
+                        isLoadingMistral = true // Début chargement
+                        generatedReportText = null // Réinitialiser l'ancienne réponse
+                        sendReportToMistral(reportText, context) { result ->
+                            generatedReportText = result // Mettre à jour l'état avec le résultat
+                            isLoadingMistral = false // Fin chargement
+                        }
+                    } else {
+                        Toast.makeText(context, "Veuillez entrer ou dicter une description.", Toast.LENGTH_SHORT).show()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(56.dp),
+                enabled = !isLoadingMistral // Désactiver pendant le chargement
             ) {
-                Text("Générer le rapport")
+                Text("Générer le rapport (Mistral)")
+            }
+
+            Spacer(Modifier.height(16.dp))
+
+            // ----> 4. Afficher la réponse générée ou le chargement <----
+            if (isLoadingMistral) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else if (generatedReportText != null) {
+                Divider(modifier = Modifier.padding(vertical = 8.dp)) // Séparateur visuel
+                Text("Rapport généré par Mistral :", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+                Text(generatedReportText!!) // Afficher le texte généré
             }
         }
     }
 }
 
 
-private fun sendReportToMistral(reportText: String, context: Context) {
+@Composable
+fun ChatScreen() {
+    // ----> Déclarations des variables ICI <----
+    val context = LocalContext.current // Obtenir le contexte ici
+    val scope = rememberCoroutineScope() // Obtenir la coroutine scope ici
+    val engine = remember { GemmaEngine(context) } // Créer l'instance de GemmaEngine ici
+
+    // États pour le prompt, la réponse et le chargement
+    var prompt by remember { mutableStateOf("") }
+    var answer by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+
+    // Effet pour fermer l'engine lorsque le composable est détruit
+    DisposableEffect(Unit) {
+        onDispose {
+            engine.close()
+        }
+    }
+    // ----> FIN Déclarations <----
+
+
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
+        TextField(
+            value = prompt, // prompt est maintenant défini
+            onValueChange = { prompt = it },
+            label = { Text("Demande") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !isLoading // isLoading est maintenant défini
+        )
+        Spacer(Modifier.height(8.dp))
+        Button(
+            onClick = {
+                if (prompt.isNotBlank() && !isLoading) { // prompt et isLoading sont définis
+                    isLoading = true // isLoading est défini
+                    answer = "Génération en cours..." // answer est défini
+                    scope.launch { // scope est défini
+                        engine.askAsync( // engine est défini
+                            prompt = prompt, // prompt est défini
+                            onSuccess = { result ->
+                                answer = result // answer est défini
+                                isLoading = false // isLoading est défini
+                            },
+                            onError = { error ->
+                                answer = "Erreur: ${error.message}" // answer est défini, error.message existe
+                                isLoading = false // isLoading est défini
+                                Toast.makeText(context, "Erreur Gemma: ${error.message}", Toast.LENGTH_LONG).show() // context et error.message sont définis
+                            }
+                        )
+                    }
+                }
+            },
+            enabled = !isLoading // isLoading est défini
+        ) {
+            Text("Envoyer")
+        }
+        Spacer(Modifier.height(12.dp))
+        Text(answer) // answer est défini
+    }
+}
+
+private fun sendReportToMistral(
+    reportText: String,
+    context: Context,
+    onResult: (String) -> Unit // Lambda pour retourner le résultat
+) {
     if (reportText.isBlank()) {
         Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
         return
@@ -179,13 +280,13 @@ private fun sendReportToMistral(reportText: String, context: Context) {
                 response.choices.firstOrNull()?.message?.content ?: "Aucune réponse générée."
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "Réponse : $generatedText", Toast.LENGTH_LONG).show()
-                // Mettre à jour l'UI avec generatedText si nécessaire
+                onResult(generatedText) // Appeler la lambda avec le résultat
             }
         } catch (e: Exception) {
+            Log.e("MistralAPI", "Error calling Mistral API", e)
             withContext(Dispatchers.Main) {
-                Log.e("MistralAPI", "Error calling Mistral API", e) // Log l'erreur pour le débogage
-                Toast.makeText(context, "Erreur réseau : ${e.message}", Toast.LENGTH_SHORT).show()
+                // Retourner un message d'erreur via la lambda
+                onResult("Erreur réseau : ${e.message}")
             }
         }
     }
@@ -210,5 +311,4 @@ private fun launchSpeech(
     }
     launcher.launch(intent)
 }
-
 

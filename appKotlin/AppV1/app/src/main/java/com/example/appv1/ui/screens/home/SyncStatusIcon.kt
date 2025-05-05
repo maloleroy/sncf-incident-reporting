@@ -50,6 +50,11 @@ fun SyncStatusIcon(synchronizer: IncidentSynchronizer) {
                     contentDescription = "Synchronisation échouée",
                     tint = MaterialTheme.colorScheme.error
                 )
+                SynchronizationStatus.IDLE -> Icon(
+                    Icons.Default.CloudOff,
+                    contentDescription = "Aucune synchronisation",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
             }
         }
     }
