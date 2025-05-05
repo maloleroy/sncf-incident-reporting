@@ -7,13 +7,9 @@ import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.genai.llminference.LlmInference.LlmInferenceOptions
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
-import kotlinx.coroutines.launch
-import java.util.concurrent.Executors // Import pour Executors
+import java.util.concurrent.Executors
 
-class GemmaEngine(private val context: Context) {
+class GemmaEngine(context: Context) {
 
     private var llmInference: LlmInference? = null
     // Executor pour gérer les callbacks de ListenableFuture

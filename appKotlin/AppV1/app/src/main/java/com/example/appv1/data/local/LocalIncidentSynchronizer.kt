@@ -38,7 +38,7 @@ class LocalIncidentSynchronizer(private val context: Context) : IncidentSynchron
 
     private fun saveIncidents() {
         val json = gson.toJson(pendingIncidents)
-        sharedPreferences.edit() { putString(KEY_PENDING_INCIDENTS, json) }
+        sharedPreferences.edit { putString(KEY_PENDING_INCIDENTS, json) }
         synchronized = pendingIncidents.isEmpty()
     }
 

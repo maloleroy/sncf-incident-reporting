@@ -7,14 +7,13 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.SyncProblem
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.data.SynchronizationStatus
-import androidx.compose.material3.Icon
-import androidx.compose.runtime.collectAsState
 
 @Composable
 fun SyncStatusIcon(synchronizer: IncidentSynchronizer) {
