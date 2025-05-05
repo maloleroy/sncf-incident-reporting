@@ -16,8 +16,8 @@ def excel_to_custom_nested_json(excel_path, json_path=None):
     df.columns = ['Localisation (QR)', 'Catégorie', 'Précision à localisation N2', 'Organe', 'Précision à localisation N3', 'Sous-organe', 'Défaillance']
 
     # Création des clés composites
-    df['N+1'] = df['Catégorie'].astype(str) + " / " + df['Précision à localisation N2'].astype(str)
-    df['N+2'] = df['Organe'].astype(str) + " / " + df['Précision à localisation N3'].astype(str) + " / " + df['Sous-organe'].astype(str)
+    df['N+1'] = df['Catégorie'].astype(str)#+ " / " + df['Précision à localisation N2'].astype(str)
+    df['N+2'] = df['Organe'].astype(str) #+ " / " + df['Précision à localisation N3'].astype(str) + " / " + df['Sous-organe'].astype(str)
 
     # Nettoyage des clés : suppression des "nan" inutiles
     df['N+1'] = df['N+1'].str.replace(r'( / nan)+', '', regex=True).str.replace(r'^nan / ', '', regex=True)
@@ -43,4 +43,4 @@ def excel_to_custom_nested_json(excel_path, json_path=None):
 
 
 # Exemple d'utilisation
-json_data = excel_to_custom_nested_json("../Arbo SIGNALEMENT et motifs MGC.xlsx", "../incidents_arbo.json")
+json_data = excel_to_custom_nested_json("../Arbo SIGNALEMENT et motifs MGC.xlsx", "../incidents_arbo_simple.json")
