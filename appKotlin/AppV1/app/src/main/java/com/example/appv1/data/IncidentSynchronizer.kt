@@ -6,6 +6,8 @@ import com.example.appv1.domain.model.Incident
  * Enum representing the possible synchronization statuses.
  */
 enum class SynchronizationStatus {
+    IDLE,
+
     /** Indicates that synchronization is pending. */
     PENDING,
 
