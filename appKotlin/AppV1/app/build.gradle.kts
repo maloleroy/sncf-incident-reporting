@@ -52,11 +52,11 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0") // Ou version plus récente
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // Ou version plus récente
-    implementation("com.squareup.okhttp3:okhttp:4.10.0") // Ou version plus récente
+    implementation(libs.retrofit) // Ou version plus récente
+    implementation(libs.retrofit.converter.gson) // Ou version plus récente
+    implementation(libs.okhttp) // Ou version plus récente
     // Ajoutez la dépendance MediaPipe GenAI Tasks
-    implementation("com.google.mediapipe:tasks-genai:0.10.23") // Vérifiez la dernière version stable
+    implementation(libs.tasks.genai) // Vérifiez la dernière version stable
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
