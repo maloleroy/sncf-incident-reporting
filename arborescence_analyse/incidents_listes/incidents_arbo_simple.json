@@ -1,0 +1,889 @@
+{
+  "Compartiment": {
+    "Accessoires/ Environnement": {
+      "Porte bagage inférieur": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte bagage supérieur": "Problème de fixation, cassé, dégradé, manquant",
+      "Miroir": "Cassé, dégradé, manquant, bruyant"
+    },
+    "Habillage": {
+      "Cloison": "Souillée, taguée",
+      "Plafond": "Revêtement usé, abimé, décollé",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Vitre cloison couloir": "Problème de fixation, cassée, dégradée, manquante"
+    },
+    "Pack inoui": {
+      "WIFI": "Abîmé, dégradé, manquant"
+    }
+  },
+  "Local ASCT": {
+    "Accessoires/ Environnement": {
+      "Bac d'écoulement": "Bouché, cassé, dégradé, bonde manquante",
+      "Boîte à déchets": "Cassée, dégradée, manquante",
+      "Case à bagages": "Cassée, dégradée",
+      "Distributeur d'eau": "PORTE: Problème de fixation, manquante",
+      "Kit voyageur malade": "Un kit manquant ou incomplet",
+      "Meuble casiers à bouteilles": "Etagère cassée, dégradée, manquante",
+      "Meuble étagères": "Etagère manquante, cassée, dégradée",
+      "Meuble poubelle": "Problème ouverture/ fermeture, cassée, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Placard": "Rayée, gravée",
+      "Portant à vêtements": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte veste": "Problème de fixation, cassé, dégradé, manquant",
+      "Store": "Problème de fixation, cassé, dégradé, manquant",
+      "Support Machine à café": "Problème d'ouverture, fermeture, verrouillage",
+      "Table vis-à-vis": "Problème de fixation, cassé, dégradé, manquant",
+      "Tablette famille": "Sale, souillé, tâché",
+      "Tabouret": "Problème de fixation, cassé, dégradé, manquant",
+      "Vestiaire": "Problème de fixation, cassée, dégradée, manquante",
+      "Strapontin": "Revêtement usé, déchiré, brûlé",
+      "Meuble 3 portes": "Problème d'ouverture, fermeture, verrouillage",
+      "Meuble 4 portes": "Problème d'ouverture, fermeture, verrouillage",
+      "Etagère inox": "Problème de fixation, cassé, dégradé, manquant"
+    },
+    "Eclairage": {
+      "Bandeau comptoir": "Ne fonctionne pas, cassé, dégradé",
+      "Bandeau office": "Ne fonctionne pas, cassé, dégradé, bruyant",
+      "Eclairage latéral (au dessus des vitres)": "Ne fonctionne pas, manquant, cassé",
+      "Lampe de table": "Odeur de brûlé",
+      "Liseuse": "Odeur de brûlé",
+      "Plan de travail": "Odeur de brûlé"
+    },
+    "Equipements chauds": {
+      "Four micro-onde": "Cassée, dégradée, manquante",
+      "Machine à café": "Bloc café droit ne fonctionne pas"
+    },
+    "Equipements froids": {
+      "Frigo 38 litres": "Ne fonctionne pas, dysfonctionnelle",
+      "Meuble Rep 3 - (3°C)": "Température affichée supérieure à 3°C",
+      "Meuble Rep 7 - (3°C)": "Température affichée supérieure à 3°C",
+      "Signalétique": "Dégradée, décollée, manquante"
+    },
+    "Equipements SECURITE": {
+      "Détecteur de fumée": "Cassé, dégradé, manquant",
+      "Extincteur": "Périmé",
+      "Marteau brise vitre": "Vitre cassée, dégradée, manquante",
+      "Robinet d'isolement porte chargement": "Déplombé",
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact",
+      "Vitre porte chargement": "Vitre brisée, verre en place ou troué (inférieur à 5 mm) - film posé côté intérieur"
+    },
+    "Habillage": {
+      "Baguette recouvrement": "Cassée, dégradée, manquante",
+      "Bandeau Prises 220V": "Cassé, dégradé, bruyant",
+      "Cloison": "Souillée, taguée",
+      "Cloison vitrée": "Vitre Cassée, dégradée, manquante",
+      "Grille élément filtrant": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Grille ventilation": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Hublot": "Cassé, dégradé, manquant",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Porte armoire électrique/Sono": "Problème ouverture/ fermeture, cassée, manquante",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Trappe hotte d'extraction d'air": "Problème ouverture/ fermeture, cassée, manquante"
+    },
+    "Info/Communication": {
+      "Signalétique": "MSG  Localisation inconnue, introuvable",
+      "Sonorisation": "Volume trop faible, trop fort"
+    },
+    "Porte local": {
+      "Hublot": "Cassé, dégradé, manquant",
+      "Patte à cadenas": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte": "Rayée, gravée",
+      "Serrure": "Problème de verrouillage, cassée, manquante",
+      "Serrure anti-panique": "Problème de fixation, cassé, dégradé, manquant",
+      "Vantail": "Cassé, dégradé, manquant",
+      "Poignée/commande porte": "Problème ouverture/ fermeture, cassée, manquante"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas, voyant éteint",
+      "Prise électrique": "Fils apparents"
+    },
+    "Siège": {
+      "Accoudoir": "Cassé, dégradé, manquant",
+      "Assise": "Sale, souillée, tâchée",
+      "Bâti": "Cassé, dégradé, instable",
+      "Dossier": "Souillé, tagué",
+      "Repose tête": "Déchiré, brûlé, abîmé, usé",
+      "Mécanisme inclinaison/réglage": "Poignée de commande cassée"
+    },
+    "Pack inoui": {
+      "Point info": "Abîmé, dégradé, manquant"
+    },
+    "Porte coulissante": {
+      "Porte coulissante": "Problème de fixation, cassée, dégradée, manquante",
+      "Serrure": "Problème de fixation, cassée, dégradée, manquante",
+      "Poignée/commande porte": "Problème de fixation, cassée, dégradée, manquante"
+    }
+  },
+  "Local de service": {
+    "Accessoires/ Environnement": {
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Kit voyageur malade": "Un kit manquant ou incomplet",
+      "Chaise": "Problème de réglage en hauteur",
+      "Distributeur papier essuie-mains": "Cassé, dégradé, manquant",
+      "Store": "Problème de fixation, cassé, dégradé, manquant",
+      "Strapontin": "Revêtement usé, déchiré, brûlé",
+      "Tablette comptoir": "Sale, souillée, tâchée",
+      "Placard": "Manquante , dégradée",
+      "Tablette mange debout": "Sale, souillée, tâchée"
+    },
+    "Climatisation": {
+      "Chauffage": "Trop froid"
+    },
+    "Eclairage": {
+      "Liseuse/veilleuse": "Odeur de brûlé",
+      "Bandeau": "Ne fonctionne pas, cassé, dégradé"
+    },
+    "Habillage": {
+      "Cloison": "Cassée, dégradée, manquante",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Grille ventilation": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau"
+    },
+    "Info/Communication": {
+      "Console": "Ne fonctionne pas",
+      "Pancartage": "Cassé, dégradé, manquant",
+      "Signalétique": "MSG  Localisation inconnue, introuvable",
+      "Console SIVE Principale": "SIVE ne fonctionne pas sur toute la rame",
+      "Interphonie": "Problème de son",
+      "Sonorisation": "Volume trop faible, trop fort",
+      "Carnet de bord": "Déchiré, abîmé, manquant, plein",
+      "Livret, Guide de dépannage": "Abîmé, sale, manquant"
+    },
+    "Porte local": {
+      "Sûreté": "Problème pattes à cadenas",
+      "Hublot": "Cassé, dégradé, manquant",
+      "Poignée/commande porte": "Problème ouverture/ fermeture, cassée, manquante",
+      "Porte": "Rayée, gravée",
+      "Serrure": "Problème de verrouillage"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact",
+      "Etiquette Porte HORS SERVICE": "Manquante",
+      "Kit sécurisation vitre": "Manquant ou détérioré",
+      "Robinet RB-URG": "Déplombé",
+      "Trousse rouge médicalisée": "Trousse périmée"
+    }
+  },
+  "Nurserie": {
+    "Accessoires/ Environnement": {
+      "Sèche mains": "Ne fonctionne pas, cassé, dégradé, manquant",
+      "Chauffe-biberon": "Ne fonctionne pas, manquant",
+      "Strapontin": "Manquant",
+      "Distributeur sac plastique": "Trappe défaillante, cassée",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte sous lavabo": "Problème ouverture/ fermeture, cassée, manquante",
+      "Poubelle": "Reste ouverte, ou bloquée",
+      "Savonnier": "Problème de fixation, cassé, dégradé, manquant",
+      "Table à langer": "Cassé, dégradé, manquant",
+      "Banquette": "Sale, souillé, tâché"
+    },
+    "Climatisation": {
+      "Chauffage": "Trop froid"
+    },
+    "Eclairage": {
+      "Eclairage miroir": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage lavabo": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage table à langer": "Problème d'ouverture, fermeture, verrouillage luminaire"
+    },
+    "Habillage": {
+      "Cloison": "Cassée, dégradée, manquante",
+      "Décoration, pelliculage": "Cassé, dégradé, manquant",
+      "Grille": "Cassée, dégradée, manquante",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Sol": "Usé, déchiré, décollé, manquant"
+    },
+    "Info/Communication": {
+      "Signalétique d'indisponibilité": "Manquante ou dégradée",
+      "Voyant d'occupation": "Ne fonctionne pas, cassé, dégradé",
+      "Signalétique": "Dégradée, décollée, manquante"
+    },
+    "Porte local": {
+      "Dispositif de condamnation ": "Ne fonctionne pas, cassé, dégradé",
+      "Poignée/commande porte": "Ne fonctionne pas, cassée, dégradée, manquante",
+      "Porte": "Rayée, gravée",
+      "Serrure": "Problème de verrouillage"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Lave-mains": {
+      "Ecoulement de l'eau": "L'eau ne coule pas",
+      "Lavabo": "Cassé, dégradé, bouché",
+      "Température de l'eau": "Trop froide"
+    },
+    "Pack inoui": {
+      "CoinPetits": "Abîmé, dégradé, manquant",
+      "Mon beau miroir": "Abîmé, dégradé, manquant"
+    }
+  },
+  "Office bar": {
+    "Equipements froids": {
+      "Meuble": "Intérieur dégradé",
+      "Porte": "Problème ouverture/ fermeture, cassée, manquante",
+      "Réfrigération": "Température affichée supérieure à 3°C",
+      "Signalétique": "Dégradée, décollée, manquante",
+      "Trappe": "Problème ouverture/ fermeture, cassée, manquante",
+      "Vitrine réfrigérée": "Ne fonctionne pas, excessive, pb condensation"
+    },
+    "Accessoires/ Environnement": {
+      "Support Machine à café": "Problème d'ouverture, fermeture",
+      "Dispositif accroche chariot": "Cassé, dégradé, manquant",
+      "Distributeur de savon": "Cassé, dégradé, manquant",
+      "Etagère": "Plateau manquant",
+      "Meuble comptoir": "Problème ouverture/ fermeture, cassée, manquante",
+      "Meuble poubelle": "Problème ouverture/ fermeture, cassée, manquante",
+      "Placard": "Problème de fixation, cassée, dégradée, manquante",
+      "Rideau métallique": "Problème de fixation, cassé, dégradé, manquant",
+      "Support smartphone": "Problème de fixation, cassé, dégradé, manquant",
+      "Tiroir": "Problème ouverture/ fermeture, cassée, manquante",
+      "Panneau de sécurisation": "Signalétique dégradée, décollée, manquante",
+      "Support rangement panneau de sécurisation": "Cassé, déformé, manquant, rangement panneau impossible",
+      "Bac d'écoulement": "Bouché, cassé, dégradé, bonde manquante",
+      "Comptoir": "Cassé, dégradé",
+      "Distributeur d'eau": "PORTE: Problème de fixation, manquante",
+      "Evier": "Grille du dessus manquante, abîmée",
+      "Meuble chariot": "Problème ouverture/ fermeture, cassée, manquante",
+      "Strapontin": "Manquant",
+      "Vitrine": "Problème de fixation, cassée, dégradée, manquante",
+      "Crochet attache trolley": "Cassé, dégradé, manquant"
+    },
+    "Equipements chauds": {
+      "Chauffe eau Instantané": "Ne fonctionne pas, pb température, fuite d'eau",
+      "Four micro-onde": "Cassée, dégradée, manquante",
+      "Grill toast": "Problème d'ouverture, fermeture",
+      "Machine à café": "Bloc café droit ne fonctionne pas"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact",
+      "Vitre porte chargement": "Vitre brisée, verre en place ou troué (inférieur à 5 mm) - film posé côté intérieur",
+      "COSE": "Déplombé",
+      "Extincteur": "Périmé",
+      "Marteau brise vitre": "Vitre cassée, dégradée, manquante"
+    },
+    "Eclairage": {
+      "Bandeau comptoir": "Ne fonctionne pas, cassé, dégradé",
+      "Spots": "Ne fonctionne pas",
+      "Eclairage latéral (voûte fond de bar)": "Ne fonctionne pas, manquant, cassé",
+      "Plan de travail": "Odeur de brûlé",
+      "Porte bar côté intérieur": "Ne fonctionne pas, manquant, cassé",
+      "Porte bar côté couloir": "Ne fonctionne pas, manquant, cassé"
+    },
+    "Habillage": {
+      "Cloison": "Cassée, dégradée, manquante",
+      "Pelliculage supérieur": "Sale, souillé, taché",
+      "Pelliculage inférieur": "Sale, souillé, taché",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Baguette recouvrement": "Cassée, dégradée, manquante",
+      "Décoration, pelliculage": "Cassé, dégradé, manquant",
+      "Grille élément filtrant": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Porte armoire électrique/Sono": "Problème ouverture/ fermeture, cassée, manquante",
+      "Trappe hotte d'extraction d'air": "Problème ouverture/ fermeture, cassée, manquante"
+    },
+    "Info/Communication": {
+      "Module sonorisation d'ambiance": "Prise USB cassée, dégradée, problème d'alimentation",
+      "Présentoir à journaux": "Problème de fixation, cassé, dégradé, manquant",
+      "Cadre PLV": "Cassé, dégradé, manquant",
+      "Signalétique": "MSG  Localisation inconnue, introuvable",
+      "Sonorisation": "Volume trop faible, trop fort"
+    },
+    "Porte office": {
+      "Grand vantail": "Problème de serrure",
+      "Petit vantail": "Problème de verrouillage (au carré)",
+      "Poignée de sûreté": "Problème de fixation, cassée, dégradée, manquante",
+      "Serrure-blocage": "Problème de serrure, cassée, dégradée, manquante",
+      "Vantail": "Cassée, dégradée, manquante"
+    },
+    "Pack inoui": {
+      "Retrait cmd horizontal": "Abîmé, dégradé, manquant",
+      "Retrait cmd vertical": "Abîmé, dégradé, manquant",
+      "LE BAR": "Abîmé, dégradé, manquant"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Four Business": {
+      "Prise électrique": "Fils apparents"
+    }
+  },
+  "Place": {
+    "Accessoires/ Environnement": {
+      "Boîte à déchets": "Cassée, dégradée, manquante",
+      "Patte à menottes": "Problème de fixation, cassée, dégradée, manquante",
+      "Patte d'accroche menottes": "Problème de fixation, cassée, dégradée, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Porte gobelet": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte objet": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte revue": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte veste": "Problème de fixation, cassé, dégradé, manquant",
+      "Prise USB": "Ne fonctionne pas, cassée, dégradée, manquante",
+      "Sangle tablette": "Problème de fixation, cassé, dégradé, manquant",
+      "Tablette": "Sale, souillée, tâchée",
+      "Filet vide poche": "Cassé, dégradé, manquant",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte bagage": "Problème de fixation, cassé, dégradé, manquant",
+      "Repose pieds": "Problème de fixation, cassé, dégradé, manquant",
+      "Store": "Problème de fixation, cassé, dégradé, manquant",
+      "Table vis-à-vis": "Problème de fixation, cassé, dégradé, manquant",
+      "Tablette vis-à-vis": "Sale, souillé, tâché, tagué",
+      "Tablette famille": "Sale, souillé, tâché",
+      "Table PMR": "Problème de fixation, cassé, dégradé, manquant"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact"
+    },
+    "Eclairage": {
+      "Eclairage blason (entre les vitres)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage latéral trumeau (vertical)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage plafond (balisage)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage voûte": "Ne fonctionne pas, manquant, cassé",
+      "Liseuse": "Odeur de brûlé",
+      "Eclairage latéral (au dessus des vitres)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage sol (balisage)": "Ne fonctionne pas, manquant, cassé",
+      "Lampe de table": "Problème de fixation",
+      "Liseuse/veilleuse": "Odeur de brûlé",
+      "Plafonnier": "Ne fonctionne pas, problème de fixation"
+    },
+    "Habillage": {
+      "Grille d'extraction inférieure": "Cassée, dégradée, manquante",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Grille ventilation": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Cloison": "Vitre cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau"
+    },
+    "Info/Communication": {
+      "ARS (Afficheur Réservation Siège)": "Cassé, dégradé, éteint, manquant",
+      "Support réservation de place": "Cassé, dégradé, manquant",
+      "Signalétique": "Dégradée, décollée, manquante",
+      "Fonction d'Appel (PMR)": "Ne fonctionne pas",
+      "Numérotation de place": "Cassée, dégradée, erronée, manquante",
+      "Sonorisation": "Volume trop faible, trop fort"
+    },
+    "Siège": {
+      "Accoudoir": "Cassé, dégradé, manquant",
+      "Assise": "Tuyau d'air apparent",
+      "Bâti": "Cassé, dégradé, instable",
+      "Bouton siège pivotant (PSH)": "Ne fonctionne pas, cassé, manquant",
+      "Dossier": "Tuyau d'air apparent",
+      "Mécanisme inclinaison/réglage": "Ne fonctionne pas, ne reste pas en position",
+      "Mécanisme pivotement (PSH)": "Ne fonctionne pas , ne reste pas en position",
+      "Repose tête": "Déchiré, brûlé, abîmé, usé",
+      "Séparateur de place ": "Cassé, dégradé, bloqué, manquant"
+    },
+    "Pack inoui": {
+      "Film Baie": "Abîmé, dégradé, manquant",
+      "WIFI": "Abîmé, dégradé, manquant",
+      "Ici valises": "Abîmé, dégradé, manquant",
+      "On est la pr vs": "Abîmé, dégradé, manquant"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    }
+  },
+  "Plateforme Accès": {
+    "Climatisation": {
+      "Chauffage": "Trop froid"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact",
+      "COSE": "Déplombé",
+      "Extincteur": "Périmé",
+      "Marteau brise vitre": "Vitre cassée, dégradée, manquante"
+    },
+    "Accessoires PMR": {
+      "Plateforme élévatrice": "Ne fonctionne pas, fuite d'air, bruyante",
+      "Casier de rangement siège de transfert": "Cassée, dégradée, manquante",
+      "Notice de montage siège transfert": "Manquante, déchirée",
+      "Sangle siège de transfert": "Problème de fixation, cassé, dégradé, manquant",
+      "Siège de transfert": "Cassé, dégradé, manquant"
+    },
+    "Info/Communication": {
+      "Présentoir à journaux": "Problème de fixation, cassé, dégradé, manquant",
+      "Bandeau signalétique d'orientation": "Cassé, dégradé, manquant, éteint",
+      "Cadre publicitaire": "Cassé, dégradé, manquant",
+      "Interphonie": "Problème de son",
+      "Signalétique": "Dégradée, décollée, manquante",
+      "Sonorisation": "Volume trop faible, trop fort",
+      "SIV intérieur": "Ne fonctionne pas, cassé, dégradé",
+      "AED (SIV extérieur)": "Ne fonctionne pas",
+      "Fonction d'Appel (PMR)": "Pas de tops sonores, pas d'affichage",
+      "AED (Afficheur Extérieur de Desserte)": "Ne fonctionne pas sur toute la rame",
+      "Console SIVE secondaire": "SIVE ne fonctionne pas sur toute la rame"
+    },
+    "Eclairage": {
+      "Luminaire latéral porte d'accès": "Problème d'ouverture, fermeture, verrouillage luminaire",
+      "Balisage": "Ne fonctionne pas",
+      "Luminaire latéral": "Odeur de brûlé",
+      "Eclairage Plafond": "Problème d'ouverture, fermeture, verrouillage luminaire",
+      "Lampe de table": "Odeur de brûlé"
+    },
+    "Accessoires/ Environnement": {
+      "Clayette inférieure": "Cassée, dégradée, manquante",
+      "Clayette supérieure": "Cassée, dégradée, manquante",
+      "Main courante": "Problème de fixation , bruyante, manquante",
+      "Casier colis presse": "Cassé, dégradé, manquant",
+      "Porte fiches sécurité": "Problème de fixation, cassé, dégradé, manquant",
+      "Strapontin": "Revêtement usé, déchiré, brûlé",
+      "Vestiaire": "Problème ouverture/ fermeture, cassé, manquant",
+      "Banquette": "Sale, souillé, tâché",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Poubelle": "Reste ouverte, ou bloquée",
+      "Table vis-à-vis": "Problème de fixation, cassé, dégradé, manquant",
+      "Dossier d'appui": "Souillé, tagué",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Tablette comptoir": "Sale, souillée, tâchée",
+      "Bac d'écoulement": "Bouché, cassé, dégradé, bonde manquante",
+      "Etagère": "Cassée, dégradée, manquante",
+      "Rideau métallique": "Problème de fixation, cassé, dégradé, manquant",
+      "Dispositif accroche chariot": "Cassé, dégradé, manquant",
+      "Etagère mobile": "Cassée, dégradée, manquante",
+      "Portillon": "Problème ouverture/ fermeture, cassé, manquant",
+      "Casier à bagages": "Cassé, dégradé, manquant",
+      "Distributeur de gel nettoyant": "La trappe ne ferme pas",
+      "Barre montoire": "Bruyante, manquante",
+      "Rampe": "Problème de fixation, bruyante, manquante"
+    },
+    "Habillage": {
+      "Cloison": "Vitre cassée, dégradée, manquante",
+      "Grille": "Cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Trappe technique": "Revêtement usé, déchiré, décollé",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte armoire électrique": "Vitre cassée, dégradée, manquante",
+      "Trappe extincteur": "Vitre cassée, dégradée",
+      "Trappe prise aspirateur": "Problème ouverture/ fermeture, cassée, manquante",
+      "Plaques intercirculation": "Problème de fixation, bruyantes",
+      "Soufflet": "Problème d'étanchéité, Infiltration d'eau",
+      "Marches d'entrée": "Revêtement usé, dégradé, manquant",
+      "Nez de marches": "Problème de fixation, cassé, dégradé, manquant",
+      "Marches": "Revêtement usé, déchiré, décollé, manquant",
+      "Capot": "Cassé, dégradé, manquant",
+      "Trappe plateforme élévatrice": "Problème ouverture/ fermeture, cassée, manquante",
+      "Bas de paroi": "Abîmé, troué, cassé, fissuré",
+      "Trappe Sono/Interph": "Problème ouverture/ fermeture, cassée, manquante",
+      "Trappe vitrée console SIVE": "Vitre cassée, dégradée"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Equipements chauds": {
+      "Chauffe eau Instantané": "Ne fonctionne pas, pb température, fuite d'eau"
+    },
+    "Equipements froids": {
+      "Meuble": "Problème pattes à cadenas",
+      "Porte": "Problème ouverture/ fermeture, cassée, manquante",
+      "Réfrigération": "Température affichée supérieure à 3°C",
+      "Signalétique": "Dégradée, décollée, manquante"
+    },
+    "Pack inoui": {
+      "Bandeau InOUI D": "Abîmé, dégradé, manquant",
+      "Bandeau InOUI G": "Abîmé, dégradé, manquant",
+      "Logo InOUI": "Abîmé, dégradé, manquant",
+      "Décrochez": "Abîmé, dégradé, manquant",
+      "Bandeau InOUI": "Abîmé, dégradé, manquant"
+    }
+  },
+  "Plateforme Intercirculation": {
+    "Climatisation": {
+      "Chauffage": "Trop froid"
+    },
+    "Eclairage": {
+      "Eclairage Latéral": "Ne fonctionne pas, manquant, cassé",
+      "Plafonnier": "Ne fonctionne pas, problème de fixation",
+      "Eclairage Plafond": "Problème d'ouverture, fermeture, verrouillage luminaire",
+      "Eclairage plan de travail": "Ne fonctionne pas, manquant, cassé",
+      "Liseuse/veilleuse": "Odeur de brûlé"
+    },
+    "Info/Communication": {
+      "Bandeau signalétique d'orientation": "Cassé, dégradé, manquant, éteint",
+      "Cadre publicitaire": "Cassé, dégradé, manquant",
+      "Signalétique": "MSG  Localisation inconnue, introuvable",
+      "Console SIVE secondaire": "SIVE ne fonctionne pas sur toute la rame",
+      "Sonorisation": "Volume trop faible, trop fort",
+      "Interphonie": "Problème de son"
+    },
+    "Accessoires/ Environnement": {
+      "Distributeur de gel nettoyant": "La trappe ne ferme pas",
+      "Main courante": "Problème de fixation , bruyante, manquante",
+      "Poubelle": "Trappe cassée, déformée, manquante",
+      "Poubelle collective": "Trappe cassée, déformée, manquante",
+      "Vestiaire": "Problème ouverture/ fermeture, cassé, manquant",
+      "Banquette": "Sale, souillé, tâché",
+      "Bac d'écoulement": "Bouché, cassé, dégradé, bonde manquante",
+      "Etagère": "Plateau manquant",
+      "Meuble poubelle": "Problème ouverture/ fermeture, cassée, manquante",
+      "Rideau métallique": "Problème de fixation, cassé, dégradé, manquant",
+      "Tablette relevable": "Sale, souillée, tâchée",
+      "Garde-fou": "Cassée, dégradée, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Vestiaire bar": "Problème ouverture/ fermeture, cassé, manquant"
+    },
+    "Habillage": {
+      "Cloison": "Cassée, dégradée, manquante",
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Plaques intercirculation": "Problème de fixation, bruyantes",
+      "Soufflet": "Problème d'étanchéité, Infiltration d'eau",
+      "Grille": "Cassée, dégradée, manquante",
+      "Trappe technique": "Revêtement usé, déchiré, décollé",
+      "Porte armoire électrique": "Vitre cassée, dégradée, manquante",
+      "Trappe extincteur": "Vitre cassée, dégradée",
+      "Pellicul. poubelle D": "Sale, souillé, taché",
+      "Pellicul. poubelle G": "Sale, souillé, taché",
+      "Trappe vitrée console SIVE": "Vitre cassée, dégradée",
+      "Trappe vitrée SIVE-Prise USB": "Vitre cassée, dégradée"
+    },
+    "Equipements froids": {
+      "Meuble": "Problème pattes à cadenas",
+      "Porte": "Problème pattes à cadenas",
+      "Réfrigération": "Température affichée supérieure à 3°C",
+      "Signalétique": "Repère dégradée, décollé, manquant"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Equipements chauds": {
+      "Four micro-onde": "Cassée, dégradée, manquante",
+      "Four Traditionnel": "Cassée, dégradée, dégradée"
+    },
+    "Equipements SECURITE": {
+      "Extincteur": "Périmé"
+    },
+    "Pack inoui": {
+      "Picto gourmands": "Abîmé, dégradé, manquant",
+      "Vers de nvx horizons": "Abîmé, dégradé, manquant",
+      "Voyagez léger": "Abîmé, dégradé, manquant",
+      "Décrochez": "Abîmé, dégradé, manquant",
+      "Prenez de la hauteur": "Abîmé, dégradé, manquant",
+      "Par ici les gourmands": "Abîmé, dégradé, manquant"
+    },
+    "Banquette": {
+      "Assise": "Sale, souillée, tâchée",
+      "Dossier inférieur": "Sale, souillé, tâché",
+      "Dossier supérieur": "Sale, souillé, tâché"
+    }
+  },
+  "Salle bar": {
+    "Pack inoui porte": {
+      "Picto gourmands": "Abîmé, dégradé, manquant"
+    },
+    "Climatisation": {
+      "Trop chaud": "La clim est en mode secours",
+      "Trop froid": "La clim est en mode secours"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Verre intérieur mosaïqué ET verre extérieur intact",
+      "Vitre porte chargement": "Vitre brisée, verre en place ou troué (inférieur à 5 mm) - film posé côté intérieur",
+      "COSE": "Déplombé",
+      "Extincteur": "Périmé",
+      "Marteau brise vitre": "Vitre cassée, dégradée, manquante",
+      "Boîtier DAE": "Cassé, dégradé, manquant"
+    },
+    "Porte de salle": {
+      "Bouton coup de poing d'ouverture pneumatique": "Fuite d'air",
+      "Bouton/poignée d'ouverture": " Ne fonctionne pas, cassé, dégradé",
+      "Fonctionnement": "Problème d'ouverture, fermeture",
+      "Porte": "Rayée, gravée",
+      "Robinet d'isolement porte": "Isolé",
+      "Capot": "Cassé, dégradé, manquant"
+    },
+    "Accessoires/ Environnement": {
+      "Vestiaire bar": "Problème ouverture/ fermeture, cassé, manquant",
+      "Distributeur de gel nettoyant": "La trappe ne ferme pas",
+      "Poubelle mange-debout": "Problème de fixation, cassée, dégradée, manquante",
+      "Banquette": "Sale, souillé, tâché",
+      "Dossier d'appui": "Souillé, tagué",
+      "Main courante": "Problème de fixation , bruyante, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Table mange-debout": "Problème de fixation, cassée, dégradée, manquante",
+      "Tablette": "Sale, souillée, tâchée",
+      "Table salle": "Problème de fixation, cassée, dégradée, manquante",
+      "Tabouret": "Problème de fixation, cassé, dégradé, manquant",
+      "Espace détente": "Revêtement usé, déchiré, brûlé",
+      "Espace Conso": "Revêtement usé, déchiré, brûlé"
+    },
+    "Eclairage": {
+      "Eclairage interciculation": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage latéral (au dessus des vitres)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage latéral (fond de salle)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage SECOURS": "Ne fonctionne pas, manquant, cassé",
+      "Spot comptoir": "Ne fonctionne pas",
+      "Bandeau comptoir": "Ne fonctionne pas, cassé, dégradé",
+      "Eclairage plafond (balisage)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage voûte": "Ne fonctionne pas, manquant, cassé",
+      "Lampe de table": "Problème de fixation",
+      "Lampe mange-debout": "Problème de fixation",
+      "Spots": "Ne fonctionne pas",
+      "Eclairage espace détente": "Ne fonctionne pas",
+      "Applique LED": "Ne fonctionne pas"
+    },
+    "Habillage": {
+      "Sol intercirculation": "Usé, déchiré, décollé, manquant",
+      "Grille": "Cassée, dégradée, manquante",
+      "Grille ventilation": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Sol": "Inondé",
+      "Vitre de séparation de salle": "Problème de fixation, cassée, dégradée, manquante",
+      "Voûte bois": "Problème de fixation, cassée, dégradée, manquante",
+      "Capot extincteur": "Cassé, dégradé, manquant",
+      "Cloison": "Cassée, dégradée, manquante",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Plafond intercirculation": "Problème d'étanchéité, Infiltration d'eau",
+      "Vitre de séparation table": "Problème de fixation, cassée, dégradée, manquante",
+      "Pelliculage": "Sale, souillé, taché"
+    },
+    "Info/Communication": {
+      "Porte menu": "Vitre cassée, rayée, manquante",
+      "Visualisation d'occupation WC": "Ne fonctionne pas, voyant cassé, abîmé",
+      "Cadre PLV": "Cassé, dégradé, manquant",
+      "Cadre publicitaire": "Cassé, dégradé, manquant",
+      "Signalétique": "MSG  Localisation inconnue, introuvable",
+      "Vitrine PLV": "Vitre Cassée, fissurée, rayée, gravée, manquante",
+      "AIV (Affichage Intérieur Voiture)": "VITRE Cassée, fissurée, rayée, gravée",
+      "Annonce SIVE (sonore ou visuel)": "Annonce erronée, interrompue, aucune annonce",
+      "SIVE - Prise USB": "Prise USB cassée, dégradée, manquante",
+      "Sonorisation": "Volume trop faible, trop fort"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise électrique": "Fils apparents"
+    },
+    "Pack inoui": {
+      "Logo InOUI": "Abîmé, dégradé, manquant",
+      "Quart de cercle rep2": "Abîmé, dégradé, manquant",
+      "Logo Miroir": "Abîmé, dégradé, manquant",
+      "Quart de cercle rep1": "Abîmé, dégradé, manquant",
+      "Commandez sur": "Abîmé, dégradé, manquant"
+    }
+  },
+  "Salle": {
+    "Climatisation": {
+      "Trop chaud": "La clim est en mode secours",
+      "Trop froid": "La clim est en mode secours"
+    },
+    "Equipements SECURITE": {
+      "Vitre latérale": "Rayées, gravées",
+      "Boîtier DAE": "Cassé, dégradé, manquant",
+      "Extincteur": "Périmé",
+      "Marteau brise vitre": "Vitre cassée, dégradée, manquante",
+      "Robinet d'isolement porte chargement": "Déplombé",
+      "Vitre porte chargement": "Vitre brisée, verre en place ou troué (inférieur à 5 mm) - film posé côté intérieur",
+      "COSE": "Déplombé",
+      "Echelle secours": "Vitre cassée, manquante"
+    },
+    "Porte de salle": {
+      "Porte": "Rayée, gravée",
+      "Bouton coup de poing d'ouverture pneumatique": "Fuite d'air",
+      "Bouton/poignée d'ouverture": " Ne fonctionne pas, cassé, dégradé",
+      "Fonctionnement": "Problème d'ouverture, fermeture",
+      "Robinet d'isolement porte": "Isolé",
+      "Capot": "Cassé, dégradé, manquant",
+      "Serrure": "Problème de fixation, cassée, dégradée, manquante",
+      "Condamnation AIR France": "Impossible à réaliser",
+      "Bandeau": "Ne fonctionne pas, cassé, dégradé"
+    },
+    "Porte local": {
+      "Poignée/commande porte": "Déplombée",
+      "Porte": "Rayée, gravée",
+      "Serrure": "Problème de verrouillage"
+    },
+    "Eclairage": {
+      "Eclairage Plafond": "Problème d'ouverture, fermeture, verrouillage luminaire",
+      "Balisage": "Ne fonctionne pas",
+      "Eclairage latéral (au dessus des vitres)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage NUIT": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage SECOURS": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage RÉDUIT": "Ne fonctionne pas, manquant, cassé",
+      "Bandeau comptoir": "Ne fonctionne pas, cassé, dégradé",
+      "Eclairage couloir": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage plafond (balisage)": "Ne fonctionne pas, manquant, cassé",
+      "Liseuse": "Ne fonctionne pas sur toute la remorque",
+      "Eclairage latéral trumeau (vertical)": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage voûte": "Ne fonctionne pas, manquant, cassé",
+      "Lampe de table": "Problème de fixation",
+      "Eclairage Bagagerie": "Ne fonctionne pas, manquant, cassé"
+    },
+    "Habillage": {
+      "Sol": "Usé, déchiré, décollé, manquant",
+      "Capot extincteur": "Cassé, dégradé, manquant",
+      "Cloison": "Vitre cassée, dégradée, manquante",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Revêtement usé, abimé, décollé",
+      "Vitre de séparation de salle": "Problème de fixation, cassée, dégradée, manquante",
+      "Capot porte de salle": "Cassé, dégradé, manquant",
+      "Cloison vitrée": "Vitre Cassée, dégradée, manquante",
+      "Grille ventilation": "Cassée, dégradée, manquante, dégagement de poussières",
+      "Support latéral": "Problème de fixation, cassé, dégradé, manquant",
+      "Barre d'appui": "Cassée, dégradée, manquante",
+      "Rambarde PMR": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte armoire électrique": "Problème ouverture/ fermeture, cassée, manquante",
+      "Bagagerie": "Cassée, dégradée, manquante, bruyante",
+      "Barre de protection grille": "Cassée, dégradée, manquante",
+      "Grille": "Cassée, dégradée, manquante",
+      "Vitre fond de salle": "Problème de fixation, cassée, dégradée, manquante",
+      "Bandeau": "Ne fonctionne pas, cassé, dégradé",
+      "Pellicul. poubelle D": "Sale, souillé, taché",
+      "Pellicul. poubelle G": "Sale, souillé, taché"
+    },
+    "Accessoires/ Environnement": {
+      "Main courante": "Problème de fixation , bruyante, manquante",
+      "Store": "Problème de fixation, cassé, dégradé, manquant",
+      "Strapontin": "Revêtement usé, déchiré, brûlé",
+      "Casier à bagages": "Cassé, dégradé, manquant",
+      "Meuble bagagerie": "Cassé, dégradé, bruyant",
+      "Casier de rangement": "Cassé, dégradé",
+      "Poubelle": "Trappe cassée, déformée, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Prise USB": "Ne fonctionne pas, cassée, dégradée, manquante",
+      "Boucle d'arrimage": "Cassée, dégradée, manquante",
+      "Sangle": "Cassée, dégradée, manquante",
+      "Poubelle collective": "Trappe cassée, déformée, manquante",
+      "Sangle vélo": "Problème de fixation, cassé, dégradé, manquant",
+      "Boîte à déchets": "Trappe manquante",
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Porte bagage": "Problème de fixation, cassé, dégradé, manquant",
+      "Table vis-à-vis": "Problème de fixation, cassé, dégradé, manquant",
+      "Miroir fond de salle": "Cassé, dégradé, manquant, bruyant",
+      "Distributeur de gel nettoyant": "La trappe ne ferme pas",
+      "Clayette escamotable": "Carré HS",
+      "Enrouleur et ceinture signalétique": "Problème de fixation, cassé, dégradé, manquant",
+      "Crochet accroche vélo": "Problème de fixation, cassé, dégradé, manquant",
+      "Boucle accroche vélo": "Problème de fixation, cassé, dégradé, manquant"
+    },
+    "Info/Communication": {
+      "Signalétique": "Cassée, dégradée, manquante",
+      "Numérotation de place": "Numérotation erronée sur toute la remorque",
+      "Sonorisation": "Volume trop faible, trop fort",
+      "Visualisation d'occupation WC": "Ne fonctionne pas, voyant cassé, abîmé",
+      "ARS (Afficheur Réservation Siège)": "Cassé, dégradé, aucun affichage dans la salle",
+      "Fonction d'Appel (PMR)": "Pas de tops sonores, pas d'affichage",
+      "AIV (Affichage Intérieur Voiture)": "Ne fonctionne pas, cassé, dégradé",
+      "Annonce SIVE (sonore ou visuel)": "Annonce erronée, interrompue, aucune annonce"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Fonctionnement partiel des prises de la salle",
+      "Prise électrique": "Fils apparents"
+    },
+    "Siège": {
+      "Accoudoir": "Cassé, dégradé, manquant",
+      "Mécanisme inclinaison/réglage": "Poignée de commande cassée",
+      "Assise": "Tuyau d'air apparent",
+      "Bâti": "Cassé, dégradé, instable",
+      "Dossier": "Tuyau d'air apparent",
+      "Repose tête": "Déchiré, brûlé, abîmé, usé"
+    },
+    "Accessoires PMR": {
+      "Casier de rangement siège de transfert": "Cassée, dégradée, manquante",
+      "Ceinture d'arrimage siège de transfert": "Cassée, dégradée, manquante",
+      "Passerelle de transfert": "Problème de fixation (attache cassée, dégradée, manquante)"
+    },
+    "Pack inoui": {
+      "WIFI": "Abîmé, dégradé, manquant",
+      "Logo InOUI": "Abîmé, dégradé, manquant",
+      "Picto bienvenue": "Abîmé, dégradé, manquant",
+      "Ici valises": "Abîmé, dégradé, manquant",
+      "Bandeau InOUI FS": "Abîmée, dégradée, manquante",
+      "Par ici les gourmands": "Abîmé, dégradé, manquant",
+      "On est la pr vs": "Abîmé, dégradé, manquant",
+      "Es. Vélo-Attachez vos ceintures": "Abîmé, dégradé, manquant",
+      "Es. Vélo-Baie": "Abîmé, dégradé, manquant",
+      "Es. Vélo-Notice": "Abîmé, dégradé, manquant",
+      "Es. Vélo-Plateforme": "Abîmé, dégradé, manquant",
+      "Es. Vélo-Sabot": "Abîmé, dégradé, manquant",
+      "Es.Vélo-Résa obligatoire": "Abîmé, dégradé, manquant",
+      "Fleche 2": "Abîmé, dégradé, manquant"
+    }
+  },
+  "Sanitaire": {
+    "Climatisation": {
+      "Chauffage": "Trop froid"
+    },
+    "Porte local": {
+      "Serrure": "Problème de verrouillage",
+      "Poignée/commande porte": "Ne fonctionne pas, cassée, dégradée, manquante",
+      "Porte": "Rayée, gravée",
+      "Dispositif de condamnation ": "Ne fonctionne pas, cassé, dégradé",
+      "Ouverture de secours": "Ne fonctionne pas, cassée, dégradée"
+    },
+    "Accessoires/ Environnement": {
+      "Patère": "Problème de fixation, cassée, dégradée, manquante",
+      "Distributeur de gel nettoyant": "La trappe ne ferme pas",
+      "Distributeur de papier toilette": "La porte/trappe du distributeur ne ferme pas",
+      "Main courante": "Problème de fixation , bruyante, manquante",
+      "Miroir": "Cassé, dégradé, manquant, bruyant",
+      "Patte d'arrimage": "Problème de fixation, cassée, dégradée, manquante",
+      "Poubelle": "Reste ouverte, ou bloquée",
+      "Savonnier": "Problème de fixation, cassé, dégradé, manquant",
+      "Sèche mains": "Ne fonctionne pas, cassé, dégradé, manquant",
+      "Table à langer": "Problème de fixation, cassé, dégradé, manquant",
+      "Porte sous lavabo": "Problème ouverture/ fermeture, cassée, manquante"
+    },
+    "Eclairage": {
+      "Eclairage Latéral": "Problème d'ouverture, fermeture, verrouillage luminaire",
+      "Eclairage lavabo": "Ne fonctionne pas, manquant, cassé",
+      "Eclairage WC": "Problème d'ouverture, fermeture, verrouillage luminaire"
+    },
+    "Habillage": {
+      "Cloison": "Cassée, dégradée, manquante",
+      "Grille": "Cassée, dégradée, manquante",
+      "Paroi": "Problème de fixation, cassée, dégradée, manquante",
+      "Plafond": "Problème d'étanchéité, Infiltration d'eau",
+      "Sol": "Inondé",
+      "Décoration, pelliculage": "Cassé, dégradé, manquant",
+      "Trappe savonnier": "Problème ouverture/ fermeture, cassée, manquante",
+      "Trappe Sèche mains": "Problème ouverture/ fermeture, cassée, manquante"
+    },
+    "Info/Communication": {
+      "Bouton d'appel (SOS PMR)": "Ne fonctionne pas, cassé, manquant",
+      "Voyant d'occupation": "Ne fonctionne pas, cassé, dégradé",
+      "Voyant rouge WC plein BPL(TEST)RET": "Ne fonctionne pas, cassé, dégradé",
+      "Signalétique": "Dégradée, décollée, manquante",
+      "Signalétique d'indisponibilité": "Manquante ou dégradée",
+      "Voyant WC plein BPL(TEST)RET": "Ne fonctionne pas, cassé, dégradé",
+      "Sonorisation": "Volume trop faible, trop fort"
+    },
+    "Lave-mains": {
+      "Ecoulement de l'eau": "L'eau ne coule pas",
+      "Lavabo": "Cassé, dégradé, bouché",
+      "Température de l'eau": "Trop froide"
+    },
+    "WC": {
+      "Chasse d'eau": "Cassée, dégradée, manquante",
+      "Ensemble cuvette": "Cassé, dégradé, manquant",
+      "Réservoir de rétention": "Réservoir vide et affichage N-MIN-WC-R01",
+      "Système WC inférieur": "Affichage WC-I-R-xx et WC condamné automatiquement",
+      "Système WC supérieur": "Affichage WC-S-R-xx et WC condamné automatiquement",
+      "Odeurs": "Odeurs incommodantes"
+    },
+    "Prise 220 Volts": {
+      "Alimentation 220V": "Ne fonctionne pas",
+      "Prise rasoir": "Fils apparents"
+    },
+    "Pack inoui": {
+      "Mon beau miroir": "Abîmé, dégradé, manquant"
+    }
+  },
+  "NaN": {
+    "nan": {
+      "NE SE DECLARE PAS DANS SIGNALEMENT": NaN
+    }
+  }
+}
