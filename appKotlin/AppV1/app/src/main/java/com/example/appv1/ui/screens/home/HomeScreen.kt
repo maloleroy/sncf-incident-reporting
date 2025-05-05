@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.RemoteInput
 import com.example.appv1.data.remote.DebugRemoteIncidentSynchronizer
 
 @OptIn(ExperimentalMaterial3Api::class)

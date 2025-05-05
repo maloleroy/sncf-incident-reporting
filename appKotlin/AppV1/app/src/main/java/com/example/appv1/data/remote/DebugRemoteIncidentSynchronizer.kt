@@ -4,12 +4,11 @@ import android.util.Log
 import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.data.SynchronizationCallback
 import com.example.appv1.data.SynchronizationStatus
+import com.example.appv1.domain.model.Incident
 import kotlinx.coroutines.delay
-import com.example.appv1.domain.model.Incident // Using the provided Incident definition
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.delay // Import delay for simulation
 
 /**
  * A debug implementation of [IncidentSynchronizer] that does nothing substantial.
