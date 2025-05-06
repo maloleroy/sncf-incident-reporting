@@ -21,13 +21,13 @@ class GemmaEngine(private val context: Context) {
 
 
     init {
+        Log.i("GemmaEngine", "Initializing LlmInference...")
         try {
             val options = LlmInferenceOptions.builder()
                 // Spécifiez uniquement le nom du fichier dans les assets
-                .setModelPath("gemma_2b_it_gpu_int8.tflite") // Assurez-vous que ce nom est correct
-                // .setMaxTokens(1024) // Optionnel
+                .setModelPath("/data/local/tmp/llm/gemma3-1b-it-int4.task")
                 //.setTemperature(0.7f) // setTemperature existe
-                // .setTopK(40) // Autre option possible
+                .setMaxTopK(64) // Autre option possible
                 .build()
             llmInference = LlmInference.createFromOptions(context, options)
             Log.i("GemmaEngine", "LlmInference initialized.")
