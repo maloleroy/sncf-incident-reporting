@@ -44,6 +44,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.DisposableEffect // Assurez-vous que cet import est présent
+import androidx.compose.runtime.rememberCoroutineScope // Assurez-vous que cet import est présent
+import kotlinx.coroutines.launch // Assurez-vous que cet import est présent
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
