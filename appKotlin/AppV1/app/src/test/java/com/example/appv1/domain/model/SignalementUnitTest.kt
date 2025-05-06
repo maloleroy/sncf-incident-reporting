@@ -45,11 +45,11 @@ class SignalementTest {
                 "lcnCode=D&" +
                 "reportDate=2024-05-14T04%3A32%3A58&" +
                 "location=Place&" +
-                "categoryLabel=Equipement%20SECURITE&" +
-                "organLabel=Vitre%20lat%C3%A9rale&" +
-                "physicalAndFunctionalFailure=Verre%20ext%C3%A9rieur%20fissur%C3%A9%2C%20impact%2C%20mosa%C3%AFque&" +
-                "svsiComment=WC%20HS&" +
-                "precisionN1=83%2C%2085"
+                "categoryLabel=Equipement+SECURITE&" +
+                "organLabel=Vitre+lat%C3%A9rale&" +
+                "physicalAndFunctionalFailure=Verre+ext%C3%A9rieur+fissur%C3%A9%2C+impact%2C+mosa%C3%AFque&" +
+                "svsiComment=WC+HS&" +
+                "precisionN1=83%2C+85"
 
         assertEquals(expected, result)
     }
@@ -92,10 +92,10 @@ class SignalementTest {
                 "codePanne=TEST123&" +
                 "lcnCode=X&" +
                 "reportDate=2024-05-14T04%3A32%3A58&" +
-                "location=Test%20Location&" +
-                "categoryLabel=Test%20Category&" +
-                "organLabel=Test%20Organ&" +
-                "physicalAndFunctionalFailure=Test%20Failure"
+                "location=Test+Location&" +
+                "categoryLabel=Test+Category&" +
+                "organLabel=Test+Organ&" +
+                "physicalAndFunctionalFailure=Test+Failure"
 
         assertEquals(expected, result)
         assertFalse(result.contains("level="))
@@ -127,13 +127,13 @@ class SignalementTest {
         val result = signalement.toRequest("https://api.special.com")
 
         // Then
-        assertTrue(result.contains("courseId=test%20%26%20course"))
+        assertTrue(result.contains("courseId=test+%26+course"))
         assertTrue(result.contains("codePanne=P%23123"))
         assertTrue(result.contains("lcnCode=A%26B"))
         assertTrue(result.contains("location=Paris%2FGare"))
         assertTrue(result.contains("categoryLabel=%C3%89quipement"))
         assertTrue(result.contains("organLabel=Porte%2FToilette"))
-        assertTrue(result.contains("physicalAndFunctionalFailure=D%C3%A9faillance%20%231"))
+        assertTrue(result.contains("physicalAndFunctionalFailure=D%C3%A9faillance+%231"))
         assertTrue(result.contains("svsiComment=Comment%3F"))
         assertTrue(result.contains("precisionN1=1%2F2"))
     }
