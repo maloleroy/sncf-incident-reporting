@@ -42,6 +42,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.DisposableEffect // Assurez-vous que cet import est présent
+import androidx.compose.runtime.rememberCoroutineScope // Assurez-vous que cet import est présent
+import kotlinx.coroutines.launch // Assurez-vous que cet import est présent
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,9 +65,22 @@ import java.util.Locale
 @Composable
 fun NewReportScreen(onBack: () -> Unit) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
+
     var reportText by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
     var isLoadingMistral by remember { mutableStateOf(false) }
+    var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
+    var isLoadingGemma by remember { mutableStateOf(false) }
+
+
+    // ----> 1. Initialiser GemmaEngine et gérer son cycle de vie <----
+    val gemmaEngine = remember { GemmaEngine(context) }
+    DisposableEffect(Unit) {
+        onDispose {
+            gemmaEngine.close() // Fermer l'engine quand l'écran est quitté
+        }
+    }
 
     /* ---------- 1) launcher pour l’Intent de reconnaissance vocale ---------- */
     val speechLauncher = rememberLauncherForActivityResult(
@@ -168,19 +184,72 @@ fun NewReportScreen(onBack: () -> Unit) {
                     .height(56.dp),
                 enabled = !isLoadingMistral // Désactiver pendant le chargement
             ) {
-                Text("Générer le rapport (Mistral)")
+                Text("Générer le rapport (Mistral - En ligne)")
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // ----> 4. Afficher la réponse générée ou le chargement <----
+            // ----> 2. Ajouter le bouton Gemma <----
+            Button(
+                onClick = {
+                    if (reportText.isNotBlank()) {
+                        isLoadingGemma = true
+                        generatedGemmaText = null
+                        // Réinitialiser aussi le texte Mistral
+                        generatedReportText = null
+                        scope.launch { // Utiliser la scope définie plus haut
+                            gemmaEngine.askAsync(
+                                prompt = reportText, // Utiliser le texte du rapport
+                                onSuccess = { result ->
+                                    generatedGemmaText = result
+                                    isLoadingGemma = false
+                                },
+                                onError = { error ->
+                                    generatedGemmaText = "Erreur Gemma: ${error.message}"
+                                    isLoadingGemma = false
+                                    Toast.makeText(context, "Erreur Gemma: ${error.message}", Toast.LENGTH_LONG).show()
+                                }
+                            )
+                        }
+                    } else { /* ... Toast ... */ }
+                },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
+                enabled = !isLoadingMistral && !isLoadingGemma // Désactiver si l'un ou l'autre charge
+            ) {
+                Text("Générer rapport (Gemma - Local)")
+            }
+
+
+            Spacer(Modifier.height(16.dp))
+
+            // ----> 3. Afficher les résultats (Mistral OU Gemma) <----
+
+            // Affichage chargement Mistral
             if (isLoadingMistral) {
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                Text("Génération Mistral en cours...", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (generatedReportText != null) {
                 NewReportScreenDivider()
                 Text("Rapport généré par Mistral :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
-                Text(generatedReportText!!) // Afficher le texte généré
+                Text(generatedReportText!!)
+            }
+
+            // Affichage chargement Gemma
+            if (isLoadingGemma) {
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                Text("Génération Gemma en cours...", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+            // Affichage résultat Gemma
+            else if (generatedGemmaText != null) {
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                Text("Rapport généré par Gemma :", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+                Text(generatedGemmaText!!)
             }
         }
     }
