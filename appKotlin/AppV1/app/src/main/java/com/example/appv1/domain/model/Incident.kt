@@ -63,17 +63,20 @@ enum class IncidentLocationPrecision1 {
     TRAVELERS,
 }
 
-enum class IncidentLocationPrecision2 {NONE}
+enum class IncidentLocationPrecision2 { NONE }
 
-enum class IncidentLocationPrecision3 {NONE}
+enum class IncidentLocationPrecision3 { NONE }
 
-enum class SubSystem { NONE, }
+enum class SubSystem {
+    NONE,
+}
 
 enum class IncidentFailure {
     NONE,
 }
 
 data class Incident(
+    val lastUpdate: Long = System.currentTimeMillis(),
     val location: IncidentLocation,
     val subSystem: SubSystem = SubSystem.NONE,
     val failure: IncidentFailure = IncidentFailure.NONE,
@@ -83,5 +86,9 @@ data class Incident(
 ) {
     override fun toString(): String {
         return "Incident(location=$location, subSystem=$subSystem, failure=$failure, comment='$comment', sealed=$sealed, t4Call=$t4Call)"
+    }
+
+    fun uid(): String {
+        return "${lastUpdate}_${location.main.name}_${location.precision1.name}_${location.precision2.name}_${location.precision3.name}"
     }
 }
