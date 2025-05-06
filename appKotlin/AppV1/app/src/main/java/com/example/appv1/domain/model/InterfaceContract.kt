@@ -71,7 +71,7 @@ data class Signalement(
             "subOrganLabel=${subOrganLabel?.encodeURL() ?: ""}"
         ).filter { !it.endsWith("=") } // Remove empty parameters
 
-        return "$baseUrl?${params.joinToString("&")}"
+        return if (params.isEmpty()) baseUrl else "$baseUrl?${params.joinToString("&")}"
     }
 
     // Helper extension function for URL encoding
