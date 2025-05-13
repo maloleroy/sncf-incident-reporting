@@ -1,7 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
 import torch
 from huggingface_hub import login
-from env.var import HF_TOKEN
+
 
 login(token=HF_TOKEN)
 
