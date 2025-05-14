@@ -48,18 +48,15 @@ class SubSystem(str, Enum):
 class IncidentFailure(str, Enum):
     NONE = "NONE"
 
-# Data class for IncidentLocation
-@dataclass
 class IncidentLocation(BaseModel):
+    id: int
     main: IncidentLocationMain
     precision1: IncidentLocationPrecision1 = IncidentLocationPrecision1.NONE
     precision2: IncidentLocationPrecision2 = IncidentLocationPrecision2.NONE
     precision3: IncidentLocationPrecision3 = IncidentLocationPrecision3.NONE
-    id: int = 0
 
-# Data class for Incident
-@dataclass
 class Incident(BaseModel):
+    id: int
     lastUpdate: int = int(datetime.now(UTC).timestamp() * 1000)  # Current time in milliseconds
     location: IncidentLocation
     subSystem: SubSystem = SubSystem.NONE
