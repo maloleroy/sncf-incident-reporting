@@ -20,19 +20,17 @@ async def create_incident(incident: Incident, db: Connection = Depends(get_db)):
     cursor = db.cursor()
 
     # Insert location data
-    cursor.execute("""
-        INSERT INTO incident_location (main, precision1, precision2, precision3)
-        VALUES (?, ?, ?, ?)
-    """, (incident.location.main, incident.location.precision1, incident.location.precision2, incident.location.precision3))
+    with open('sql/insert_location.sql', 'r') as file:
+        sql_query = file.read()
+        cursor.execute(sql_query, (incident.location.main, incident.location.precision1, incident.location.precision2, incident.location.precision3))
 
     # Get the ID of the inserted location
     location_id = cursor.lastrowid
 
     # Insert incident data
-    cursor.execute("""
-        INSERT INTO incidents (lastUpdate, location_id, subSystem, failure, comment, sealed, t4Call)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    """, (incident.lastUpdate, location_id, incident.subSystem, incident.failure, incident.comment, incident.sealed, incident.t4Call))
+    with open('sql/insert_incident.sql', 'r') as file:
+        sql_query = file.read()
+        cursor.execute(sql_query, (incident.lastUpdate, location_id, incident.subSystem, incident.failure, incident.comment, incident.sealed, incident.t4Call))
 
     db.commit()
 
@@ -41,12 +39,9 @@ async def create_incident(incident: Incident, db: Connection = Depends(get_db)):
 @app.get("/incidents/", response_model=List[Incident])
 async def read_incidents(db: Connection = Depends(get_db)):
     cursor = db.cursor()
-    cursor.execute("""
-        SELECT i.id as incident_id, i.lastUpdate, il.id as location_id, il.main, il.precision1, il.precision2, il.precision3,
-               i.subSystem, i.failure, i.comment, i.sealed, i.t4Call
-        FROM incidents i
-        JOIN incident_location il ON i.location_id = il.id
-    """)
+    with open('sql/read_incidents.sql', 'r') as file:
+        sql_query = file.read()
+        cursor.execute(sql_query)
     rows = cursor.fetchall()
 
     incidents = [

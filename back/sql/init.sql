@@ -29,5 +29,5 @@ INSERT INTO incidents (lastUpdate, location_id, subSystem, failure, comment, sea
 VALUES (strftime('%s','now')*1000, 1, 'NONE', 'NONE', 'Sample comment', FALSE, FALSE);
 
 -- Select example to retrieve incidents with location details
-SELECT * FROM incidents
-JOIN incident_location ON incidents.location_id = incident_location.id;
+-- SELECT * FROM incidents
+-- JOIN incident_location ON incidents.location_id = incident_location.id;
