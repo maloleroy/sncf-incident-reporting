@@ -27,13 +27,13 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.Divider
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -43,9 +43,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.DisposableEffect // Assurez-vous que cet import est présent
-import androidx.compose.runtime.rememberCoroutineScope // Assurez-vous que cet import est présent
-import kotlinx.coroutines.launch // Assurez-vous que cet import est présent
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -227,7 +224,7 @@ fun NewReportScreen(onBack: () -> Unit) {
 
             // Affichage chargement Mistral
             if (isLoadingMistral) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text("Génération Mistral en cours...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -240,14 +237,14 @@ fun NewReportScreen(onBack: () -> Unit) {
 
             // Affichage chargement Gemma
             if (isLoadingGemma) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text("Génération Gemma en cours...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             }
             // Affichage résultat Gemma
             else if (generatedGemmaText != null) {
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 Text("Rapport généré par Gemma :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(generatedGemmaText!!)
