@@ -64,3 +64,8 @@ class Incident(BaseModel):
     comment: str = ""
     sealed: bool = False
     t4Call: bool = False
+
+# Define Pydantic model for message structure
+class Message(BaseModel):
+    role: str
+    content: str
