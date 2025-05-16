@@ -23,6 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color // Import Color
+import androidx.compose.foundation.BorderStroke // <-- Ajoutez cet import
+import androidx.compose.material3.ButtonDefaults // <-- Ajoutez cet import
+
 import com.example.appv1.data.remote.DebugRemoteIncidentSynchronizer
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +69,7 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text("Nouveau signalement")
+                Text("Nouveau signalement - Mode vocal")
             }
             Spacer(Modifier.height(16.dp))
             OutlinedButton(
@@ -73,6 +77,21 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
+            ) {
+                Text("Nouveau signalement - Mode arborescence")
+            }
+            Spacer(Modifier.height(16.dp))
+            OutlinedButton(
+                onClick = onViewReports,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.Transparent,
+                    disabledContainerColor = Color.Gray,
+                ),
+                border = BorderStroke(1.dp, Color.Red)
             ) {
                 Text("Consulter les signalements")
             }
