@@ -37,6 +37,6 @@ data class MistralChatResponse(
 
 interface MistralApi {
     // Utilisation de l'endpoint officiel et des nouvelles data classes
-    @POST("v1/chat/completions") // <-- Endpoint officiel
+    @POST("mistral") // <-- Endpoint officiel
     suspend fun generateChatCompletion(@Body request: MistralChatRequest): MistralChatResponse // <-- Utilisation des nouvelles classes
 }
