@@ -4,6 +4,10 @@ from sqlite3 import Connection, connect, Row
 from typing import List
 from model import Incident, IncidentLocation
 
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 app = FastAPI()
 
 # Dependency to get a new database connection for each request
