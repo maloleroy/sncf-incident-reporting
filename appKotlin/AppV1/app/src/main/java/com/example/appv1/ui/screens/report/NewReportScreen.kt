@@ -174,7 +174,11 @@ fun NewReportScreen(onBack: () -> Unit) {
                             isLoadingMistral = false // Fin chargement
                         }
                     } else {
-                        Toast.makeText(context, "Veuillez entrer ou dicter une description.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Veuillez entrer ou dicter une description.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 },
                 modifier = Modifier
@@ -205,13 +209,20 @@ fun NewReportScreen(onBack: () -> Unit) {
                                 onError = { error ->
                                     generatedGemmaText = "Erreur Gemma: ${error.message}"
                                     isLoadingGemma = false
-                                    Toast.makeText(context, "Erreur Gemma: ${error.message}", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(
+                                        context,
+                                        "Erreur Gemma: ${error.message}",
+                                        Toast.LENGTH_LONG
+                                    ).show()
                                 }
                             )
                         }
-                    } else { /* ... Toast ... */ }
+                    } else { /* ... Toast ... */
+                    }
                 },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
                 enabled = !isLoadingMistral && !isLoadingGemma // Désactiver si l'un ou l'autre charge
             ) {
                 Text("Générer rapport (Gemma - Local)")
@@ -275,7 +286,9 @@ fun ChatScreen() {
     // ----> FIN Déclarations <----
 
 
-    Column(Modifier.fillMaxSize().padding(16.dp)) {
+    Column(Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         TextField(
             value = prompt, // prompt est maintenant défini
             onValueChange = { prompt = it },
@@ -297,9 +310,14 @@ fun ChatScreen() {
                                 isLoading = false // isLoading est défini
                             },
                             onError = { error ->
-                                answer = "Erreur: ${error.message}" // answer est défini, error.message existe
+                                answer =
+                                    "Erreur: ${error.message}" // answer est défini, error.message existe
                                 isLoading = false // isLoading est défini
-                                Toast.makeText(context, "Erreur Gemma: ${error.message}", Toast.LENGTH_LONG).show() // context et error.message sont définis
+                                Toast.makeText(
+                                    context,
+                                    "Erreur Gemma: ${error.message}",
+                                    Toast.LENGTH_LONG
+                                ).show() // context et error.message sont définis
                             }
                         )
                     }
