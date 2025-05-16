@@ -1,15 +1,31 @@
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from sqlite3 import Connection, connect, Row
-from typing import List
-from model import Incident, IncidentLocation, Message
+from typing import Optional
+from model import Incident, IncidentLocation, ChatRequest
 import requests
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
 app = FastAPI()
+security = HTTPBearer()
+
+PASSWORD_ENV_VAR = "PASSWORD"
+def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    load_dotenv()
+    expected_token = os.getenv("PASSWORD")
+    
+    if not expected_token:
+        raise HTTPException(status_code=500, detail="Server configuration error")
+    
+    if credentials.scheme.lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Invalid authentication scheme")
+    
+    if credentials.credentials != expected_token:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 # Dependency to get a new database connection for each request
 def get_db() -> Connection:
@@ -41,7 +57,7 @@ async def create_incident(incident: Incident, db: Connection = Depends(get_db)):
 
     return {"message": "Incident created successfully"}
 
-@app.get("/incidents/", response_model=List[Incident])
+@app.get("/incidents/", response_model=list[Incident])
 async def read_incidents(db: Connection = Depends(get_db)):
     cursor = db.cursor()
     with open('sql/read_incidents.sql', 'r') as file:
@@ -71,69 +87,115 @@ async def read_incidents(db: Connection = Depends(get_db)):
 
     return incidents
 
-@app.post("/mistral/")
-async def get_mistral_completions(messages: List[Message]):  # Accept list of Message objects
-    # Load and validate Mistral API key
-    mistral_api_key = os.getenv("MISTRAL_API_KEY")
-    if not mistral_api_key:
-        raise HTTPException(status_code=500, detail="Mistral API key not configured")
-
+def get_completions(model: str, messages: ChatRequest):
+    vars = require_environment_variables([get_env_var_name_from_model(model), PASSWORD_ENV_VAR])
     # Prepare headers and properly formatted messages
     headers = {
-        "Authorization": f"Bearer {mistral_api_key}",
+        "Authorization": f"Bearer {vars[get_env_var_name_from_model(model)]}",
         "Content-Type": "application/json"
     }
     data = {
-        "model": "mistral-small-latest",
-        "messages": [msg.dict() for msg in messages],  # Convert Pydantic models to dicts
+        "model": model,
+        "messages": [msg.dict() for msg in messages.messages],
     }
 
-    # Send request to Mistral's chat completions endpoint
     response = requests.post(
-        "https://api.mistral.ai/v1/chat/completions",  # Correct endpoint
+        get_base_url_from_model(model),
         headers=headers,
         json=data
     )
 
-    # Handle errors from Mistral API
     if response.status_code != 200:
         raise HTTPException(
             status_code=response.status_code,
-            detail=f"Mistral API error: {response.text}"
+            detail=f"LLM API error for model {model}: {response.text}"
         )
 
-    return response.json()
+    return {
+        "content": extract_llm_content(response.json())
+    }
+
+def get_base_url_from_model(model: str) -> str:
+    if model == "mistral-small-latest":
+        return "https://api.mistral.ai/v1/chat/completions"
+    elif model == "gpt-4o":
+        return "https://api.openai.com/v1/chat/completions"
+    raise HTTPException(
+        status_code=400,
+        detail=f"Unsupported model: {model}"
+    )
+
+def get_env_var_name_from_model(model: str) -> str:
+    if model == "mistral-small-latest":
+        return "MISTRAL_API_KEY"
+    elif model == "gpt-4o":
+        return "OPENAI_API_KEY"
+    raise HTTPException(
+        status_code=400,
+        detail=f"Unsupported model: {model}"
+    )
+
+def extract_llm_content(response_data: dict) -> str:
+    if "choices" not in response_data or len(response_data["choices"]) == 0:
+        raise HTTPException(
+            status_code=500,
+            detail="No choices returned from LLM API"
+        )
+    if "message" not in response_data["choices"][0]:
+        raise HTTPException(
+            status_code=500,
+            detail="No message in the first choice returned from LLM API"
+        )
+    if "content" not in response_data["choices"][0]["message"]:
+        raise HTTPException(
+            status_code=500,
+            detail="No content in the message returned from LLM API"
+        )
+    content = response_data["choices"][0]["message"]["content"]
+    if not isinstance(content, str):
+        raise HTTPException(
+            status_code=500,
+            detail="Invalid content type in the message returned from LLM API"
+        )
+    return content
+
+@app.post("/mistral/")
+async def get_mistral_completions(chat_request: ChatRequest, _: None = Depends(validate_token)):
+    return get_completions("mistral-small-latest", chat_request)
 
 @app.post("/openai/")
-async def get_openai_completion(messages: List[Message]):
-    # Validate API key
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if not openai_api_key:
-        raise HTTPException(status_code=500, detail="OPENAI_API_KEY not found in environment variables")
+async def get_openai_completion(chat_request: ChatRequest, _: None = Depends(validate_token)):
+    return get_completions("gpt-4o", chat_request)
 
-    # Prepare API request
-    headers = {
-        "Authorization": f"Bearer {openai_api_key}",
-        "Content-Type": "application/json"
-    }
-    
-    data = {
-        "model": "gpt-4o",
-        "messages": [msg.dict() for msg in messages],
-    }
+def require_environment_variables(var_names: list[str]) -> dict[str, str]:
+    required_vars = {}
+    for var_name in var_names:
+        if not os.getenv(var_name):
+            raise HTTPException(
+                status_code=500,
+                detail=f"{var_name} not found in environment variables"
+            )
+        required_vars[var_name] = os.getenv(var_name)
+    return required_vars
 
-    # Send request to OpenAI API
-    response = requests.post(
-        "https://api.openai.com/v1/chat/completions",
-        headers=headers,
-        json=data
-    )
-
-    # Handle API errors
-    if response.status_code != 200:
+def check_password(authorization: str, password: str):
+    # Verify authorization header
+    if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(
-            status_code=response.status_code,
-            detail=f"OpenAI API error: {response.text}"
+            status_code=401,
+            detail="Missing or invalid Authorization header: " + authorization
         )
 
-    return response.json()
+    try:
+        _, token = authorization.split(" ")
+    except ValueError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid Authorization header format"
+        )
+
+    if token != password:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid authentication credentials"
+        )

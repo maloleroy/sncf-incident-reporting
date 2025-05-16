@@ -69,3 +69,39 @@ class Incident(BaseModel):
 class Message(BaseModel):
     role: str
     content: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "role": "system",
+                    "content": "Tu es un assistant SNCF qui reformule les signalements des chefs de bord.",
+                }
+            ]
+        }
+    }
+
+class ChatRequest(BaseModel):
+    messages: list[Message] = Field(
+        default_factory=lambda: [
+            Message(role="system", content="Tu es un assistant SNCF qui reformule les signalements des chefs de bord."),
+            Message(role="user", content="Il y a un problème avec la porte du wagon 3.")
+        ]
+    )
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "Tu es un assistant SNCF qui reformule les signalements des chefs de bord.",
+                        },
+                        {
+                            "role": "user",
+                            "content": "Il y a un problème avec la porte du wagon 3."
+                        }
+                    ]
+                }
+            ]
+        }
+    }
