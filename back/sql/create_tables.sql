@@ -19,15 +19,3 @@ CREATE TABLE IF NOT EXISTS incidents (
     t4Call BOOLEAN NOT NULL,
     FOREIGN KEY (location_id) REFERENCES incident_location (id)
 );
-
--- Insert example for IncidentLocation
-INSERT INTO incident_location (main, precision1, precision2, precision3)
-VALUES ('ASCT_LOCAL', 'NONE', 'NONE', 'NONE');
-
--- Insert example for Incident
-INSERT INTO incidents (lastUpdate, location_id, subSystem, failure, comment, sealed, t4Call)
-VALUES (strftime('%s','now')*1000, 1, 'NONE', 'NONE', 'Sample comment', FALSE, FALSE);
-
--- Select example to retrieve incidents with location details
--- SELECT * FROM incidents
--- JOIN incident_location ON incidents.location_id = incident_location.id;
