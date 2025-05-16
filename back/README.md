@@ -8,10 +8,24 @@ Backend for the incident reporting app. Includes two main features
 
 Running this project requires having a valid `.env` file at its root. To get a grasp of the environment variables needed, look at the `.env.example` file.
 
-To run the project with `uv`, run
+To run the project with `uv` in a HTTPS-compatible way, start by generating (only once) a certificate with
 ```bash
-uv run fastapi run
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout key.pem -out cert.pem \
+  -config openssl.conf -extensions v3_req
+cp cert.pem ../appKotlin/AppV1/app/src/main/res/raw/cert.pem
 ```
+
+Note that this is not required if you don't want the backend to have HTTPS support, or if you are using an externally-provided SSL certificate (typically, a DNS domain-bound certificate in the case of a production environment).
+
+## Running
+
+Once you completed all the configuration steps once, run the server as many times as you want with
+```bash
+uv run uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-keyfile key.pem --ssl-certfile cert.pem
+```
+
+## Testing
 
 To run the integration tests, run
 ```bash
@@ -25,3 +39,4 @@ The project is managed using `uv` for its speed and reliability.
 - Pydantic, for scheme definition
 - SQLite 3, as a DB
 - PyTest, for integration tests (using `httpx` and `fastapi.testclient`)
+- OpenSSL for localhost HTTPS

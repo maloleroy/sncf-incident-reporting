@@ -8,3 +8,5 @@
 *.log
 *.env
 **/.pytest_cache/
+cert.pem
+key.pem
