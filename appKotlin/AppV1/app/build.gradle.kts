@@ -7,8 +7,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-// Fonction pour lire les propriétés locales
-fun getApiKey(propertyKey: String): String {
+fun getBackendUrl(propertyKey: String): String {
+    val properties = Properties() // Use the imported class directly
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(FileInputStream(localPropertiesFile)) // Use the imported class directly
+        return properties.getProperty(propertyKey, "")
+    }
+    return ""
+}
+
+fun getBackendPassword(propertyKey: String): String {
     val properties = Properties() // Use the imported class directly
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
@@ -28,8 +37,10 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        val mistralApiKey = getApiKey("MISTRAL_API_KEY")
-        buildConfigField("String", "MISTRAL_API_KEY", "\"$mistralApiKey\"")
+        val backendUrl = getBackendUrl("BACKEND_URL")
+        buildConfigField("String", "BACKEND_URL", "\"$backendUrl\"")
+        val backendPassword = getBackendPassword("BACKEND_PASSWORD")
+        buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
