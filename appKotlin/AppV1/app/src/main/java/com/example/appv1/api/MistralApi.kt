@@ -3,12 +3,6 @@ package com.example.appv1.api
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-data class ReportRequest(val text: String)
-data class ReportResponse(val success: Boolean, val message: String)
-
-// --- Structures de données pour l'API Mistral Chat Completions ---
-
-// Message dans la conversation
 data class ChatMessage(
     val role: String, // "user", "assistant", "system"
     val content: String
@@ -23,20 +17,15 @@ data class MistralChatRequest(
     val stream: Boolean? = false    // Optional: Set to false for single response
 )
 
-// Réponse de l'API Chat Completions (structure simplifiée)
 data class MistralChatChoice(
     val message: ChatMessage
 )
 
-data class MistralChatResponse(
-    val id: String,
-    val model: String,
-    val choices: List<MistralChatChoice>,
-    // Include other fields as needed (e.g., usage statistics)
+data class ChatResponse(
+    val content: String,
 )
 
 interface MistralApi {
-    // Utilisation de l'endpoint officiel et des nouvelles data classes
-    @POST("mistral") // <-- Endpoint officiel
-    suspend fun generateChatCompletion(@Body request: MistralChatRequest): MistralChatResponse // <-- Utilisation des nouvelles classes
+    @POST("/mistral")
+    suspend fun generateChatCompletion(@Body request: MistralChatRequest): ChatResponse // <-- Utilisation des nouvelles classes
 }

@@ -57,6 +57,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -358,21 +359,22 @@ private fun sendReportToMistral(
     CoroutineScope(Dispatchers.IO).launch {
         try {
             // Appeler le nouvel endpoint
-            val response = RetrofitInstance.api.generateChatCompletion(chatRequest)
+            val response = RetrofitInstance.getApi(context).generateChatCompletion(chatRequest)
 
             // Traiter la réponse (prendre le premier choix par exemple)
-            val generatedText =
-                response.choices.firstOrNull()?.message?.content ?: "Aucune réponse générée."
-
+            val generatedText = response.content
             withContext(Dispatchers.Main) {
                 onResult(generatedText) // Appeler la lambda avec le résultat
             }
-        } catch (e: Exception) {
-            Log.e("MistralAPI", "Error calling Mistral API", e)
+        } catch (e: IOException) { // Catch only network errors (IOException)
+            Log.e("MistralAPI", "Network error calling Mistral API", e)
             withContext(Dispatchers.Main) {
                 // Retourner un message d'erreur via la lambda
                 onResult("Erreur réseau : ${e.message}")
             }
+        } catch (e: Exception) { // Let other exceptions propagate
+            Log.e("MistralAPI", "Unexpected error calling Mistral API", e)
+            throw e // Re-throw the exception
         }
     }
 }
