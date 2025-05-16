@@ -27,8 +27,20 @@ def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)
     if credentials.credentials != expected_token:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+def initialize_db():
+    conn = connect('incidents.db')
+    cursor = conn.cursor()
+    # Create tables if they don't exist
+    with open('sql/create_tables.sql', 'r') as file:
+        sql_query = file.read()
+        cursor.executescript(sql_query)
+    conn.commit()
+    conn.close()
+
 # Dependency to get a new database connection for each request
 def get_db() -> Connection:
+    if not os.path.exists('incidents.db'):
+        initialize_db()
     conn = connect('incidents.db', check_same_thread=False)
     conn.row_factory = Row  # Enable row factory to access columns by name
     try:
