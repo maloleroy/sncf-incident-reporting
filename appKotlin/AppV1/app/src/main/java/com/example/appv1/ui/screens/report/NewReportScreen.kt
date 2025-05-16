@@ -133,7 +133,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 onValueChange = { reportText = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(300.dp),
                 placeholder = { Text("Décrivez votre signalement ici…") },
                 label = { Text("Description initiale") } // Ajout d'un label
 
@@ -160,8 +160,6 @@ fun NewReportScreen(onBack: () -> Unit) {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Speech to Text")
-                Spacer(Modifier.width(8.dp))
-                Text("Speech-to-Text")
             }
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
