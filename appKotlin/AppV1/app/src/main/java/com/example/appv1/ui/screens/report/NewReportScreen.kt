@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.appv1.GemmaEngine
 import com.example.appv1.api.ChatMessage
-import com.example.appv1.api.MistralChatRequest
+import com.example.appv1.api.ChatRequest
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +68,7 @@ fun NewReportScreen(onBack: () -> Unit) {
 
     var reportText by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
-    var isLoadingMistral by remember { mutableStateOf(false) }
+    var isOnlineAILoading by remember { mutableStateOf(false) }
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
 
@@ -168,11 +168,11 @@ fun NewReportScreen(onBack: () -> Unit) {
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
                     if (reportText.isNotBlank()) {
-                        isLoadingMistral = true // Début chargement
+                        isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        sendReportToMistral(reportText, context) { result ->
+                        sendReportToAI(reportText, context) { result ->
                             generatedReportText = result // Mettre à jour l'état avec le résultat
-                            isLoadingMistral = false // Fin chargement
+                            isOnlineAILoading = false // Fin chargement
                         }
                     } else {
                         Toast.makeText(
@@ -185,9 +185,9 @@ fun NewReportScreen(onBack: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                enabled = !isLoadingMistral // Désactiver pendant le chargement
+                enabled = !isOnlineAILoading // Désactiver pendant le chargement
             ) {
-                Text("Générer le rapport (Mistral - En ligne)")
+                Text("Générer le rapport par IA (en ligne)")
             }
 
             Spacer(Modifier.height(16.dp))
@@ -198,7 +198,6 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (reportText.isNotBlank()) {
                         isLoadingGemma = true
                         generatedGemmaText = null
-                        // Réinitialiser aussi le texte Mistral
                         generatedReportText = null
                         scope.launch { // Utiliser la scope définie plus haut
                             gemmaEngine.askAsync(
@@ -224,7 +223,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                enabled = !isLoadingMistral && !isLoadingGemma // Désactiver si l'un ou l'autre charge
+                enabled = !isOnlineAILoading && !isLoadingGemma // Désactiver si l'un ou l'autre charge
             ) {
                 Text("Générer rapport (Gemma - Local)")
             }
@@ -232,17 +231,17 @@ fun NewReportScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
 
-            // ----> 3. Afficher les résultats (Mistral OU Gemma) <----
+            // ----> 3. Afficher les résultats <----
 
-            // Affichage chargement Mistral
-            if (isLoadingMistral) {
+            // Affichage chargement IA
+            if (isOnlineAILoading) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Génération Mistral en cours...", style = MaterialTheme.typography.titleMedium)
+                Text("Génération en cours...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (generatedReportText != null) {
                 NewReportScreenDivider()
-                Text("Rapport généré par Mistral :", style = MaterialTheme.typography.titleMedium)
+                Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(generatedReportText!!)
             }
@@ -333,7 +332,7 @@ fun ChatScreen() {
     }
 }
 
-private fun sendReportToMistral(
+private fun sendReportToAI(
     reportText: String,
     context: Context,
     onResult: (String) -> Unit // Lambda pour retourner le résultat
@@ -343,37 +342,32 @@ private fun sendReportToMistral(
         return
     }
 
-    // Construire la requête pour Mistral Chat API
-    val chatRequest = MistralChatRequest(
-        model = "mistral-small-latest", // Ou un autre modèle
+    // Construire la requête pour Chat API
+    val chatRequest = ChatRequest(
         messages = listOf(
             ChatMessage(
                 role = "system",
                 content = "Tu es un assistant SNCF qui reformule les signalements des chefs de bord."
-            ), // Instruction système (optionnel)
-            ChatMessage(role = "user", content = reportText) // Le texte du chef de bord
+            ),
+            ChatMessage(role = "user", content = reportText)
         )
     )
 
-    // Utilisation de CoroutineScope pour effectuer l'appel réseau
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            // Appeler le nouvel endpoint
             val response = RetrofitInstance.getApi(context).generateChatCompletion(chatRequest)
 
-            // Traiter la réponse (prendre le premier choix par exemple)
-            val generatedText = response.content
             withContext(Dispatchers.Main) {
-                onResult(generatedText) // Appeler la lambda avec le résultat
+                onResult(response.content)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
-            Log.e("MistralAPI", "Network error calling Mistral API", e)
+            Log.e("AiApi", "Network error calling AI API", e)
             withContext(Dispatchers.Main) {
                 // Retourner un message d'erreur via la lambda
                 onResult("Erreur réseau : ${e.message}")
             }
         } catch (e: Exception) { // Let other exceptions propagate
-            Log.e("MistralAPI", "Unexpected error calling Mistral API", e)
+            Log.e("AiApi", "Unexpected error calling AI API", e)
             throw e // Re-throw the exception
         }
     }

@@ -41,6 +41,8 @@ android {
         buildConfigField("String", "BACKEND_URL", "\"$backendUrl\"")
         val backendPassword = getBackendPassword("BACKEND_PASSWORD")
         buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
+        val backendAiRoute = getBackendUrl("BACKEND_AI_ROUTE")
+        buildConfigField("String", "BACKEND_AI_ROUTE", "\"$backendAiRoute\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

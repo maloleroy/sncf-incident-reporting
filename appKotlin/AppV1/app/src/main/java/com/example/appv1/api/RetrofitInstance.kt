@@ -57,12 +57,12 @@ object RetrofitInstance {
     }
 
     // Lazy-initialized API instance (requires a Context)
-    fun getApi(context: Context): MistralApi {
+    fun getApi(context: Context): ChatApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(createSecureClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(MistralApi::class.java)
+            .create(ChatApiService::class.java)
     }
 }
