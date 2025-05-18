@@ -74,3 +74,13 @@ def get_incidents_defaillance(cursor, organes, locn3, loc, locn2, locn1, cat):
         print(ligne)
         defaillance += ligne[0] + ","
     return defaillance
+
+def get_incidents_localisation(cursor, localisation):
+    # Insertion de données
+    cursor.execute("INSERT INTO utilisateurs (nom, age) VALUES (?, ?)", ("Alice", 30))
+
+    # Lecture des données
+    cursor.execute("SELECT * FROM utilisateurs")
+    resultats = cursor.fetchall()
+    for ligne in resultats:
+        print(ligne)
