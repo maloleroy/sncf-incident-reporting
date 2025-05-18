@@ -15,7 +15,7 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # --- BDD et GPT ---
 def get_incidents_voiture():
-    conn = sqlite3.connect("/Users/margauxlanglois/Documents/SNCF/s2025p2-mobile-app-incidents/arborescence_analyse/DBs/incidents.db")
+    conn = sqlite3.connect("arborescence_analyse/DBs/incidents.db")
     cursor = conn.cursor()
     return conn, cursor 
 
@@ -59,6 +59,26 @@ def get_response(message, rame, voiture):
     rep = ask_openai(prompt)
     return rep
 
+def wrap_text(text, font, max_width):
+    """Découpe le texte pour qu'il tienne dans une largeur donnée."""
+    words = text.split(' ')
+    lines = []
+    current_line = ''
+    
+    for word in words:
+        test_line = current_line + word + ' '
+        if font.size(test_line)[0] <= max_width:
+            current_line = test_line
+        else:
+            lines.append(current_line)
+            current_line = word + ' '
+    
+    if current_line:
+        lines.append(current_line)
+    
+    return lines
+
+
 # --- Pygame GUI ---
 pygame.init()
 WIDTH, HEIGHT = 800, 600
@@ -98,10 +118,13 @@ def draw():
 
     # Affichage réponse
     y = 280
-    for line in response_text.splitlines():
-        line_surf = font.render(line, True, (0, 0, 0))
-        screen.blit(line_surf, (50, y))
-        y += 30
+    if response_text:
+        wrapped_lines = wrap_text(response_text, font, 700)  # 700px max width
+        for line in wrapped_lines:
+            line_surf = font.render(line, True, (0, 0, 0))
+            screen.blit(line_surf, (50, y))
+            y += 30
+
 
     pygame.display.flip()
 
