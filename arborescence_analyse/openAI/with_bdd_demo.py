@@ -17,10 +17,9 @@ def get_incidents_voiture():
 
 
 def get_incidents_objets(cursor, voiture, rame):
-    cursor.execute(
-        """
+    cursor.execute(f"""
         SELECT localisation, categorie, organe, precision_n2, precision_n3, sous_organe, defaillance
-        FROM DASYE_eau_incidents
+        FROM {voiture}
         WHERE rames LIKE '%' || ? || '%';
     """,
         (rame,),
