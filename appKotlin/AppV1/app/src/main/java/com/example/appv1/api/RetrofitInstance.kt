@@ -57,12 +57,21 @@ object RetrofitInstance {
     }
 
     // Lazy-initialized API instance (requires a Context)
-    fun getApi(context: Context): ChatApiService {
+    fun getChatApiService(context: Context): ChatApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(createSecureClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ChatApiService::class.java)
+    }
+
+    fun getIncidentObjectsListApiService(context: Context): IncidentObjectsListApiService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .client(createSecureClient(context))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(IncidentObjectsListApiService::class.java)
     }
 }

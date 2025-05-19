@@ -382,15 +382,21 @@ private fun sendReportToAI(
         messages = listOf(
             ChatMessage(
                 role = "system",
-                content = "Tu es un assistant SNCF qui reformule les signalements des chefs de bord."
+                content = "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."
             ),
-            ChatMessage(role = "user", content = reportText)
+            ChatMessage(role = "user", content = """
+Transcription :
+${reportText}
+
+⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
+Si tu n'es pas sûr, écris : Je ne sais pas.""")
         )
     )
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = RetrofitInstance.getApi(context).generateChatCompletion(chatRequest)
+            val objs = RetrofitInstance.getIncidentObjectsListApiService(context).getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
+            val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
 
             withContext(Dispatchers.Main) {
                 onResult(response.content)
