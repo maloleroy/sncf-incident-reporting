@@ -189,10 +189,10 @@ fun NewReportScreen(onBack: () -> Unit) {
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                    if (reportText.isNotBlank()) {
+                    if (reportText.isNotBlank() && trainType.isNotBlank() && trainNumber.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        sendReportToAI(reportText, context) { result ->
+                        sendReportToAI(reportText, trainType, trainNumber, context) { result ->
                             generatedReportText = result // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
@@ -356,11 +356,21 @@ fun ChatScreen() {
 
 private fun sendReportToAI(
     reportText: String,
+    trainType: String,
+    trainNumber: String,
     context: Context,
     onResult: (String) -> Unit // Lambda pour retourner le résultat
 ) {
     if (reportText.isBlank()) {
         Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (trainType.isBlank()) {
+        Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (trainNumber.isBlank()) {
+        Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
         return
     }
 

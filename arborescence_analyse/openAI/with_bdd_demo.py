@@ -13,34 +13,47 @@ key = keys["OPENAI_SNCF"]
 os.environ["OPENAI_API_KEY"] = key
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
+
 # --- BDD et GPT ---
 def get_incidents_voiture():
-    conn = sqlite3.connect("arborescence_analyse/DBs/incidents.db")
+    conn = sqlite3.connect("../DBs/incidents.db")
     cursor = conn.cursor()
-    return conn, cursor 
+    return conn, cursor
+
 
 def get_incidents_objets(cursor, voiture, rame):
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT localisation, categorie, organe, precision_n2, precision_n3, sous_organe, defaillance
         FROM DASYE_eau_incidents
         WHERE rames LIKE '%' || ? || '%';
-    """, (rame, ))
+    """,
+        (rame,),
+    )
     response = cursor.fetchall()
     return response
 
+
 def prompt_openai_objects(list_objects, message):
     messages = [
-        {"role": "system", "content": "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."},
-        {"role": "user", "content": f"""Voici les objets possibles :
+        {
+            "role": "system",
+            "content": "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident.",
+        },
+        {
+            "role": "user",
+            "content": f"""Voici les objets possibles :
 {list_objects}
 
 Transcription :
 {message}
 
 ⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
-Si tu n'es pas sûr, écris : Je ne sais pas."""}
+Si tu n'es pas sûr, écris : Je ne sais pas.""",
+        },
     ]
     return messages
+
 
 def ask_openai(messages):
     response = client.chat.completions.create(
@@ -48,6 +61,7 @@ def ask_openai(messages):
         messages=messages,
     )
     return response.choices[0].message.content
+
 
 def get_response(message, rame, voiture):
     conn, cursor = get_incidents_voiture()
@@ -59,23 +73,24 @@ def get_response(message, rame, voiture):
     rep = ask_openai(prompt)
     return rep
 
+
 def wrap_text(text, font, max_width):
     """Découpe le texte pour qu'il tienne dans une largeur donnée."""
-    words = text.split(' ')
+    words = text.split(" ")
     lines = []
-    current_line = ''
-    
+    current_line = ""
+
     for word in words:
-        test_line = current_line + word + ' '
+        test_line = current_line + word + " "
         if font.size(test_line)[0] <= max_width:
             current_line = test_line
         else:
             lines.append(current_line)
-            current_line = word + ' '
-    
+            current_line = word + " "
+
     if current_line:
         lines.append(current_line)
-    
+
     return lines
 
 
@@ -97,10 +112,11 @@ inputs = {
 
 response_text = ""
 
+
 def draw():
     screen.fill((255, 255, 255))
     title = font.render("Assistant Incidents SNCF", True, (0, 0, 0))
-    screen.blit(title, (WIDTH//2 - title.get_width()//2, 10))
+    screen.blit(title, (WIDTH // 2 - title.get_width() // 2, 10))
 
     y = 50
     for label, data in inputs.items():
@@ -108,7 +124,7 @@ def draw():
         screen.blit(label_surf, (50, y))
         pygame.draw.rect(screen, (200, 200, 200), data["rect"], 2)
         text_surface = font.render(data["text"], True, (0, 0, 0))
-        screen.blit(text_surface, (data["rect"].x+5, data["rect"].y+5))
+        screen.blit(text_surface, (data["rect"].x + 5, data["rect"].y + 5))
         y += 50
 
     # Bouton Envoyer
@@ -125,8 +141,8 @@ def draw():
             screen.blit(line_surf, (50, y))
             y += 30
 
-
     pygame.display.flip()
+
 
 while True:
     for event in pygame.event.get():
