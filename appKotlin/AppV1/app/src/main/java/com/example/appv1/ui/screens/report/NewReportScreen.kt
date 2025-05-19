@@ -66,6 +66,8 @@ fun NewReportScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
+    var trainType by remember { mutableStateOf("") }
+    var trainNumber by remember { mutableStateOf("") }
     var reportText by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
     var isOnlineAILoading by remember { mutableStateOf(false) }
@@ -129,6 +131,26 @@ fun NewReportScreen(onBack: () -> Unit) {
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
+            // Champ pour le type de train
+            OutlinedTextField(
+                value = trainType,
+                onValueChange = { trainType = it },
+                label = { Text("Type de train") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
+            // Champ pour le numéro de rame
+            OutlinedTextField(
+                value = trainNumber,
+                onValueChange = { trainNumber = it },
+                label = { Text("Numéro de rame") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
             OutlinedTextField(
                 value = reportText,
                 onValueChange = { reportText = it },
