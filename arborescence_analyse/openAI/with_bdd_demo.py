@@ -1,18 +1,13 @@
 import pygame
 import sys
-import json
-import os
+from os import getenv
 import sqlite3
 from openai import OpenAI
+from dotenv import load_dotenv
 
 # --- OpenAI setup ---
-with open("../../env/keys.json", "r", encoding="utf-8") as f:
-    keys = json.load(f)
-
-key = keys["OPENAI_SNCF"]
-os.environ["OPENAI_API_KEY"] = key
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # --- BDD et GPT ---
 def get_incidents_voiture():
