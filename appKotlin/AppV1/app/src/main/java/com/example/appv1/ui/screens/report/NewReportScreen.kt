@@ -217,45 +217,6 @@ fun NewReportScreen(onBack: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
 
-            // ----> 2. Ajouter le bouton Gemma <----
-            // Button(
-            //     onClick = {
-            //         if (reportText.isNotBlank()) {
-            //             isLoadingGemma = true
-            //             generatedGemmaText = null
-            //             generatedReportText = null
-            //             scope.launch { // Utiliser la scope définie plus haut
-            //                 gemmaEngine.askAsync(
-            //                     prompt = reportText, // Utiliser le texte du rapport
-            //                     onSuccess = { result ->
-            //                         generatedGemmaText = result
-            //                         isLoadingGemma = false
-            //                     },
-            //                     onError = { error ->
-            //                         generatedGemmaText = "Erreur Gemma: ${error.message}"
-            //                         isLoadingGemma = false
-            //                         Toast.makeText(
-            //                             context,
-            //                             "Erreur Gemma: ${error.message}",
-            //                             Toast.LENGTH_LONG
-            //                         ).show()
-            //                     }
-            //                 )
-            //             }
-            //         } else { /* ... Toast ... */
-            //         }
-            //     },
-            //     modifier = Modifier
-            //         .fillMaxWidth()
-            //         .height(56.dp),
-            //     enabled = !isOnlineAILoading && !isLoadingGemma // Désactiver si l'un ou l'autre charge
-            // ) {
-            //     Text("Générer rapport (Gemma - Local)")
-            // }
-
-
-            Spacer(Modifier.height(16.dp))
-
             // ----> 3. Afficher les résultats <----
 
             // Affichage chargement IA
