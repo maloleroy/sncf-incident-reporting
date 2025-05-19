@@ -180,12 +180,15 @@ fun NewReportScreen(onBack: () -> Unit) {
                         }
                     }
                 },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .height(56.dp)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Speech to Text")
-                Spacer(Modifier.width(8.dp))
-                Text("Speech-to-Text")
+                //Spacer(Modifier.width(8.dp))
+                //Text("Speech-to-Text")
             }
+            Spacer(Modifier.height(56.dp))
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
@@ -209,46 +212,46 @@ fun NewReportScreen(onBack: () -> Unit) {
                     .height(56.dp),
                 enabled = !isOnlineAILoading // Désactiver pendant le chargement
             ) {
-                Text("Générer le rapport par IA (en ligne)")
+                Text("Générer le rapport par IA")
             }
 
             Spacer(Modifier.height(16.dp))
 
             // ----> 2. Ajouter le bouton Gemma <----
-            Button(
-                onClick = {
-                    if (reportText.isNotBlank()) {
-                        isLoadingGemma = true
-                        generatedGemmaText = null
-                        generatedReportText = null
-                        scope.launch { // Utiliser la scope définie plus haut
-                            gemmaEngine.askAsync(
-                                prompt = reportText, // Utiliser le texte du rapport
-                                onSuccess = { result ->
-                                    generatedGemmaText = result
-                                    isLoadingGemma = false
-                                },
-                                onError = { error ->
-                                    generatedGemmaText = "Erreur Gemma: ${error.message}"
-                                    isLoadingGemma = false
-                                    Toast.makeText(
-                                        context,
-                                        "Erreur Gemma: ${error.message}",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            )
-                        }
-                    } else { /* ... Toast ... */
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                enabled = !isOnlineAILoading && !isLoadingGemma // Désactiver si l'un ou l'autre charge
-            ) {
-                Text("Générer rapport (Gemma - Local)")
-            }
+            // Button(
+            //     onClick = {
+            //         if (reportText.isNotBlank()) {
+            //             isLoadingGemma = true
+            //             generatedGemmaText = null
+            //             generatedReportText = null
+            //             scope.launch { // Utiliser la scope définie plus haut
+            //                 gemmaEngine.askAsync(
+            //                     prompt = reportText, // Utiliser le texte du rapport
+            //                     onSuccess = { result ->
+            //                         generatedGemmaText = result
+            //                         isLoadingGemma = false
+            //                     },
+            //                     onError = { error ->
+            //                         generatedGemmaText = "Erreur Gemma: ${error.message}"
+            //                         isLoadingGemma = false
+            //                         Toast.makeText(
+            //                             context,
+            //                             "Erreur Gemma: ${error.message}",
+            //                             Toast.LENGTH_LONG
+            //                         ).show()
+            //                     }
+            //                 )
+            //             }
+            //         } else { /* ... Toast ... */
+            //         }
+            //     },
+            //     modifier = Modifier
+            //         .fillMaxWidth()
+            //         .height(56.dp),
+            //     enabled = !isOnlineAILoading && !isLoadingGemma // Désactiver si l'un ou l'autre charge
+            // ) {
+            //     Text("Générer rapport (Gemma - Local)")
+            // }
 
 
             Spacer(Modifier.height(16.dp))
