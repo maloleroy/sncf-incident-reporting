@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from sqlite3 import Connection, connect, Row
-import requests
 import os
 from model import Incident, IncidentLocation, ChatRequest
 

@@ -1,5 +1,8 @@
+import requests
+
 from model import Incident, IncidentLocation, ChatRequest
 from env import require_environment_variables
+from security import PASSWORD_ENV_VAR
 
 def get_completions(model: str, messages: ChatRequest):
     vars = require_environment_variables([get_env_var_name_from_model(model), PASSWORD_ENV_VAR])
