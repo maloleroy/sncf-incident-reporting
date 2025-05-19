@@ -7,24 +7,14 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-fun getBackendUrl(propertyKey: String): String {
+fun getEnvVar(propertyKey: String, default: String = ""): String {
     val properties = Properties() // Use the imported class directly
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         properties.load(FileInputStream(localPropertiesFile)) // Use the imported class directly
         return properties.getProperty(propertyKey, "")
     }
-    return ""
-}
-
-fun getBackendPassword(propertyKey: String): String {
-    val properties = Properties() // Use the imported class directly
-    val localPropertiesFile = rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        properties.load(FileInputStream(localPropertiesFile)) // Use the imported class directly
-        return properties.getProperty(propertyKey, "")
-    }
-    return ""
+    return default
 }
 
 android {
@@ -37,11 +27,11 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        val backendUrl = getBackendUrl("BACKEND_URL")
+        val backendUrl = getEnvVar("BACKEND_URL", "https://10.0.2.2:8000/")
         buildConfigField("String", "BACKEND_URL", "\"$backendUrl\"")
-        val backendPassword = getBackendPassword("BACKEND_PASSWORD")
+        val backendPassword = getEnvVar("BACKEND_PASSWORD", "admin")
         buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
-        val backendAiRoute = getBackendUrl("BACKEND_AI_ROUTE")
+        val backendAiRoute = getEnvVar("BACKEND_AI_ROUTE", "/openai")
         buildConfigField("String", "BACKEND_AI_ROUTE", "\"$backendAiRoute\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
