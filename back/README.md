@@ -18,6 +18,8 @@ cp cert.pem ../appKotlin/AppV1/app/src/main/res/raw/cert.pem
 
 Note that this is not required if you don't want the backend to have HTTPS support, or if you are using an externally-provided SSL certificate (typically, a DNS domain-bound certificate in the case of a production environment).
 
+> You **have** to add this device's IP (on the frontend's network) or domain name in `openssl.conf`, else the certificate could be refused by the frontend.
+
 ## Running
 
 Once you completed all the configuration steps once, run the server as many times as you want with
