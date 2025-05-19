@@ -7,7 +7,6 @@ security = HTTPBearer()
 PASSWORD_ENV_VAR = "PASSWORD"
 
 def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    load_dotenv()
     expected_token = os.getenv(PASSWORD_ENV_VAR)
     
     if not expected_token:
