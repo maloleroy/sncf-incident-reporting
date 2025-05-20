@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Ajoutez cette ligne pour la permission Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- 1. Déclaration de la permission micro -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
@@ -32,10 +35,8 @@
             android:theme="@style/Theme.AppV1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

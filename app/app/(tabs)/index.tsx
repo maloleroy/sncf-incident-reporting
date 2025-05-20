@@ -10,6 +10,15 @@ type RootStackParamList = {
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { SafeArea } from '@/components/SafeArea';
+
+type RootStackParamList = {
+  'new-incident': undefined;
+  'incident-details': { incident: Incident };
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 type Incident = {
   id: string;
@@ -25,6 +34,7 @@ type Trip = {
 };
 
 const HomeScreen = () => {
+  const navigation = useNavigation<NavigationProp>();
   const navigation = useNavigation<NavigationProp>();
 
   // Temporary mock data
@@ -71,7 +81,23 @@ const HomeScreen = () => {
           keyExtractor={item => item.id}
           style={styles.list}
         />
+        <Text style={styles.sectionTitle}>Incidents récents</Text>
+        <FlatList
+          data={recentIncidents}
+          renderItem={renderIncidentItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
 
+        <Text style={styles.sectionTitle}>Trajets récents</Text>
+        <FlatList
+          data={recentTrips}
+          renderItem={renderTripItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+        />
+      </View>
+    </SafeArea>
         <Text style={styles.sectionTitle}>Trajets récents</Text>
         <FlatList
           data={recentTrips}
