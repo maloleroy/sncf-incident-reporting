@@ -331,8 +331,7 @@ Si tu n'es pas sûr, écris : Je ne sais pas."""
     CoroutineScope(Dispatchers.IO).launch {
         try {
             //val objs = RetrofitInstance.getIncidentObjectsListApiService(context).getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
-            //val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
-            val response = RetrofitInstance.getChatApiService()
+            val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
 
             withContext(Dispatchers.Main) {
                 onResult(response.content)
