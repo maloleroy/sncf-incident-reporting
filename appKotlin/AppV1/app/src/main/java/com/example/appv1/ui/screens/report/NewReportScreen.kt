@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.layout.size
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
@@ -22,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -46,7 +48,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.appv1.GemmaEngine
 import com.example.appv1.api.ChatMessage
 import com.example.appv1.api.ChatRequest
@@ -207,12 +211,23 @@ fun NewReportScreen(onBack: () -> Unit) {
                         ).show()
                     }
                 },
+                shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(48.dp),
                 enabled = !isOnlineAILoading // Désactiver pendant le chargement
             ) {
-                Text("Générer le rapport par IA")
+                Text(
+                    "Valider",
+                    fontSize = 16.sp // Choisis la taille que tu veux, par exemple 20.sp
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Valider",
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .size(16.dp)
+                )
             }
 
             Spacer(Modifier.height(16.dp))
