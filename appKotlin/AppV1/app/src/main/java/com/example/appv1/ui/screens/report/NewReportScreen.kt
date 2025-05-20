@@ -182,7 +182,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .height(56.dp)
+                    .height(64.dp)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Speech to Text")
             }
