@@ -30,5 +30,5 @@ async def get_openai_completion(chat_request: ChatRequest, _: None = Depends(val
     return get_completions("gpt-4o", chat_request)
 
 @app.post("/objects/")
-async def get_objects(voiture: str, rame: str, db: Connection = Depends(incidents_schema.get_db), _: None = Depends(validate_token)):
-    return incidents_schema.get_incidents_objets(db, rame, voiture)
+async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _: None = Depends(validate_token)):
+    return incidents_schema.get_incidents_objets(db, trainType, car)

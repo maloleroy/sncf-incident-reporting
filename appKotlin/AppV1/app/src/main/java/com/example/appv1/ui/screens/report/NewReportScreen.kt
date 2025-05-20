@@ -177,8 +177,8 @@ fun NewReportScreen(onBack: () -> Unit) {
                     }
                 },
                 modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .height(56.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .height(56.dp)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Speech to Text")
                 //Spacer(Modifier.width(8.dp))
@@ -191,7 +191,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (reportText.isNotBlank() && trainType.isNotBlank() && trainNumber.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        sendReportToAI(reportText, trainType, trainNumber, context) { result ->
+                        doSomething(reportText, trainType, trainNumber, context) { result ->
                             generatedReportText = result // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
@@ -246,23 +246,52 @@ fun NewReportScreen(onBack: () -> Unit) {
     }
 }
 
-private fun sendReportToAI(
+private fun doSomething(
     reportText: String,
     trainType: String,
     trainNumber: String,
     context: Context,
     onResult: (String) -> Unit // Lambda pour retourner le résultat
 ) {
-    if (reportText.isBlank()) {
-        Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
-        return
-    }
     if (trainType.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
         return
     }
     if (trainNumber.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
+        return
+    }
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val objs = RetrofitInstance.getIncidentObjectsListApiService(context)
+                .getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
+            val items = objs.objects.map { it[2] }
+
+            withContext(Dispatchers.Main) {
+                sendReportToAI(reportText, items, context, onResult)
+            }
+        } catch (e: IOException) { // Catch only network errors (IOException)
+            Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                // Retourner un message d'erreur via la lambda
+                sendReportToAI(reportText, emptyList(), context, onResult)
+            }
+        } catch (e: Exception) { // Let other exceptions propagate
+            Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
+            throw e // Re-throw the exception
+        }
+    }
+}
+
+private fun sendReportToAI(
+    reportText: String,
+    items: List<String>,
+    context: Context,
+    onResult: (String) -> Unit // Lambda pour retourner le résultat
+) {
+    if (reportText.isBlank()) {
+        Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
         return
     }
 
@@ -273,19 +302,23 @@ private fun sendReportToAI(
                 role = "system",
                 content = "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."
             ),
-            ChatMessage(role = "user", content = """
+            ChatMessage(
+                role = "user", content = """Voici les objets possibles :
+${items.joinToString("\n")}
+
 Transcription :
 ${reportText}
 
 ⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
-Si tu n'es pas sûr, écris : Je ne sais pas.""")
+Si tu n'es pas sûr, écris : Je ne sais pas."""
+            )
         )
     )
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val objs = RetrofitInstance.getIncidentObjectsListApiService(context).getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
-            val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
+            val response =
+                RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
 
             withContext(Dispatchers.Main) {
                 onResult(response.content)
