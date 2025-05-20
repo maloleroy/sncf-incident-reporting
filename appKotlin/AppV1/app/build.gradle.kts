@@ -7,15 +7,14 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-// Fonction pour lire les propriétés locales
-fun getApiKey(propertyKey: String): String {
+fun getEnvVar(propertyKey: String, default: String = ""): String {
     val properties = Properties() // Use the imported class directly
     val localPropertiesFile = rootProject.file("local.properties")
     if (localPropertiesFile.exists()) {
         properties.load(FileInputStream(localPropertiesFile)) // Use the imported class directly
         return properties.getProperty(propertyKey, "")
     }
-    return ""
+    return default
 }
 
 android {
@@ -28,8 +27,14 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-        val mistralApiKey = getApiKey("MISTRAL_API_KEY")
-        buildConfigField("String", "MISTRAL_API_KEY", "\"$mistralApiKey\"")
+        val backendUrl = getEnvVar("BACKEND_URL", "https://10.0.2.2:8000/")
+        buildConfigField("String", "BACKEND_URL", "\"$backendUrl\"")
+        val backendPassword = getEnvVar("BACKEND_PASSWORD", "admin")
+        buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
+        val backendAiRoute = getEnvVar("BACKEND_AI_ROUTE", "/openai")
+        buildConfigField("String", "BACKEND_AI_ROUTE", "\"$backendAiRoute\"")
+        val backendObjectsListRoute = getEnvVar("BACKEND_OBJECTS_LIST_ROUTE", "/objects")
+        buildConfigField("String", "BACKEND_OBJECTS_LIST_ROUTE", "\"$backendObjectsListRoute\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

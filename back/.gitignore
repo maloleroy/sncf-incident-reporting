@@ -6,4 +6,7 @@
 *.db
 *.sqlite3
 *.log
-.env
+*.env
+**/.pytest_cache/
+cert.pem
+key.pem

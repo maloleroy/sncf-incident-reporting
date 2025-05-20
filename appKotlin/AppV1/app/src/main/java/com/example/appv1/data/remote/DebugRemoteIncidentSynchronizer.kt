@@ -69,11 +69,6 @@ class DebugRemoteIncidentSynchronizer : IncidentSynchronizer {
         return emptyList()
     }
 
-    /**
-     * Returns the current synchronization status.
-     *
-     * @return The current synchronization status.
-     */
     override fun getStatus(): SynchronizationStatus {
         // Return the current status from the flow
         val currentStatus = _statusFlow.value
@@ -81,11 +76,6 @@ class DebugRemoteIncidentSynchronizer : IncidentSynchronizer {
         return currentStatus
     }
 
-    /**
-     * Attaches a callback to be notified of status changes.
-     *
-     * @param callback The callback to attach.
-     */
     override fun attachCallback(callback: SynchronizationCallback) {
         Log.d(TAG, "attachCallback called.")
         this.callback = callback
@@ -93,22 +83,12 @@ class DebugRemoteIncidentSynchronizer : IncidentSynchronizer {
         callback.onStatusChanged(_statusFlow.value)
     }
 
-    /**
-     * Attaches another synchronizer to chain operations.
-     *
-     * @param synchronizer The synchronizer to attach.
-     */
     override fun attachSynchronizer(synchronizer: IncidentSynchronizer) {
         // This method might be for a decorator pattern, not applicable here.
         Log.w(TAG, "attachSynchronizer called but not implemented in DebugRemoteIncidentSynchronizer.")
         // No operation needed for this debug implementation.
     }
 
-    /**
-     * Provides a Flow to observe synchronization status changes.
-     *
-     * @return A Flow emitting current synchronization statuses.
-     */
     override fun getStatusFlow(): Flow<SynchronizationStatus> {
         Log.d(TAG, "getStatusFlow called.")
         return _statusFlow.asStateFlow()
