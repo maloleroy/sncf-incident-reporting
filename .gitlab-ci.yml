@@ -3,7 +3,7 @@ stages:
 
 test:
   stage: test
-  image: python:3.12-slim
+  image: python:3.13-slim
   before_script:
     - pip install uv
     - cd /builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/back
