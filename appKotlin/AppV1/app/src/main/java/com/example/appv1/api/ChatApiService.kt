@@ -20,13 +20,11 @@ data class ChatResponse(
 data class IncidentInfo(
     val transcription : String,
     val train : String,
-    val voiture : string
+    val voiture : String
 )
 
 data class Incident(
-    val localisation : String,
-    val organe : String,
-    val defaillance : String
+    val message : String
 )
 
 interface ChatApiService {

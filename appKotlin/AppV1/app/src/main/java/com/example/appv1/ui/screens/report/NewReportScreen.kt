@@ -29,7 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -51,6 +50,7 @@ import com.example.appv1.GemmaEngine
 import com.example.appv1.api.ChatMessage
 import com.example.appv1.api.ChatRequest
 import com.example.appv1.api.IncidentObjectsListRequest
+import com.example.appv1.api.IncidentInfo
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.util.launchSpeech
@@ -288,7 +288,7 @@ private fun doSomething(
             Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
             withContext(Dispatchers.Main) {
                 // Retourner un message d'erreur via la lambda
-                sendReportToAI(incidentInfo, context, onResult)
+                sendReportToAI(IncidentInfo(voiture = "", transcription = "", train = ""), context, onResult)
             }
         } catch (e: Exception) { // Let other exceptions propagate
             Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
@@ -330,7 +330,7 @@ private fun sendReportToAI(
             val response = RetrofitInstance.getIncidentApiService(context).generateInterfaceAnalyse(incidentInfo)
 
             withContext(Dispatchers.Main) {
-                onResult(response.content)
+                onResult(response.message)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
             Log.e("AiApi", "Network error calling AI API", e)

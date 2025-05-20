@@ -90,7 +90,7 @@ def ask_openai(messages, tools=None):
         tools=tools,
         tool_choice="auto"
     )
-    print(response.choices[0].message.content)
+    return response.choices[0].message.content
 
 def prompt_openai_objects(list_objects, message):
 
