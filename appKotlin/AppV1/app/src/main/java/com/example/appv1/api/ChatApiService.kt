@@ -17,7 +17,24 @@ data class ChatResponse(
     val content: String,
 )
 
+data class IncidentInfo(
+    val transcription : String,
+    val train : String,
+    val voiture : string
+)
+
+data class Incident(
+    val localisation : String,
+    val organe : String,
+    val defaillance : String
+)
+
 interface ChatApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
     suspend fun generateChatCompletion(@Body request: ChatRequest): ChatResponse // <-- Utilisation des nouvelles classes
+}
+
+interface IncidentApiService {
+    @POST(BuildConfig.BACKEND_AI_ROUTE)
+    suspend fun generateInterfaceAnalyse(@Body request: IncidentInfo): Incident 
 }

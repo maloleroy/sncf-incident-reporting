@@ -3,6 +3,9 @@ import requests
 from model import Incident, IncidentLocation, ChatRequest
 from env import require_environment_variables
 from security import PASSWORD_ENV_VAR
+from openai import OpenAI
+import os 
+
 
 def get_completions(model: str, messages: ChatRequest):
     vars = require_environment_variables([get_env_var_name_from_model(model), PASSWORD_ENV_VAR])
@@ -75,3 +78,38 @@ def extract_llm_content(response_data: dict) -> str:
             detail="Invalid content type in the message returned from LLM API"
         )
     return content
+
+
+
+def ask_openai(messages, tools=None):
+    os.environ["OPENAI_API_KEY"] = key
+    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    response = client.chat.completions.create(
+        model="gpt-4.1",  # ou "gpt-4.1" si tu l’utilises
+        messages=messages,
+        tools=tools,
+        tool_choice="auto"
+    )
+    print(response.choices[0].message.content)
+
+def prompt_openai_objects(list_objects, message):
+
+    messages = [
+            {"role": "system", "content": "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."},
+            {"role": "user", "content": f"""Voici les objets possibles :
+    {list_objects}
+
+    Transcription :
+    {message}
+
+
+    ⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
+    Si tu n'es pas sûr, écris : Je ne sais pas."""}
+        ]
+
+    return messages
+
+def get_response(message, possibilities):
+    prompt = prompt_openai_objects(possibilities, message)
+    rep = ask_openai(prompt)
+    return rep

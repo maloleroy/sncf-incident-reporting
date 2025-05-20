@@ -280,15 +280,15 @@ private fun doSomething(
             val objs = RetrofitInstance.getIncidentObjectsListApiService(context)
                 .getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
             val items = objs.objects.map { it[2] }
-
+            val incidentInfo = IncidentInfo(transcription = reportText, train = trainType, voiture = trainNumber)
             withContext(Dispatchers.Main) {
-                sendReportToAI(reportText, items, context, onResult)
+                sendReportToAI(incidentInfo, context, onResult)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
             Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
             withContext(Dispatchers.Main) {
                 // Retourner un message d'erreur via la lambda
-                sendReportToAI(reportText, emptyList(), context, onResult)
+                sendReportToAI(incidentInfo, context, onResult)
             }
         } catch (e: Exception) { // Let other exceptions propagate
             Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
@@ -298,40 +298,36 @@ private fun doSomething(
 }
 
 private fun sendReportToAI(
-    reportText: String,
-    items: List<String>,
+    incidentInfo: IncidentInfo,
     context: Context,
     onResult: (String) -> Unit // Lambda pour retourner le résultat
 ) {
-    if (reportText.isBlank()) {
-        Toast.makeText(context, "Le texte du rapport est vide", Toast.LENGTH_SHORT).show()
-        return
-    }
 
     // Construire la requête pour Chat API
-    val chatRequest = ChatRequest(
-        messages = listOf(
-            ChatMessage(
-                role = "system",
-                content = "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."
-            ),
-            ChatMessage(
-                role = "user", content = """Voici les objets possibles :
-${items.joinToString("\n")}
+//     val chatRequest = ChatRequest(
+//         messages = listOf(
+//             ChatMessage(
+//                 role = "system",
+//                 content = "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."
+//             ),
+//             ChatMessage(
+//                 role = "user", content = """Voici les objets possibles :
+// ${items.joinToString("\n")}
 
-Transcription :
-${reportText}
+// Transcription :
+// ${reportText}
 
-⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
-Si tu n'es pas sûr, écris : Je ne sais pas."""
-            )
-        )
-    )
+// ⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
+// Si tu n'es pas sûr, écris : Je ne sais pas."""
+//             )
+//         )
+//     )
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
             //val objs = RetrofitInstance.getIncidentObjectsListApiService(context).getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
-            val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
+            //val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
+            val response = RetrofitInstance.getIncidentApiService(context).generateInterfaceAnalyse(incidentInfo)
 
             withContext(Dispatchers.Main) {
                 onResult(response.content)

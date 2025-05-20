@@ -55,15 +55,15 @@ class IncidentLocation(BaseModel):
     precision2: IncidentLocationPrecision2 = IncidentLocationPrecision2.NONE
     precision3: IncidentLocationPrecision3 = IncidentLocationPrecision3.NONE
 
-class Incident(BaseModel):
-    id: int
-    lastUpdate: int = int(datetime.now(UTC).timestamp() * 1000)  # Current time in milliseconds
-    location: IncidentLocation
-    subSystem: SubSystem = SubSystem.NONE
-    failure: IncidentFailure = IncidentFailure.NONE
-    comment: str = ""
-    sealed: bool = False
-    t4Call: bool = False
+# class Incident(BaseModel):
+#     id: int
+#     lastUpdate: int = int(datetime.now(UTC).timestamp() * 1000)  # Current time in milliseconds
+#     location: IncidentLocation
+#     subSystem: SubSystem = SubSystem.NONE
+#     failure: IncidentFailure = IncidentFailure.NONE
+#     comment: str = ""
+#     sealed: bool = False
+#     t4Call: bool = False
 
 # Define Pydantic model for message structure
 class Message(BaseModel):
@@ -105,3 +105,16 @@ class ChatRequest(BaseModel):
             ]
         }
     }
+
+class IncidentInfo(BaseModel):
+    # exemple de champs — adapte selon ta définition Kotlin
+    localisation: str
+    organe: str
+    defaillance: str
+    # ajoute d'autres champs nécessaires
+
+class Incident(BaseModel):
+    message : str
+    # localisation: str
+    # organe: str
+    # defaillance: str

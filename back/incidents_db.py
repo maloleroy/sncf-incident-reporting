@@ -72,3 +72,4 @@ def read_incidents(db: Connection):
     ]
 
     return incidents
+

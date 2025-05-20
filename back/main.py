@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from sqlite3 import Connection, connect, Row
 import os
-from model import Incident, IncidentLocation, ChatRequest
-
+from model import Incident, IncidentLocation, ChatRequest, IncidentInfo
+from incident import find_incident
 from security import validate_token
 from llm import get_completions
 from env import load_dotenv
@@ -32,3 +32,12 @@ async def get_openai_completion(chat_request: ChatRequest, _: None = Depends(val
 @app.post("/objects/")
 async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _: None = Depends(validate_token)):
     return incidents_schema.get_incidents_objets(db, trainType, car)
+
+@app.post("/interface-analyse/", response_model=Incident)
+async def generate_interface_analyse(incident_info: IncidentInfo, db: Connection = Depends(incidents_db.get_db)):
+   
+    incident = find_incident(db, incident_info["train"], incident_info["voiture"], incident_info["transcription"])
+
+    # Optionnel: sauvegarder en base de données via incidents_db.create_incident(incident, db)
+
+    return Incident(message = incident)
