@@ -55,15 +55,15 @@ class IncidentLocation(BaseModel):
     precision2: IncidentLocationPrecision2 = IncidentLocationPrecision2.NONE
     precision3: IncidentLocationPrecision3 = IncidentLocationPrecision3.NONE
 
-# class Incident(BaseModel):
-#     id: int
-#     lastUpdate: int = int(datetime.now(UTC).timestamp() * 1000)  # Current time in milliseconds
-#     location: IncidentLocation
-#     subSystem: SubSystem = SubSystem.NONE
-#     failure: IncidentFailure = IncidentFailure.NONE
-#     comment: str = ""
-#     sealed: bool = False
-#     t4Call: bool = False
+class Incident(BaseModel):
+    id: int
+    lastUpdate: int = int(datetime.now(UTC).timestamp() * 1000)  # Current time in milliseconds
+    location: IncidentLocation
+    subSystem: SubSystem = SubSystem.NONE
+    failure: IncidentFailure = IncidentFailure.NONE
+    comment: str = ""
+    sealed: bool = False
+    t4Call: bool = False
 
 # Define Pydantic model for message structure
 class Message(BaseModel):
@@ -106,14 +106,37 @@ class ChatRequest(BaseModel):
         }
     }
 
-class IncidentInfo(BaseModel):
-    # exemple de champs — adapte selon ta définition Kotlin
-    localisation: str
-    organe: str
-    defaillance: str
-    # ajoute d'autres champs nécessaires
+class SimpleChatCompletion(BaseModel):
+    content: str
 
-class Incident(BaseModel):
+class TrainType(str, Enum):
+    DASYE = "DASYE_eau_incidents",
+    DUPLEX_WC_CHEM = "DUPLEX_WC_chimique_incidents",
+    DUPLEX_WC_WATER = "DUPLEX_WC_EAU_incidents",
+    NEODUPLEX_CHEM = "NEODUPLEX_chimique_incidents",
+    OCEANE = "OCEANE_LIKE_incidents",
+    OUIGO1 = "OUIGO1_incidents",
+    OUIGO2 = "OUIGO2_incidents",
+    PLT = "PLT_incidents",
+    POS = "POS_incidents",
+    P_DUPLEX = "P_DUPLEX_incidents",
+    RDOM = "RDOM_incidents",
+    RITA = "RITA_incidents",
+    TANGO = "TANGO_incidents",
+    TGV_R_TRI_FO = "TGV_R_TRI_FO_incidents",
+    TGV_R_TRI = "TGV_R_TRI_incidents",
+    TRAIN_2N2_3UA_LYRIA = "TRAIN_2N2_3UA_LYRIA_incidents",
+    TRAIN_2N2_3UA = "TRAIN_2N2_3UA_incidents",
+    TRAIN_2N2_3UFC = "TRAIN_2N2_3UFC_incidents",
+    TRAIN_2N2_3UF = "TRAIN_2N2_3UF_incidents",
+    TRAIN_2N2_3UH = "TRAIN_2N2_3UH_incidents"
+
+class IncidentInfo(BaseModel):
+    trainType: TrainType = TrainType.DASYE
+    trainCar: str = "R4H"
+    transcription: str = "L'accoudoir de la place 76 est cassé."
+
+class Incident4Cols(BaseModel):
     message : str
     # localisation: str
     # organe: str
