@@ -1,5 +1,4 @@
 package com.example.appv1.ui.screens.report
-
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -162,7 +161,7 @@ fun NewReportScreen(onBack: () -> Unit) {
 
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(8.dp)) // Espace entre Annuler et Valider
 
             Button(
                 onClick = {
@@ -182,7 +181,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .height(56.dp)
+                    .height(64.dp)
             ) {
                 Icon(Icons.Filled.Mic, contentDescription = "Speech to Text")
             }
