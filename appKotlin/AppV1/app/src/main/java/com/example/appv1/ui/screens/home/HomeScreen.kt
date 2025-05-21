@@ -78,23 +78,9 @@ fun HomeScreen(
                     .fillMaxWidth()
                     .height(56.dp)
             ) {
-                Text("Nouveau signalement - Mode arborescence")
-            }
-            Spacer(Modifier.height(16.dp))
-            OutlinedButton(
-                onClick = onViewReports,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = Color.Red,
-                    contentColor = Color.Transparent,
-                    disabledContainerColor = Color.Gray,
-                ),
-                border = BorderStroke(1.dp, Color.Red)
-            ) {
                 Text("Consulter les signalements")
             }
+            
         }
     }
 }
