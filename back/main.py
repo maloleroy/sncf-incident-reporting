@@ -34,8 +34,8 @@ async def get_openai_completion(chat_request: model.ChatRequest, _ = Depends(val
 async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
-@app.post("/incident-analysis/", response_model=IdentifiedIncident)
-async def generate_interface_analyse(incident_info: IncidentInfo, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
+@app.post("/incident-analysis/", response_model= model.IncidentAnalysisRequest)
+async def generate_interface_analyse(incident_info: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     incident = find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
 
     # Optionnel: sauvegarder en base de données via incidents_db.create_incident(incident, db)
