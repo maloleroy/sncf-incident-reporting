@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +27,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,10 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.appv1.GemmaEngine
-import com.example.appv1.api.ChatMessage
-import com.example.appv1.api.ChatRequest
-import com.example.appv1.api.IncidentObjectsListRequest
-import com.example.appv1.api.IncidentInfo
+import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.util.launchSpeech
@@ -66,8 +63,8 @@ fun NewReportScreen(onBack: () -> Unit) {
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
     var trainType by remember { mutableStateOf("") }
-    var trainNumber by remember { mutableStateOf("") }
-    var reportText by remember { mutableStateOf("") }
+    var trainCar by remember { mutableStateOf("") }
+    var transcription by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
     var isOnlineAILoading by remember { mutableStateOf(false) }
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
@@ -91,7 +88,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 RecognizerIntent.EXTRA_RESULTS
             )
             if (!matches.isNullOrEmpty()) {
-                reportText = matches[0]
+                transcription = matches[0]
             }
         }
     }
@@ -142,8 +139,8 @@ fun NewReportScreen(onBack: () -> Unit) {
             )
             // Champ pour le numéro de rame
             OutlinedTextField(
-                value = trainNumber,
-                onValueChange = { trainNumber = it },
+                value = trainCar,
+                onValueChange = { trainCar = it },
                 label = { Text("Numéro de rame") },
                 singleLine = true,
                 modifier = Modifier
@@ -151,8 +148,8 @@ fun NewReportScreen(onBack: () -> Unit) {
                     .padding(bottom = 16.dp)
             )
             OutlinedTextField(
-                value = reportText,
-                onValueChange = { reportText = it },
+                value = transcription,
+                onValueChange = { transcription = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp),
@@ -189,10 +186,10 @@ fun NewReportScreen(onBack: () -> Unit) {
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                    if (reportText.isNotBlank() && trainType.isNotBlank() && trainNumber.isNotBlank()) {
+                    if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        doSomething(reportText, trainType, trainNumber, context) { result ->
+                        getIncidentAnalysis(IncidentAnalysisRequest(trainType, trainCar, transcription), context) { result ->
                             generatedReportText = result // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
@@ -258,87 +255,35 @@ fun NewReportScreen(onBack: () -> Unit) {
     }
 }
 
-private fun doSomething(
-    reportText: String,
-    trainType: String,
-    trainNumber: String,
+private fun getIncidentAnalysis(
+    incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
     onResult: (String) -> Unit // Lambda pour retourner le résultat
 ) {
-    if (trainType.isBlank()) {
+    if (incidentAnalysisRequest.trainType.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
         return
     }
-    if (trainNumber.isBlank()) {
+    if (incidentAnalysisRequest.trainCar.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
         return
     }
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val objs = RetrofitInstance.getIncidentObjectsListApiService(context)
-                .getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
-            val items = objs.objects.map { it[2] }
-            val incidentInfo = IncidentInfo(transcription = reportText, train = trainType, voiture = trainNumber)
+            val response = RetrofitInstance.getIncidentApiService(context)
+                .generateIncidentAnalysis(incidentAnalysisRequest)
             withContext(Dispatchers.Main) {
-                sendReportToAI(incidentInfo, context, onResult)
+                onResult(response.message)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
             Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
             withContext(Dispatchers.Main) {
                 // Retourner un message d'erreur via la lambda
-                sendReportToAI(IncidentInfo(voiture = "", transcription = "", train = ""), context, onResult)
+                onResult("Erreur de réseau : ${e.message}")
             }
         } catch (e: Exception) { // Let other exceptions propagate
             Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-            throw e // Re-throw the exception
-        }
-    }
-}
-
-private fun sendReportToAI(
-    incidentInfo: IncidentInfo,
-    context: Context,
-    onResult: (String) -> Unit // Lambda pour retourner le résultat
-) {
-
-    // Construire la requête pour Chat API
-//     val chatRequest = ChatRequest(
-//         messages = listOf(
-//             ChatMessage(
-//                 role = "system",
-//                 content = "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."
-//             ),
-//             ChatMessage(
-//                 role = "user", content = """Voici les objets possibles :
-// ${items.joinToString("\n")}
-
-// Transcription :
-// ${reportText}
-
-// ⚠️ Réponds uniquement par l'incident qui se rapproche le plus du signalement.
-// Si tu n'es pas sûr, écris : Je ne sais pas."""
-//             )
-//         )
-//     )
-
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            //val objs = RetrofitInstance.getIncidentObjectsListApiService(context).getObjectsList(IncidentObjectsListRequest(trainType, trainNumber))
-            //val response = RetrofitInstance.getChatApiService(context).generateChatCompletion(chatRequest)
-            val response = RetrofitInstance.getIncidentApiService(context).generateInterfaceAnalyse(incidentInfo)
-
-            withContext(Dispatchers.Main) {
-                onResult(response.message)
-            }
-        } catch (e: IOException) { // Catch only network errors (IOException)
-            Log.e("AiApi", "Network error calling AI API", e)
-            withContext(Dispatchers.Main) {
-                // Retourner un message d'erreur via la lambda
-                onResult("Erreur réseau : ${e.message}")
-            }
-        } catch (e: Exception) { // Let other exceptions propagate
-            Log.e("AiApi", "Unexpected error calling AI API", e)
             throw e // Re-throw the exception
         }
     }

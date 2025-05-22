@@ -56,13 +56,12 @@ object RetrofitInstance {
         return certificate
     }
 
-    // Lazy-initialized API instance (requires a Context)
-    fun getChatApiService(context: Context): ChatApiService {
+    fun getIncidentApiService(context: Context): IncidentAnalysisApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(createSecureClient(context))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ChatApiService::class.java)
+            .create(IncidentAnalysisApiService::class.java)
     }
 }

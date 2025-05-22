@@ -10,11 +10,11 @@ data class IncidentAnalysisRequest(
     val transcription : String
 )
 
-data class IncidentResponse(
+data class IncidentAnalysisResponse(
     val message : String
 )
 
-interface IncidentApiService {
+interface IncidentAnalysisApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
-    suspend fun generateInterfaceAnalyse(@Body request: IncidentAnalysisRequest): IncidentResponse
+    suspend fun generateIncidentAnalysis(@Body request: IncidentAnalysisRequest): IncidentAnalysisResponse
 }
