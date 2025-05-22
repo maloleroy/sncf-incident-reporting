@@ -9,7 +9,7 @@ def excel_to_sqlite(excel_path, sqlite_path, table_name, train_col):
     df = pd.DataFrame(df_raw.values[5:], columns=header)
 
     # Garder les colonnes utiles
-    df = df.iloc[:, [train_col, 21, 22, 23, 24, 25, 28, 29, 30]]
+    df = df.iloc[:, [train_col, 21, 22, 23, 24, 25, 26, 27, 28]]
     df.columns = [
         "Rames",
         "Localisation",
@@ -102,7 +102,7 @@ trains = [
 
 for i in range(len(trains)):
     excel_to_sqlite(
-        "arborescence_analyse/Arbo.xlsx",
+        "arborescence_analyse/Arbo SignaV038.xlsx",
         "arborescence_analyse/DBs/incidents2.db",
         trains[i],
         i + 1,
