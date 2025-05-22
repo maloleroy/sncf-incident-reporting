@@ -1,12 +1,12 @@
 from incidents_schema import get_incidents
 from llm import get_response
-from model import IdentifiedIncident
+from model import IncidentAnalysisResponse
 import logging
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def find_incident(db, train, voiture, transcription):
+def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse:
     possibilities = get_incidents(db, train, voiture)
     response = get_response(transcription, possibilities)['content']
     logger.info("LLM Response: %s", response)
@@ -16,8 +16,16 @@ def find_incident(db, train, voiture, transcription):
     return response_cleared
 
 def create_incident_response(response_parsed):
-    rep = IdentifiedIncident(localisation = response_parsed[0], categorie = response_parsed[1], organe = response_parsed[2], precision_n2 = response_parsed[3], precision_n3 = response_parsed[4], sous_organe = response_parsed[5], defaillance = response_parsed[6])
-    return rep
+    return IncidentAnalysisResponse(
+        localisation = response_parsed[0],
+        categorie = response_parsed[1],
+        organe = response_parsed[2],
+        precision_n1 = response_parsed[3],
+        precision_n2 = response_parsed[4],
+        precision_n3 = response_parsed[5],
+        sous_organe = response_parsed[6],
+        defaillance = response_parsed[7],
+    )
 
 def find_categories(response):
     # Extraction du contenu entre parenthèses
@@ -60,4 +68,3 @@ def find_categories(response):
         result.append(accumulate)
 
     return result
-
