@@ -1,4 +1,5 @@
 package com.example.appv1.ui.screens.report
+
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -76,7 +77,7 @@ fun NewReportScreen(onBack: () -> Unit) {
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
     val trainTypes = mapOf(
-        "Dasye"  to "DASYE_eau_incidents",
+        "Dasye" to "DASYE_eau_incidents",
         "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
         "DUPLEX WC EAU" to "DUPLEX_WC_EAU_incidents",
         "NEODUPLEX chimique" to "NEODUPLEX_chimique_incidents",
@@ -240,10 +241,27 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription), context) { result ->
-                            generatedReportText = result.failure // Mettre à jour l'état avec le résultat
-                            isOnlineAILoading = false // Fin chargement
-                        }
+                        getIncidentAnalysis(
+                            IncidentAnalysisRequest(
+                                trainTypes[trainType]!!,
+                                trainCar,
+                                transcription
+                            ),
+                            context,
+                            onResult = { result ->
+                                generatedReportText = result.failure
+                                isOnlineAILoading = false
+                                // Get to the validation screen
+                            },
+                            onError = { errorMessage ->
+                                isOnlineAILoading = false
+                                Toast.makeText(
+                                    context,
+                                    "Erreur lors de l'analyse : $errorMessage",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
                     } else {
                         Toast.makeText(
                             context,
@@ -309,7 +327,8 @@ fun NewReportScreen(onBack: () -> Unit) {
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
-    onResult: (IncidentAnalysisResponse) -> Unit // Lambda pour retourner le résultat
+    onResult: (IncidentAnalysisResponse) -> Unit,
+    onError: (String) -> Unit,
 ) {
     if (incidentAnalysisRequest.trainType.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
@@ -328,9 +347,13 @@ private fun getIncidentAnalysis(
                 onResult(response)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
-            Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) { // Let other exceptions propagate
-            Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                onError("Erreur de réseau lors de l'appel API : ${e.message}")
+            }
+        } catch (e: Exception) { // Catch other exceptions with a generic message
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue lors de l'appel API : ${e.message}")
+            }
         }
     }
 }
