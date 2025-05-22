@@ -133,7 +133,7 @@ class TrainType(str, Enum):
 
 class IncidentAnalysisRequest(BaseModel):
     trainType: TrainType = TrainType.DASYE
-    trainCar: str = "R4H"
+    trainCar: str = "R6H"
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
 class IncidentAnalysisResponse(BaseModel):
