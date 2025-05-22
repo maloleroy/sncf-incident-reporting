@@ -241,7 +241,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
                         getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription), context) { result ->
-                            generatedReportText = result // Mettre à jour l'état avec le résultat
+                            generatedReportText = result.failure // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
                     } else {
