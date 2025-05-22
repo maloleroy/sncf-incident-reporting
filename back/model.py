@@ -138,3 +138,13 @@ class IncidentAnalysisRequest(BaseModel):
 
 class IncidentAnalysisResponse(BaseModel):
     message : str
+
+class IdentifiedIncident(BaseModel):
+    localisation : str 
+    #precision_n1 : str
+    categorie : str
+    organe : str 
+    precision_n2 : str
+    precision_n3 : str 
+    sous_organe : str 
+    defaillance : str 
