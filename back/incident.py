@@ -5,3 +5,46 @@ def find_incident(db, train, voiture, transcription):
     possibilities = get_incidents(db, train, voiture)
     response = get_response(transcription, possibilities)
     return response
+
+def find_categories(response):
+    # Extraction du contenu entre parenthèses
+    step1 = response.split('(', 1)[1].rsplit(')', 1)[0]
+    step2 = step1.split(',')
+
+    state = False
+    result = []
+    accumulate = ''
+
+    for word in step2:
+        word = word.strip()  # Supprime les espaces autour
+
+        if word == "''":
+            result.append('')
+            continue
+
+        if word.startswith("'") and word.endswith("'") and not state:
+            # Cas simple : mot complet entre quotes sur une seule ligne
+            result.append(word[1:-1].strip())
+        elif word.startswith("'") and not state:
+            # Début de mot entre quotes sur plusieurs segments
+            accumulate = word[1:].strip()
+            state = True
+        elif word.endswith("'") and state:
+            # Fin de mot multi-segment
+            accumulate += ', ' + word[:-1].strip()
+            result.append(accumulate)
+            accumulate = ''
+            state = False
+        elif state:
+            # Milieu de mot multi-segment
+            accumulate += ', ' + word.strip()
+        else:
+            # Mot non quoté (rare mais possible)
+            result.append(word.strip())
+
+    # Ajout final si oubli d'un mot
+    if state and accumulate:
+        result.append(accumulate)
+
+    return result
+
