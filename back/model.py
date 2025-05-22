@@ -131,10 +131,10 @@ class TrainType(str, Enum):
     TRAIN_2N2_3UF = "TRAIN_2N2_3UF_incidents",
     TRAIN_2N2_3UH = "TRAIN_2N2_3UH_incidents"
 
-class IncidentInfo(BaseModel):
+class IncidentAnalysisRequest(BaseModel):
     trainType: TrainType = TrainType.DASYE
     trainCar: str = "R4H"
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
-class IncidentMessage(BaseModel):
+class IncidentAnalysisResponse(BaseModel):
     message : str
