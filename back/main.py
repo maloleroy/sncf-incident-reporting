@@ -36,5 +36,4 @@ async def get_objects(trainType: str, car: str, db: Connection = Depends(inciden
 
 @app.post("/incident-analysis/", response_model= model.IncidentAnalysisResponse)
 async def get_incident_analysis(incident_info: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
-    incident = find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
-    return incident
+    return find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
