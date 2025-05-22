@@ -136,8 +136,5 @@ class IncidentInfo(BaseModel):
     trainCar: str = "R4H"
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
-class Incident4Cols(BaseModel):
+class IncidentMessage(BaseModel):
     message : str
-    # localisation: str
-    # organe: str
-    # defaillance: str
