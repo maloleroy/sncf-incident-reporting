@@ -23,11 +23,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,6 +60,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewReportScreen(onBack: () -> Unit) {
@@ -69,6 +74,28 @@ fun NewReportScreen(onBack: () -> Unit) {
     var isOnlineAILoading by remember { mutableStateOf(false) }
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
+    val trainTypes = mapOf(
+        "Dasye"  to "DASYE_eau_incidents",
+        "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
+        "DUPLEX WC EAU" to "DUPLEX_WC_EAU_incidents",
+        "NEODUPLEX chimique" to "NEODUPLEX_chimique_incidents",
+        "OCEANE LIKE" to "OCEANE_LIKE_incidents",
+        "OUIGO1" to "OUIGO1_incidents",
+        "OUIGO2" to "OUIGO2_incidents",
+        "PLT" to "PLT_incidents",
+        "POS" to "POS_incidents",
+        "P DUPLEX" to "P_DUPLEX_incidents",
+        "RDOM" to "RDOM_incidents",
+        "RITA" to "RITA_incidents",
+        "TANGO" to "TANGO_incidents",
+        "TGV R TRI FO" to "TGV_R_TRI_FO_incidents",
+        "TGV R TRI" to "TGV_R_TRI_incidents",
+        "TRAIN 2N2 3UA LYRIA" to "TRAIN_2N2_3UA_LYRIA_incidents",
+        "TRAIN 2N2 3UA" to "TRAIN_2N2_3UA_incidents",
+        "TRAIN 2N2 3UFC" to "TRAIN_2N2_3UFC_incidents",
+        "TRAIN 2N2 3UF" to "TRAIN_2N2_3UF_incidents",
+        "TRAIN 2N2 3UH" to "TRAIN_2N2_3UH_incidents"
+    )
 
 
     // ----> 1. Initialiser GemmaEngine et gérer son cycle de vie <----
@@ -128,15 +155,38 @@ fun NewReportScreen(onBack: () -> Unit) {
                 .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
             // Champ pour le type de train
-            OutlinedTextField(
-                value = trainType,
-                onValueChange = { trainType = it },
-                label = { Text("Type de train") },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
-            )
+            var expanded by remember { mutableStateOf(false) }
+
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = !expanded }
+            ) {
+                OutlinedTextField(
+                    value = trainType,
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text("Type de train") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    trainTypes.keys.forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type) },
+                            onClick = {
+                                trainType = type
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
             // Champ pour le numéro de rame
             OutlinedTextField(
                 value = trainCar,
@@ -189,7 +239,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(IncidentAnalysisRequest(trainType, trainCar, transcription), context) { result ->
+                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription), context) { result ->
                             generatedReportText = result // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
