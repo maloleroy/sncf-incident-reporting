@@ -1,5 +1,6 @@
 package com.example.appv1.ui.screens.report
 
+
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
@@ -251,23 +252,38 @@ fun NewReportScreen(
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                    isOnlineAILoading = true
-                    getIncidentAnalysis(
-                        IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription),
-                        context
-                    ) {
-                        isOnlineAILoading = false
-                        onSuccess() // Navigue vers la page de confirmation
+                    if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
+                        isOnlineAILoading = true // Début chargement
+                        generatedReportText = null // Réinitialiser l'ancienne réponse
+                        getIncidentAnalysis(
+                            IncidentAnalysisRequest(
+                                trainTypes[trainType]!!,
+                                trainCar,
+                                transcription
+                            ),
+                            context,
+                            onResult = { result ->
+                                generatedReportText = result.failure
+                                isOnlineAILoading = false
+                                // Get to the validation screen
+                            },
+                            onError = { errorMessage ->
+                                isOnlineAILoading = false
+                                Toast.makeText(
+                                    context,
+                                    "Erreur lors de l'analyse : $errorMessage",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Veuillez entrer ou dicter une description.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Veuillez entrer ou dicter une description.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            },
+                },
                 shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
@@ -317,6 +333,40 @@ fun NewReportScreen(
                 Text("Rapport généré par Gemma :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(generatedGemmaText!!)
+            }
+        }
+    }
+}
+
+private fun getIncidentAnalysis(
+    incidentAnalysisRequest: IncidentAnalysisRequest,
+    context: Context,
+    onResult: (IncidentAnalysisResponse) -> Unit,
+    onError: (String) -> Unit,
+) {
+    if (incidentAnalysisRequest.trainType.isBlank()) {
+        Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (incidentAnalysisRequest.trainCar.isBlank()) {
+        Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
+        return
+    }
+
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.getIncidentApiService(context)
+                .generateIncidentAnalysis(incidentAnalysisRequest)
+            withContext(Dispatchers.Main) {
+                onResult(response)
+            }
+        } catch (e: IOException) { // Catch only network errors (IOException)
+            withContext(Dispatchers.Main) {
+                onError("Erreur de réseau lors de l'appel API : ${e.message}")
+            }
+        } catch (e: Exception) { // Catch other exceptions with a generic message
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue lors de l'appel API : ${e.message}")
             }
         }
     }
