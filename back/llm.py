@@ -84,7 +84,7 @@ def extract_llm_content(response_data: dict) -> str:
     return content
 
 
-def prompt_openai_objects(list_objects, message) -> list[dict[str, str]]:
+def get_llm_prompt_messages_from_objects(list_objects, message) -> list[dict[str, str]]:
     messages = [
             {"role": "system", "content": "Tu es un assistant chargé d'analyser des transcriptions audio d'agents SNCF pour identifier l'objet concerné par l'incident."},
             {"role": "user", "content": f"""Voici les objets possibles :
@@ -101,5 +101,5 @@ def prompt_openai_objects(list_objects, message) -> list[dict[str, str]]:
     return messages
 
 def get_response(message, possibilities):
-    prompt = prompt_openai_objects(possibilities, message)
+    prompt = get_llm_prompt_messages_from_objects(possibilities, message)
     return get_completions(ModelName.OPENAI, ChatRequest(messages=prompt))
