@@ -8,5 +8,6 @@ test:
     - pip install uv
     - cd /builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/back
     - uv sync
+    - cp .env.example .env
   script:
     - uv run pytest
