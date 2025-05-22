@@ -33,7 +33,7 @@ async def get_openai_completion(chat_request: ChatRequest, _ = Depends(validate_
 async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
-@app.post("/interface-analyse/", response_model=IncidentMessage)
+@app.post("/incident-analysis/", response_model=IncidentMessage)
 async def generate_interface_analyse(incident_info: IncidentInfo, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     incident = find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
 
