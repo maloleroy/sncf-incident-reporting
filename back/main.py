@@ -35,6 +35,6 @@ async def get_objects(trainType: str, car: str, db: Connection = Depends(inciden
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
 @app.post("/incident-analysis/", response_model=model.IncidentAnalysisResponse)
-async def generate_interface_analyse(incident_analysis_request: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
-    incident = find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
-    return IncidentAnalysisResponse(message = incident["content"])
+async def get_incident_analysis(incident_analysis_request: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
+    incident = find_incident(db, incident_analysis_request.trainType, incident_analysis_request.trainCar, incident_analysis_request.transcription)
+    return model.IncidentAnalysisResponse(message = incident["content"])
