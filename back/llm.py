@@ -1,12 +1,17 @@
 import requests
 from fastapi import FastAPI, HTTPException, Depends
+import os
+from enum import Enum
+
 from model import Incident, IncidentLocation, ChatRequest
 from env import require_environment_variables
 from security import PASSWORD_ENV_VAR
-import os
 
+class ModelName(str, Enum):
+    MISTRAL = "mistral-small-latest"
+    OPENAI = "gpt-4.1"
 
-def get_completions(model: str, messages: ChatRequest):
+def get_completions(model: ModelName, messages: ChatRequest):
     vars = require_environment_variables([get_env_var_name_from_model(model), PASSWORD_ENV_VAR])
     # Prepare headers and properly formatted messages
     headers = {
@@ -35,9 +40,9 @@ def get_completions(model: str, messages: ChatRequest):
     }
 
 def get_base_url_from_model(model: str) -> str:
-    if model == "mistral-small-latest":
+    if model == ModelName.MISTRAL:
         return "https://api.mistral.ai/v1/chat/completions"
-    elif model == "gpt-4o":
+    elif model == ModelName.OPENAI:
         return "https://api.openai.com/v1/chat/completions"
     raise HTTPException(
         status_code=400,
@@ -45,9 +50,9 @@ def get_base_url_from_model(model: str) -> str:
     )
 
 def get_env_var_name_from_model(model: str) -> str:
-    if model == "mistral-small-latest":
+    if model == ModelName.MISTRAL:
         return "MISTRAL_API_KEY"
-    elif model == "gpt-4o":
+    elif model == ModelName.OPENAI:
         return "OPENAI_API_KEY"
     raise HTTPException(
         status_code=400,
@@ -97,4 +102,4 @@ def prompt_openai_objects(list_objects, message) -> list[dict[str, str]]:
 
 def get_response(message, possibilities):
     prompt = prompt_openai_objects(possibilities, message)
-    return get_completions("gpt-4o", ChatRequest(messages=prompt))
+    return get_completions(ModelName.OPENAI, ChatRequest(messages=prompt))
