@@ -11,7 +11,14 @@ data class IncidentAnalysisRequest(
 )
 
 data class IncidentAnalysisResponse(
-    val message : String
+    val location : String,
+    val category : String,
+    val system : String,
+    val precision1 : String,
+    val precision2 : String,
+    val precision3 : String,
+    val subSystem : String,
+    val failure : String,
 )
 
 interface IncidentAnalysisApiService {

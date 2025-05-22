@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.appv1.GemmaEngine
 import com.example.appv1.api.IncidentAnalysisRequest
+import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.util.launchSpeech
@@ -308,7 +309,7 @@ fun NewReportScreen(onBack: () -> Unit) {
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
-    onResult: (String) -> Unit // Lambda pour retourner le résultat
+    onResult: (IncidentAnalysisResponse) -> Unit // Lambda pour retourner le résultat
 ) {
     if (incidentAnalysisRequest.trainType.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
@@ -324,17 +325,12 @@ private fun getIncidentAnalysis(
             val response = RetrofitInstance.getIncidentApiService(context)
                 .generateIncidentAnalysis(incidentAnalysisRequest)
             withContext(Dispatchers.Main) {
-                onResult(response.message)
+                onResult(response)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
             Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-            withContext(Dispatchers.Main) {
-                // Retourner un message d'erreur via la lambda
-                onResult("Erreur de réseau : ${e.message}")
-            }
         } catch (e: Exception) { // Let other exceptions propagate
             Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-            throw e // Re-throw the exception
         }
     }
 }
