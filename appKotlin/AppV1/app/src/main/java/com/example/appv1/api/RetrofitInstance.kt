@@ -65,22 +65,4 @@ object RetrofitInstance {
             .build()
             .create(ChatApiService::class.java)
     }
-
-    fun getIncidentObjectsListApiService(context: Context): IncidentObjectsListApiService {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .client(createSecureClient(context))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(IncidentObjectsListApiService::class.java)
-    }
-
-    fun getIncidentApiService(context: Context): IncidentApiService {
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.BACKEND_URL)
-            .client(createSecureClient(context))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(IncidentApiService::class.java)
-    }
 }

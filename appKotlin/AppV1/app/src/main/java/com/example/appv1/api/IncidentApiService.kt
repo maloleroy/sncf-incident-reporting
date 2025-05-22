@@ -4,7 +4,7 @@ import com.example.appv1.BuildConfig
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-data class IncidentInfo(
+data class IncidentAnalysisRequest(
     val trainType : String,
     val trainCar : String,
     val transcription : String
@@ -16,5 +16,5 @@ data class IncidentResponse(
 
 interface IncidentApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
-    suspend fun generateInterfaceAnalyse(@Body request: IncidentInfo): IncidentResponse
+    suspend fun generateInterfaceAnalyse(@Body request: IncidentAnalysisRequest): IncidentResponse
 }
