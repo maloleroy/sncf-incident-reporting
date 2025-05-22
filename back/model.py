@@ -137,11 +137,27 @@ class IncidentAnalysisRequest(BaseModel):
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
 class IncidentAnalysisResponse(BaseModel):
-    localisation : str 
-    categorie : str
-    organe : str
-    precision_n1 : str
-    precision_n2 : str
-    precision_n3 : str 
-    sous_organe : str 
-    defaillance : str 
+    location : str # localisation
+    category : str # categorie
+    system : str # organe
+    precision1 : str # precision_n1
+    precision2 : str # precision_n2
+    precision3 : str # precision_n3
+    subSystem : str # sous_organe
+    failure : str # defaillance
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                "location": "Place",
+                "category": "Siège",
+                "system": "Accoudoir",
+                "precision1": "",
+                "precision2": "",
+                "precision3": "Fenêtre",
+                "subSystem": "",
+                "failure": "Cassé, dégradé, manquant"
+                }
+            ]
+        }
+    }

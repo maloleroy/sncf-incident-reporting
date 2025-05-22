@@ -17,14 +17,14 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
 
 def create_incident_response(response_parsed):
     return IncidentAnalysisResponse(
-        localisation = response_parsed[0],
-        categorie = response_parsed[1],
-        organe = response_parsed[2],
-        precision_n1 = response_parsed[3],
-        precision_n2 = response_parsed[4],
-        precision_n3 = response_parsed[5],
-        sous_organe = response_parsed[6],
-        defaillance = response_parsed[7],
+        location = response_parsed[0],
+        category = response_parsed[1],
+        system = response_parsed[2],
+        precision1 = response_parsed[3],
+        precision2 = response_parsed[4],
+        precision3 = response_parsed[5],
+        subSystem = response_parsed[6],
+        failure = response_parsed[7],
     )
 
 def find_categories(response):
