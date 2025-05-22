@@ -4,35 +4,17 @@ import com.example.appv1.BuildConfig
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-data class ChatMessage(
-    val role: String, // "user", "assistant", "system"
-    val content: String
-)
-
-data class ChatRequest(
-    val messages: List<ChatMessage>,
-)
-
-data class ChatResponse(
-    val content: String,
-)
-
 data class IncidentInfo(
-    val transcription : String,
-    val train : String,
-    val voiture : String
+    val trainType : String,
+    val trainCar : String,
+    val transcription : String
 )
 
-data class Incident(
+data class IncidentResponse(
     val message : String
 )
 
-interface ChatApiService {
-    @POST(BuildConfig.BACKEND_AI_ROUTE)
-    suspend fun generateChatCompletion(@Body request: ChatRequest): ChatResponse // <-- Utilisation des nouvelles classes
-}
-
 interface IncidentApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
-    suspend fun generateInterfaceAnalyse(@Body request: IncidentInfo): Incident 
+    suspend fun generateInterfaceAnalyse(@Body request: IncidentInfo): IncidentResponse
 }
