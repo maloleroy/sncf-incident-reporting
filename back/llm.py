@@ -1,5 +1,5 @@
 import requests
-
+from fastapi import FastAPI, HTTPException, Depends
 from model import Incident, IncidentLocation, ChatRequest
 from env import require_environment_variables
 from security import PASSWORD_ENV_VAR
