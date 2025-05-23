@@ -47,29 +47,23 @@ def insert_incident(incident: IncidentAnalysisResponse, db: Connection):
 
     return {"message": "Incident created successfully"}
 
-def read_incidents(db: Connection):
+def list_incidents(db: Connection):
     cursor = db.cursor()
-    with open('sql/read_incidents.sql', 'r') as file:
+    with open('sql/list_incidents.sql', 'r') as file:
         sql_query = file.read()
         cursor.execute(sql_query)
     rows = cursor.fetchall()
 
     incidents = [
-        Incident(
-            id=row['incident_id'],
-            lastUpdate=row['lastUpdate'],
-            location=IncidentLocation(
-                id=row['location_id'],
-                main=row['main'],
-                precision1=row['precision1'],
-                precision2=row['precision2'],
-                precision3=row['precision3'],
-            ),
+        IncidentAnalysisResponse(
+            location=row['location'],
+            category=row['category'],
+            system=row['system'],
+            precision1=row['precision1'],
+            precision2=row['precision2'],
+            precision3=row['precision3'],
             subSystem=row['subSystem'],
             failure=row['failure'],
-            comment=row['comment'],
-            sealed=row['sealed'],
-            t4Call=row['t4Call']
         )
         for row in rows
     ]
