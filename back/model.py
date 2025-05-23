@@ -2,6 +2,8 @@ from enum import Enum
 from dataclasses import dataclass
 from datetime import datetime, UTC
 from pydantic import BaseModel, Field
+from typing import Optional
+
 
 # Enums for IncidentLocationMain
 class IncidentLocationMain(str, Enum):
@@ -135,6 +137,17 @@ class IncidentAnalysisRequest(BaseModel):
     trainType: TrainType = TrainType.DASYE
     trainCar: str = "R6H"
     transcription: str = "L'accoudoir de la place 76 est cassé."
+
+class ConservedInformations(BaseModel):
+    location: Optional[str] = None  # localisation
+    category: Optional[str] = None  # categorie
+    system: Optional[str] = None    # organe
+    precision1: Optional[str] = None  # precision_n1
+    precision2: Optional[str] = None  # precision_n2
+    precision3: Optional[str] = None  # precision_n3
+    subSystem: Optional[str] = None   # sous_organe
+    failure: Optional[str] = None     # defaillance
+
 
 class IncidentAnalysisResponse(BaseModel):
     location : str # localisation

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 fun getEnvVar(propertyKey: String, default: String = ""): String {
@@ -78,6 +79,8 @@ dependencies {
     implementation(libs.okhttp) // Ou version plus récente
     // Ajoutez la dépendance MediaPipe GenAI Tasks
     implementation(libs.tasks.genai) // Vérifiez la dernière version stable
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

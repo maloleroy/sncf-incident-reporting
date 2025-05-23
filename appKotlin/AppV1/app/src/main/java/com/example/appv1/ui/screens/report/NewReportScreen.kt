@@ -70,6 +70,7 @@ fun NewReportScreen(onBack: () -> Unit) {
 
     var trainType by remember { mutableStateOf("") }
     var trainCar by remember { mutableStateOf("") }
+    var numberOfSeat by remember { mutableStateOf("") }
     var transcription by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
     var isOnlineAILoading by remember { mutableStateOf(false) }
@@ -198,6 +199,19 @@ fun NewReportScreen(onBack: () -> Unit) {
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
+
+                        // Champ pour le numéro de siège
+            OutlinedTextField(
+                value = numberOfSeat,
+                onValueChange = { numberOfSeat = it },
+                label = { Text("Numéro de siège") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            
             OutlinedTextField(
                 value = transcription,
                 onValueChange = { transcription = it },
@@ -240,7 +254,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription), context) { result ->
+                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, numberOfSeat, transcription), context) { result ->
                             generatedReportText = result.failure // Mettre à jour l'état avec le résultat
                             isOnlineAILoading = false // Fin chargement
                         }
