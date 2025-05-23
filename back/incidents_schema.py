@@ -33,7 +33,7 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
 
 def get_incidents_completion(db : sqlite3.Connection, trainType: str, car: str, conserved_infos: model.ConservedInformations) -> list:
     cursor = db.cursor()
-    list_categories = ["location", "category", "system", "precision1", "precision2", "precision3", "subSystem", "failure"]
+    list_categories = ["location", "precision1", "category", "precision2", "system", "precision3", "subSystem", "failure"]
     kept_categories = []
     last_category = ""
     for cat in list_categories:
@@ -45,7 +45,6 @@ def get_incidents_completion(db : sqlite3.Connection, trainType: str, car: str, 
         sql_template = file.read()
     if not trainType.isidentifier():  # Sécurité de base
         raise ValueError("Nom de table non valide.")
-    
     sql_query = sql_template.replace("{train}", trainType)
     for cat in kept_categories:
         if not cat in conserved_infos:
