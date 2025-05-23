@@ -1,4 +1,5 @@
 package com.example.appv1.ui.screens.report
+
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -54,6 +55,7 @@ import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
+import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +82,7 @@ fun NewReportScreen(
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
     val trainTypes = mapOf(
-        "Dasye"  to "DASYE_eau_incidents",
+        "Dasye" to "DASYE_eau_incidents",
         "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
         "DUPLEX WC EAU" to "DUPLEX_WC_EAU_incidents",
         "NEODUPLEX chimique" to "NEODUPLEX_chimique_incidents",
@@ -241,14 +243,33 @@ fun NewReportScreen(
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                    isOnlineAILoading = true
+                    if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
+                    isOnlineAILoading = true // Début chargement
+                    generatedReportText = null // Réinitialiser l'ancienne réponse
                     getIncidentAnalysis(
-                        IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription),
-                        context
-                    ) {
-                        isOnlineAILoading = false
-                        onSuccess() // Navigue vers la page de confirmation
+                        IncidentAnalysisRequest(
+                            trainTypes[trainType]!!,
+                            trainCar,
+                            transcription
+                        ),
+                        context,
+                        onResult = { result ->
+                            generatedReportText = result.failure
+                            isOnlineAILoading = false
+                            // Get to the validation screen
+                            onSuccess()
+                        },
+                        onError = { errorMessage ->
+                            isOnlineAILoading = false
+                            showErrorDialog(context, errorMessage)
+                        }
+                    )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Veuillez entrer ou dicter une description.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 } else {
                     Toast.makeText(
@@ -315,14 +336,19 @@ fun NewReportScreen(
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
-    onResult: (IncidentAnalysisResponse) -> Unit // Lambda pour retourner le résultat
+    onResult: (IncidentAnalysisResponse) -> Unit,
+    onError: (String) -> Unit,
 ) {
     if (incidentAnalysisRequest.trainType.isBlank()) {
-        Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
+        onError("Veuillez préciser le train")
         return
     }
     if (incidentAnalysisRequest.trainCar.isBlank()) {
-        Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
+        onError("Veuillez préciser le numéro de rame")
+        return
+    }
+    if (incidentAnalysisRequest.transcription.isBlank()) {
+        onError("Veuillez préciser la description de l'incident")
         return
     }
 
@@ -333,10 +359,22 @@ private fun getIncidentAnalysis(
             withContext(Dispatchers.Main) {
                 onResult(response)
             }
-        } catch (e: IOException) { // Catch only network errors (IOException)
-            Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) { // Let other exceptions propagate
-            Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
+        } catch (e: retrofit2.HttpException) {
+            withContext(Dispatchers.Main) {
+                when (e.code()) {
+                    404 -> onError("Aucun incident trouvé")
+                    500 -> onError("Erreur serveur")
+                    else -> onError("Erreur HTTP ${e.code()}")
+                }
+            }
+        } catch (e: IOException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur de réseau lors de l'appel API : ${e.message}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue lors de l'appel API : ${e.message}")
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ from llm import get_completions
 from env import load_dotenv
 import incidents_db
 import incidents_schema
+from health import ensure_health
 
 app = FastAPI()
 load_dotenv()
@@ -37,3 +38,8 @@ async def get_objects(trainType: str, car: str, db: Connection = Depends(inciden
 @app.post("/incident-analysis/", response_model= model.IncidentAnalysisResponse)
 async def get_incident_analysis(incident_info: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
+
+@app.get("/health/", response_model=model.HealthCheckResponse)
+async def health_check():
+    ensure_health()
+    return model.HealthCheckResponse()

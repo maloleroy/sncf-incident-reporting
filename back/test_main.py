@@ -1,11 +1,24 @@
 from fastapi.testclient import TestClient
+
 from main import app
+from security import get_security_header
+
+from env import load_dotenv
+load_dotenv()
 
 client = TestClient(app)
 
 def test_get_root():
     response = client.get("/")
     assert response.status_code == 404
+
+def test_get_health():
+    response = client.get("/health/", headers=get_security_header())
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+    response = client.get("/health/") # we should be able to access it without auth
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
 
 def test_create_incident():
     incident_data = {
@@ -24,11 +37,11 @@ def test_create_incident():
         "sealed": False,
         "t4Call": False
     }
-    response = client.post("/incidents/", json=incident_data)
+    response = client.post("/incidents/", json=incident_data, headers=get_security_header())
     assert response.status_code == 200
     assert response.json() == {"message": "Incident created successfully"}
     # Check if the incident was created in the database
-    response = client.get("/incidents/")
+    response = client.get("/incidents/", headers=get_security_header())
     assert response.status_code == 200
     incidents = response.json()
     assert len(incidents) > 0
@@ -44,7 +57,7 @@ def test_create_incident():
     assert incidents[-1]["t4Call"] == incident_data["t4Call"]
 
 def test_read_incidents():
-    response = client.get("/incidents/")
+    response = client.get("/incidents/", headers=get_security_header())
     assert response.status_code == 200
     incidents = response.json()
     assert isinstance(incidents, list)

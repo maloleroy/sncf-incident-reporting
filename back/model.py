@@ -3,6 +3,18 @@ from dataclasses import dataclass
 from datetime import datetime, UTC
 from pydantic import BaseModel, Field
 
+class HealthCheckResponse(BaseModel):
+    status: str = "ok"
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "status": "ok"
+                }
+            ]
+        }
+    }
+
 # Enums for IncidentLocationMain
 class IncidentLocationMain(str, Enum):
     ASCT_LOCAL = "ASCT_LOCAL"
