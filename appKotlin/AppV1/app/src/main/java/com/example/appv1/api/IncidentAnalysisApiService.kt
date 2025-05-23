@@ -22,10 +22,17 @@ data class IncidentAnalysisResponse(
     val failure : String,
 )
 
+data class IncidentSubmittingResponse(
+    val status: String,
+)
+
 interface IncidentAnalysisApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
     suspend fun generateIncidentAnalysis(@Body request: IncidentAnalysisRequest): IncidentAnalysisResponse
 
     @GET("/health")
     suspend fun healthCheck(): String
+
+    @POST("/incident")
+    suspend fun submitIncident(@Body incident: IncidentAnalysisResponse): IncidentSubmittingResponse
 }
