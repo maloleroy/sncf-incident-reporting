@@ -20,10 +20,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.example.appv1.api.IncidentAnalysisResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmationScreen(
+    response: IncidentAnalysisResponse?,
     onBack: () -> Unit,
 ) {
     Scaffold(
@@ -55,6 +57,14 @@ fun ConfirmationScreen(
                 text = "Votre rapport a été envoyé avec succès.",
                 style = MaterialTheme.typography.bodyLarge
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            if (response != null) {
+                Text("Catégorie : ${response.category}")
+                Text("Système : ${response.system}")
+                Text("Lieu : ${response.location}")
+                Text("Sous-système : ${response.subSystem}")
+                Text("Défaillance : ${response.failure}")
+            }
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick=onBack) {
                 Text("Retour à la saisie")
