@@ -100,3 +100,4 @@ def get_incidents_completion(db: sqlite3.Connection, trainType: str, car: str, r
 # conserved_1.precision3 = "Boulevard de la République"
 # conserved_1.subSystem = "Boulevard"
 # conserved_1.failure = "Boulevard"
+
