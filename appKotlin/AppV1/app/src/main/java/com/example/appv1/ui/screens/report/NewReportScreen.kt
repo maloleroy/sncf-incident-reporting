@@ -3,6 +3,7 @@ package com.example.appv1.ui.screens.report
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import android.widget.Toast
@@ -53,10 +54,16 @@ import androidx.core.content.ContextCompat
 import com.example.appv1.GemmaEngine
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
+import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.api.getIncidentAnalysis
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
