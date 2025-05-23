@@ -33,6 +33,6 @@ interface IncidentAnalysisApiService {
     @GET("/health")
     suspend fun healthCheck(): String
 
-    @POST("/incident")
+    @POST("/incidents")
     suspend fun submitIncident(@Body incident: IncidentAnalysisResponse): IncidentSubmittingResponse
 }
