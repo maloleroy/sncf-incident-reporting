@@ -111,3 +111,11 @@ class IncidentAnalysisResponse(BaseModel):
             ]
         }
     }
+
+class IncidentSubmittingResponseStatus(str, Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+
+class IncidentSubmittingResponse(BaseModel):
+    status: IncidentSubmittingResponseStatus
+    message: str

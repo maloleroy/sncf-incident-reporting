@@ -15,7 +15,7 @@ from health import ensure_health
 app = FastAPI()
 load_dotenv()
 
-@app.post("/incidents/")
+@app.post("/incidents/", response_model=model.IncidentSubmittingResponse)
 async def save_incident(incident: model.IncidentAnalysisResponse, db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
     return incidents_db.insert_incident(incident, db)
 
