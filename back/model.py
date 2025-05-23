@@ -4,7 +4,6 @@ from datetime import datetime, UTC
 from pydantic import BaseModel, Field
 from typing import Optional
 
-<<<<<<< HEAD
 
 class HealthCheckResponse(BaseModel):
     status: str = "ok"
@@ -17,8 +16,6 @@ class HealthCheckResponse(BaseModel):
             ]
         }
     }
-=======
->>>>>>> fcd2353 (requetes pour differents niveaux)
 
 # Enums for IncidentLocationMain
 class IncidentLocationMain(str, Enum):
