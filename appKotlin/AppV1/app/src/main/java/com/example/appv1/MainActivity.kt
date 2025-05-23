@@ -8,7 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appv1.ui.screens.home.HomeScreen
 import com.example.appv1.ui.screens.report.NewReportScreen
+import com.example.appv1.ui.screens.report.ConfirmationScreen
+import com.example.appv1.ui.screens.report.ConfirmationScreen
 import com.example.appv1.ui.theme.AppV1Theme
+import com.example.appv1.ui.screens.report.ReportSharedViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +20,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppV1Theme(dynamicColor = false) {
                 val navController = rememberNavController()
+                val sharedViewModel: ReportSharedViewModel = viewModel()
                 NavHost(navController, startDestination = "home") {
                     composable("home") {
                         HomeScreen(
@@ -24,7 +29,19 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("new_report") {
-                        NewReportScreen(onBack = { navController.popBackStack() })
+                        NewReportScreen(
+                            onBack = { navController.popBackStack() },
+                            onSuccess = { response ->
+                                sharedViewModel.lastIncidentAnalysisResponse = response
+                                navController.navigate("confirm_report")
+                            }
+                        )
+                    }
+                    composable("confirm_report") {
+                        ConfirmationScreen(
+                            response = sharedViewModel.lastIncidentAnalysisResponse,
+                            onBack = { navController.popBackStack() }
+                        )
                     }
                 }
             }

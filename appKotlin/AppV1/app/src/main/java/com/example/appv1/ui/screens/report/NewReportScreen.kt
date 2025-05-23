@@ -1,7 +1,8 @@
 package com.example.appv1.ui.screens.report
+
+
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import android.widget.Toast
@@ -52,19 +53,18 @@ import androidx.core.content.ContextCompat
 import com.example.appv1.GemmaEngine
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
-import com.example.appv1.api.RetrofitInstance
+import com.example.appv1.api.getIncidentAnalysis
 import com.example.appv1.ui.components.NewReportScreenDivider
+import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.IOException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewReportScreen(onBack: () -> Unit) {
+fun NewReportScreen(
+    onBack: () -> Unit,
+    onSuccess: (IncidentAnalysisResponse) -> Unit
+) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
@@ -77,7 +77,7 @@ fun NewReportScreen(onBack: () -> Unit) {
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
     val trainTypes = mapOf(
-        "Dasye"  to "DASYE_eau_incidents",
+        "Dasye" to "DASYE_eau_incidents",
         "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
         "DUPLEX WC EAU" to "DUPLEX_WC_EAU_incidents",
         "NEODUPLEX chimique" to "NEODUPLEX_chimique_incidents",
@@ -254,10 +254,23 @@ fun NewReportScreen(onBack: () -> Unit) {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, numberOfSeat, transcription), context) { result ->
-                            generatedReportText = result.failure // Mettre à jour l'état avec le résultat
-                            isOnlineAILoading = false // Fin chargement
-                        }
+                        getIncidentAnalysis(
+                            IncidentAnalysisRequest(
+                                trainTypes[trainType]!!,
+                                trainCar,
+                                transcription
+                            ),
+                            context,
+                            onResult = { result ->
+                                generatedReportText = result.failure
+                                isOnlineAILoading = false
+                                onSuccess(result)
+                            },
+                            onError = { errorMessage ->
+                                isOnlineAILoading = false
+                                showErrorDialog(context, errorMessage)
+                            }
+                        )
                     } else {
                         Toast.makeText(
                             context,
@@ -295,7 +308,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 Text("Génération en cours...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            } else if (generatedReportText != null) {
+            } else if (generatedReportText != null) { // Cette partie pourrait être enlevée si on navigue directement
                 NewReportScreenDivider()
                 Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
@@ -323,7 +336,8 @@ fun NewReportScreen(onBack: () -> Unit) {
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
-    onResult: (IncidentAnalysisResponse) -> Unit // Lambda pour retourner le résultat
+    onResult: (IncidentAnalysisResponse) -> Unit,
+    onError: (String) -> Unit,
 ) {
     if (incidentAnalysisRequest.trainType.isBlank()) {
         Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
@@ -342,9 +356,13 @@ private fun getIncidentAnalysis(
                 onResult(response)
             }
         } catch (e: IOException) { // Catch only network errors (IOException)
-            Toast.makeText(context, "Network error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) { // Let other exceptions propagate
-            Toast.makeText(context, "Unexpected error calling AI API ${e.message}", Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main) {
+                onError("Erreur de réseau lors de l'appel API : ${e.message}")
+            }
+        } catch (e: Exception) { // Catch other exceptions with a generic message
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue lors de l'appel API : ${e.message}")
+            }
         }
     }
 }

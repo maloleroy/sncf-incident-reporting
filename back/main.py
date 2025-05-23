@@ -10,17 +10,18 @@ from llm import get_completions
 from env import load_dotenv
 import incidents_db
 import incidents_schema
+from health import ensure_health
 
 app = FastAPI()
 load_dotenv()
 
-@app.post("/incidents/")
-async def create_incident(incident: model.Incident, db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
-    return incidents_db.create_incident(incident, db)
+@app.post("/incidents/", response_model=model.IncidentSubmittingResponse)
+async def save_incident(incident: model.IncidentAnalysisResponse, db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
+    return incidents_db.insert_incident(incident, db)
 
-@app.get("/incidents/", response_model=list[model.Incident])
-async def read_incidents(db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
-    return incidents_db.read_incidents(db)
+@app.get("/incidents/", response_model=list[model.IncidentAnalysisResponse])
+async def list_incidents(db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
+    return incidents_db.list_incidents(db)
 
 @app.post("/mistral/", response_model=model.SimpleChatCompletion)
 async def get_mistral_completion(chat_request: model.ChatRequest, _ = Depends(validate_token)):
@@ -41,3 +42,8 @@ async def get_completion_options(trainType: str, car: str, conserved_infos: mode
 @app.post("/incident-analysis/", response_model= model.IncidentAnalysisResponse)
 async def get_incident_analysis(incident_info: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return find_incident(db, incident_info.trainType, incident_info.trainCar, incident_info.transcription)
+
+@app.get("/health/", response_model=model.HealthCheckResponse)
+async def health_check():
+    ensure_health()
+    return model.HealthCheckResponse()

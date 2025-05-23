@@ -5,6 +5,18 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
+class HealthCheckResponse(BaseModel):
+    status: str = "ok"
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "status": "ok"
+                }
+            ]
+        }
+    }
+
 # Enums for IncidentLocationMain
 class IncidentLocationMain(str, Enum):
     ASCT_LOCAL = "ASCT_LOCAL"
@@ -176,14 +188,36 @@ class IncidentAnalysisResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                "location": "Place",
-                "category": "Siège",
-                "system": "Accoudoir",
-                "precision1": "",
-                "precision2": "",
-                "precision3": "Fenêtre",
-                "subSystem": "",
-                "failure": "Cassé, dégradé, manquant"
+                    "location": "Place",
+                    "category": "Siège",
+                    "system": "Accoudoir",
+                    "precision1": "",
+                    "precision2": "",
+                    "precision3": "Fenêtre",
+                    "subSystem": "",
+                    "failure": "Cassé, dégradé, manquant"
+                    }
+            ]
+        }
+    }
+
+class IncidentSubmittingResponseStatus(str, Enum):
+    SUCCESS = "success"
+    FAILURE = "failure"
+
+class IncidentSubmittingResponse(BaseModel):
+    status: IncidentSubmittingResponseStatus
+    message: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "status": "success",
+                    "message": "Incident successfully submitted"
+                },
+                {
+                    "status": "failure",
+                    "message": "Incident submission failed"
                 }
             ]
         }

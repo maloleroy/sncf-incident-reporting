@@ -6,16 +6,22 @@ security = HTTPBearer()
 
 PASSWORD_ENV_VAR = "PASSWORD"
 
-def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    expected_token = os.getenv(PASSWORD_ENV_VAR)
-    
-    if not expected_token:
+def get_server_password():
+    password = os.getenv(PASSWORD_ENV_VAR)
+    if not password:
         raise HTTPException(status_code=500, detail="Server configuration error")
-    
+    return password
+
+def get_security_header():
+    return {
+        "Authorization": "Bearer " + get_server_password()
+    }
+
+def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)):    
     if credentials.scheme.lower() != "bearer":
         raise HTTPException(status_code=401, detail="Invalid authentication scheme")
     
-    if credentials.credentials != expected_token:
+    if credentials.credentials != get_server_password():
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
