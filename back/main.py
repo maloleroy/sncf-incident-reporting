@@ -12,6 +12,13 @@ import incidents_db
 import incidents_schema
 from health import ensure_health
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # ← INFO pour voir les logs sans activer DEBUG
+    format="%(asctime)s [%(levelname)s] %(message)s"
+)
+
 app = FastAPI()
 load_dotenv()
 
