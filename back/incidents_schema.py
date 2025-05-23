@@ -93,7 +93,7 @@ def get_incidents_completion(db: sqlite3.Connection, trainType: str, car: str, r
     final_response = {cat: list(values) for cat, values in response_by_category.items()}
     logging.debug(f"[DEBUG] Résultat final structuré : {final_response}")
 
-    return final_response
+    return model.IncidentCompletionResponse(options=final_response[request.level])
 
 # conserved_1.precision2 = "Boulevard de la République"
 # conserved_1.system = "Boulevard"
