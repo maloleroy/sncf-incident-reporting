@@ -253,37 +253,35 @@ fun NewReportScreen(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                        isOnlineAILoading = true // Début chargement
-                        generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(
-                            IncidentAnalysisRequest(
-                                trainTypes[trainType]!!,
-                                trainCar,
-                                transcription
-                            ),
-                            context,
-                            onResult = { result ->
-                                generatedReportText = result.failure
-                                isOnlineAILoading = false
-                                // Get to the validation screen
-                            },
-                            onError = { errorMessage ->
-                                isOnlineAILoading = false
-                                Toast.makeText(
-                                    context,
-                                    "Erreur lors de l'analyse : $errorMessage",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Veuillez entrer ou dicter une description.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                },
+                    isOnlineAILoading = true // Début chargement
+                    generatedReportText = null // Réinitialiser l'ancienne réponse
+                    getIncidentAnalysis(
+                        IncidentAnalysisRequest(
+                            trainTypes[trainType]!!,
+                            trainCar,
+                            transcription
+                        ),
+                        context,
+                        onResult = { result ->
+                            generatedReportText = result.failure
+                            isOnlineAILoading = false
+                            // Get to the validation screen
+                        },
+                        onError = { errorMessage ->
+                            isOnlineAILoading = false
+                            showErrorDialog(context, errorMessage)
+                        }
+                    )
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Veuillez entrer ou dicter une description.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+
+        
                 shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
