@@ -24,6 +24,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.rememberScrollState
 import com.example.appv1.api.IncidentAnalysisResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +65,8 @@ fun ConfirmationScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -123,10 +126,6 @@ fun ConfirmationScreen(
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = { /* TODO: callback de sauvegarde ou validation */ }) {
                 Text("Sauvegarder les modifications")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onBack) {
-                Text("Retour à la saisie")
             }
         }
     }
