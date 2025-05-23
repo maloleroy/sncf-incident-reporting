@@ -1,7 +1,7 @@
 from sqlite3 import Connection, connect, Row
 import os
 
-from model import IncidentAnalysisResponse
+import model
 
 def initialize_db():
     conn = connect('incidents.db')
@@ -24,7 +24,7 @@ def get_db() -> Connection:
     finally:
         conn.close()
 
-def insert_incident(incident: IncidentAnalysisResponse, db: Connection):
+def insert_incident(incident: model.IncidentAnalysisResponse, db: Connection):
     cursor = db.cursor()
 
     with open('sql/insert_incident.sql', 'r') as file:
@@ -45,7 +45,10 @@ def insert_incident(incident: IncidentAnalysisResponse, db: Connection):
 
     db.commit()
 
-    return {"message": "Incident created successfully"}
+    return model.IncidentSubmittingResponse(
+        status=model.IncidentSubmittingResponseStatus.SUCCESS,
+        message="Incident successfully submitted",
+    )
 
 def list_incidents(db: Connection):
     cursor = db.cursor()
@@ -55,7 +58,7 @@ def list_incidents(db: Connection):
     rows = cursor.fetchall()
 
     incidents = [
-        IncidentAnalysisResponse(
+        model.IncidentAnalysisResponse(
             location=row['location'],
             category=row['category'],
             system=row['system'],
