@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appv1.ui.screens.home.HomeScreen
 import com.example.appv1.ui.screens.report.NewReportScreen
+import com.example.appv1.ui.screens.report.ConfirmationScreen
 import com.example.appv1.ui.theme.AppV1Theme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,13 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable("new_report") {
-                        NewReportScreen(onBack = { navController.popBackStack() })
+                        NewReportScreen(
+                            onBack = { navController.popBackStack() },
+                            onSuccess = { navController.navigate("confirm_report") }
+                        )
+                    }
+                    composable("confirm_report") {
+                        ConfirmationScreen(onBack = { navController.popBackStack() })
                     }
                 }
             }

@@ -64,7 +64,11 @@ import java.io.IOException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewReportScreen(onBack: () -> Unit) {
+fun NewReportScreen(
+    onBack: () -> Unit,
+    onSuccess: () -> Unit
+    //onSubmissionResult: (success: Boolean, message: String?) -> Unit // Ajout du paramètre
+) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
@@ -237,21 +241,23 @@ fun NewReportScreen(onBack: () -> Unit) {
             Button(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
-                    if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                        isOnlineAILoading = true // Début chargement
-                        generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription), context) { result ->
-                            generatedReportText = result.failure // Mettre à jour l'état avec le résultat
-                            isOnlineAILoading = false // Fin chargement
-                        }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Veuillez entrer ou dicter une description.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
+                    isOnlineAILoading = true
+                    getIncidentAnalysis(
+                        IncidentAnalysisRequest(trainTypes[trainType]!!, trainCar, transcription),
+                        context
+                    ) {
+                        isOnlineAILoading = false
+                        onSuccess() // Navigue vers la page de confirmation
                     }
-                },
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Veuillez entrer ou dicter une description.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
                 shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
@@ -281,7 +287,7 @@ fun NewReportScreen(onBack: () -> Unit) {
                 Text("Génération en cours...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            } else if (generatedReportText != null) {
+            } else if (generatedReportText != null) { // Cette partie pourrait être enlevée si on navigue directement
                 NewReportScreenDivider()
                 Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
