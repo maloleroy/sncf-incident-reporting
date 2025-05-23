@@ -12,6 +12,14 @@ def test_get_root():
     response = client.get("/")
     assert response.status_code == 404
 
+def test_get_health():
+    response = client.get("/health/", headers=get_security_header())
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+    response = client.get("/health/") # we should be able to access it without auth
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+
 def test_create_incident():
     incident_data = {
         "id": 0,
