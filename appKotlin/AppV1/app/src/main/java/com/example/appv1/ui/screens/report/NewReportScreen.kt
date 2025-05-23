@@ -69,6 +69,7 @@ fun NewReportScreen(
 
     var trainType by remember { mutableStateOf("") }
     var trainCar by remember { mutableStateOf("") }
+    var numberOfSeat by remember { mutableStateOf("") }
     var transcription by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
     var isOnlineAILoading by remember { mutableStateOf(false) }
@@ -197,6 +198,19 @@ fun NewReportScreen(
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
+
+                        // Champ pour le numéro de siège
+            OutlinedTextField(
+                value = numberOfSeat,
+                onValueChange = { numberOfSeat = it },
+                label = { Text("Numéro de siège") },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            )
+
+            
             OutlinedTextField(
                 value = transcription,
                 onValueChange = { transcription = it },
