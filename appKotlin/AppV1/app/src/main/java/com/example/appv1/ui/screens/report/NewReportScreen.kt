@@ -63,8 +63,7 @@ import com.example.appv1.ui.util.launchSpeech
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: () -> Unit
-    //onSubmissionResult: (success: Boolean, message: String?) -> Unit // Ajout du paramètre
+    onSuccess: (IncidentAnalysisResponse) -> Unit
 ) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
@@ -253,35 +252,33 @@ fun NewReportScreen(
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                    isOnlineAILoading = true // Début chargement
-                    generatedReportText = null // Réinitialiser l'ancienne réponse
-                    getIncidentAnalysis(
-                        IncidentAnalysisRequest(
-                            trainTypes[trainType]!!,
-                            trainCar,
-                            transcription
-                        ),
-                        context,
-                        onResult = { result ->
-                            generatedReportText = result.failure
-                            isOnlineAILoading = false
-                            // Get to the validation screen
-                        },
-                        onError = { errorMessage ->
-                            isOnlineAILoading = false
-                            showErrorDialog(context, errorMessage)
-                        }
-                    )
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Veuillez entrer ou dicter une description.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            },
-
-        
+                        isOnlineAILoading = true // Début chargement
+                        generatedReportText = null // Réinitialiser l'ancienne réponse
+                        getIncidentAnalysis(
+                            IncidentAnalysisRequest(
+                                trainTypes[trainType]!!,
+                                trainCar,
+                                transcription
+                            ),
+                            context,
+                            onResult = { result ->
+                                generatedReportText = result.failure
+                                isOnlineAILoading = false
+                                onSuccess(result)
+                            },
+                            onError = { errorMessage ->
+                                isOnlineAILoading = false
+                                showErrorDialog(context, errorMessage)
+                            }
+                        )
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Veuillez entrer ou dicter une description.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
                 shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
