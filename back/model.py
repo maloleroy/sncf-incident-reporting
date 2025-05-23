@@ -119,3 +119,17 @@ class IncidentSubmittingResponseStatus(str, Enum):
 class IncidentSubmittingResponse(BaseModel):
     status: IncidentSubmittingResponseStatus
     message: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "status": "success",
+                    "message": "Incident successfully submitted"
+                },
+                {
+                    "status": "failure",
+                    "message": "Incident submission failed"
+                }
+            ]
+        }
+    }
