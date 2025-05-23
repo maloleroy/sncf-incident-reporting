@@ -4,38 +4,32 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.example.appv1.api.IncidentAnalysisResponse
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.material3.MenuAnchorType
+import com.example.appv1.api.submitIncident
+import com.example.appv1.ui.components.showErrorDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +39,7 @@ fun ConfirmationScreen(
     // Ajoute un callback pour charger dynamiquement les options
     loadOptions: suspend (level: String, selections: Map<String, String>) -> List<String> = { _, _ -> emptyList() }
 ) {
+    val context = LocalContext.current
     if (response == null) {
         // Affichage d'un message d'erreur ou d'un loader si besoin
         Text("Aucune donnée à afficher.")
@@ -443,8 +438,35 @@ fun ConfirmationScreen(
             }
             // Ajoute un bouton de sauvegarde ou de validation si besoin
             Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = { /* TODO: sauvegarde ou validation */ }) {
-                Text("Confirmer l'incident")
+            Button(onClick = {
+                // Soumettre les données modifiées
+                submitIncident(
+                    IncidentAnalysisResponse(
+                        location = location,
+                        category = category,
+                        system = system,
+                        precision1 = precision1,
+                        precision2 = precision2,
+                        precision3 = precision3,
+                        subSystem = subSystem,
+                        failure = failure
+                    ),
+                    context,
+                    onResult = { response ->
+                        // Gérer la réponse de l'API
+                        if (response.status == "success") {
+                            // Afficher un message de succès ou naviguer ailleurs
+                            onBack()
+                        } else {
+                            showErrorDialog(context, "Erreur lors de la soumission : ${response.status}")
+                        }
+                    },
+                    onError = { errorMessage ->
+                        // Afficher un message d'erreur
+                    }
+                )
+            }) {
+                Text("Sauvegarder les modifications")
             }
         }
     }

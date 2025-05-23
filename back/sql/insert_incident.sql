@@ -1,2 +1,11 @@
-INSERT INTO incidents (lastUpdate, location_id, subSystem, failure, comment, sealed, t4Call)
-VALUES (?, ?, ?, ?, ?, ?, ?)
+INSERT INTO incidents (
+    location,
+    category,
+    system,
+    precision1,
+    precision2,
+    precision3,
+    subSystem,
+    failure
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
