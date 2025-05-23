@@ -82,27 +82,27 @@ fun ConfirmationScreen(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
             OutlinedTextField(
-                value = category,
-                onValueChange = setCategory,
-                label = { Text("Catégorie") },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
-            )
-            OutlinedTextField(
-                value = system,
-                onValueChange = setSystem,
-                label = { Text("Système") },
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
-            )
-            OutlinedTextField(
                 value = precision1,
                 onValueChange = setPrecision1,
                 label = { Text("Précision 1") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
             OutlinedTextField(
+                value = category,
+                onValueChange = setCategory,
+                label = { Text("Catégorie") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
                 value = precision2,
                 onValueChange = setPrecision2,
                 label = { Text("Précision 2") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = system,
+                onValueChange = setSystem,
+                label = { Text("Système") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
             OutlinedTextField(
