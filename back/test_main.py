@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 
 from main import app
 from security import get_security_header
-from model import IncidentAnalysisResponse
+import model
 
 from env import load_dotenv
 load_dotenv()
@@ -22,10 +22,10 @@ def test_get_health():
     assert response.json() == {"status": "ok"}
 
 def test_create_incident():
-    incident_data = IncidentAnalysisResponse.model_config["json_schema_extra"]["examples"][0]
+    incident_data = model.IncidentAnalysisResponse.model_config["json_schema_extra"]["examples"][0]
     response = client.post("/incidents/", json=incident_data, headers=get_security_header())
     assert response.status_code == 200
-    assert response.json() == {"message": "Incident created successfully"}
+    assert response.json() == model.IncidentSubmittingResponse.model_config["json_schema_extra"]["examples"][0]
     # Check if the incident was created in the database
     response = client.get("/incidents/", headers=get_security_header())
     assert response.status_code == 200
@@ -43,7 +43,7 @@ def test_read_incidents():
     if incidents:
         for incident in incidents:
             assert isinstance(incident, dict)
-            for key in IncidentAnalysisResponse.model_fields.keys():
+            for key in model.IncidentAnalysisResponse.model_fields.keys():
                 if key in incident:
                     assert isinstance(incident[key], str)
                 else:

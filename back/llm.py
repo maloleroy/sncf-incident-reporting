@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException, Depends
 import os
 from enum import Enum
 
-from model import Incident, IncidentLocation, ChatRequest
+from model import ChatRequest
 from env import require_environment_variables
 from security import PASSWORD_ENV_VAR
 
