@@ -34,8 +34,8 @@ async def get_openai_completion(chat_request: model.ChatRequest, _ = Depends(val
 async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
-@app.post("/complete/")
-async def get_objects(trainType: str, car: str, conserved_infos: model.ConservedInformations, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
+@app.post("/incident-options/", response_model = model.InformationsPossibilities)
+async def get_completion_options(trainType: str, car: str, conserved_infos: model.IncidentCompletionRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_completion(db, trainType, car, conserved_infos)
 
 @app.post("/incident-analysis/", response_model= model.IncidentAnalysisResponse)
