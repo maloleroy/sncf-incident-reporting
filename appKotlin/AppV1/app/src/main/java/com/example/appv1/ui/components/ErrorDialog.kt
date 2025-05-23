@@ -9,7 +9,7 @@ fun showErrorDialog(context: Context, errorMessage: String) {
     val builder = AlertDialog.Builder(context)
     .setTitle("Erreur")
     .setMessage(errorMessage)
-    .setPositiveButton("Envoyer un rapport d'incident") { dialog, which ->
+    .setPositiveButton("Signaler l'erreur") { dialog, which ->
         // Send incident report
     }
     .setNegativeButton("Fermer") { dialog, which ->

@@ -1,3 +1,5 @@
+from fastapi import HTTPException
+
 from incidents_schema import get_incidents
 from llm import get_response
 from model import IncidentAnalysisResponse
@@ -10,7 +12,12 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
     possibilities = get_incidents(db, train, voiture)
     response = get_response(transcription, possibilities)['content']
     logger.info("LLM Response: %s", response)
-    response_parsed = find_categories(response)
+    if response.lower().replace(" ", "").replace(".", "") == "jenesaispas":
+        raise HTTPException(status_code=404, detail="No incident found")
+    try:
+        response_parsed = find_categories(response)
+    except IndexError as e:
+        raise HTTPException(status_code=500, detail="Parsing error: %s" % e)
     response_cleared = create_incident_response(response_parsed)
     logger.info("LLM Response Parsed: %s", response_cleared)
     return response_cleared

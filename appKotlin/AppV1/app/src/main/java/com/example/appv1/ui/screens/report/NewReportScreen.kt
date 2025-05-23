@@ -347,11 +347,19 @@ private fun getIncidentAnalysis(
             withContext(Dispatchers.Main) {
                 onResult(response)
             }
-        } catch (e: IOException) { // Catch only network errors (IOException)
+        } catch (e: retrofit2.HttpException) {
+            withContext(Dispatchers.Main) {
+                when (e.code()) {
+                    404 -> onError("Aucun incident trouvé")
+                    500 -> onError("Erreur serveur")
+                    else -> onError("Erreur HTTP ${e.code()}")
+                }
+            }
+        } catch (e: IOException) {
             withContext(Dispatchers.Main) {
                 onError("Erreur de réseau lors de l'appel API : ${e.message}")
             }
-        } catch (e: Exception) { // Catch other exceptions with a generic message
+        } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 onError("Erreur inattendue lors de l'appel API : ${e.message}")
             }
