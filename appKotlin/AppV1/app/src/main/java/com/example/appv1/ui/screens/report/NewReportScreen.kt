@@ -264,13 +264,6 @@ fun NewReportScreen(
                             showErrorDialog(context, errorMessage)
                         }
                     )
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Veuillez entrer ou dicter une description.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 } else {
                     Toast.makeText(
                         context,
@@ -279,6 +272,8 @@ fun NewReportScreen(
                     ).show()
                 }
             },
+
+        
                 shape = RoundedCornerShape(15.dp), // Ajuste la valeur pour plus ou moins d’arrondi
                 modifier = Modifier
                     .fillMaxWidth()
