@@ -98,6 +98,20 @@ class ConservedInformations(BaseModel):
     subSystem: Optional[str] = None   # sous_organe
     failure: Optional[str] = None     # defaillance
 
+class IncidentCompletionRequest(BaseModel):
+    level: str
+    selections: ConservedInformations
+
+class InformationsPossibilities(BaseModel):
+    location: Optional[list] = None
+    category: Optional[list] = None  # categorie
+    system: Optional[list] = None    # organe
+    precision1: Optional[list] = None  # precision_n1
+    precision2: Optional[list] = None  # precision_n2
+    precision3: Optional[list] = None  # precision_n3
+    subSystem: Optional[list] = None   # sous_organe
+    failure: Optional[list] = None 
+
 
 class IncidentAnalysisResponse(BaseModel):
     location : str # localisation
