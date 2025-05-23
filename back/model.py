@@ -164,6 +164,9 @@ class IncidentCompletionRequest(BaseModel):
     level: str
     selections: ConservedInformations
 
+class IncidentCompletionResponse(BaseModel):
+    options: list
+
 class InformationsPossibilities(BaseModel):
     location: Optional[list] = None
     category: Optional[list] = None  # categorie
