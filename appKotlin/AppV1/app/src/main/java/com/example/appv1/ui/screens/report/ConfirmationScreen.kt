@@ -125,7 +125,7 @@ fun ConfirmationScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = { /* TODO: callback de sauvegarde ou validation */ }) {
-                Text("Sauvegarder les modifications")
+                Text("Confirmer l'incident")
             }
         }
     }
