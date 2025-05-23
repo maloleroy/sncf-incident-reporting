@@ -55,6 +55,7 @@ import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.NewReportScreenDivider
+import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -239,29 +240,25 @@ fun NewReportScreen(onBack: () -> Unit) {
                 // ----> 3. Mettre à jour l'appel onClick <----
                 onClick = {
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
-                        isOnlineAILoading = true // Début chargement
-                        generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(
-                            IncidentAnalysisRequest(
-                                trainTypes[trainType]!!,
-                                trainCar,
-                                transcription
-                            ),
-                            context,
-                            onResult = { result ->
-                                generatedReportText = result.failure
-                                isOnlineAILoading = false
-                                // Get to the validation screen
-                            },
-                            onError = { errorMessage ->
-                                isOnlineAILoading = false
-                                Toast.makeText(
-                                    context,
-                                    "Erreur lors de l'analyse : $errorMessage",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        )
+                    isOnlineAILoading = true // Début chargement
+                    generatedReportText = null // Réinitialiser l'ancienne réponse
+                    getIncidentAnalysis(
+                        IncidentAnalysisRequest(
+                            trainTypes[trainType]!!,
+                            trainCar,
+                            transcription
+                        ),
+                        context,
+                        onResult = { result ->
+                            generatedReportText = result.failure
+                            isOnlineAILoading = false
+                            // Get to the validation screen
+                        },
+                        onError = { errorMessage ->
+                            isOnlineAILoading = false
+                            showErrorDialog(context, errorMessage)
+                        }
+                    )
                     } else {
                         Toast.makeText(
                             context,
@@ -331,11 +328,15 @@ private fun getIncidentAnalysis(
     onError: (String) -> Unit,
 ) {
     if (incidentAnalysisRequest.trainType.isBlank()) {
-        Toast.makeText(context, "Veuillez préciser le train", Toast.LENGTH_SHORT).show()
+        onError("Veuillez préciser le train")
         return
     }
     if (incidentAnalysisRequest.trainCar.isBlank()) {
-        Toast.makeText(context, "Veuillez préciser le numéro de rame", Toast.LENGTH_SHORT).show()
+        onError("Veuillez préciser le numéro de rame")
+        return
+    }
+    if (incidentAnalysisRequest.transcription.isBlank()) {
+        onError("Veuillez préciser la description de l'incident")
         return
     }
 
