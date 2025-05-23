@@ -99,15 +99,15 @@ class IncidentAnalysisResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
-                "location": "Place",
-                "category": "Siège",
-                "system": "Accoudoir",
-                "precision1": "",
-                "precision2": "",
-                "precision3": "Fenêtre",
-                "subSystem": "",
-                "failure": "Cassé, dégradé, manquant"
-                }
+                    "location": "Place",
+                    "category": "Siège",
+                    "system": "Accoudoir",
+                    "precision1": "",
+                    "precision2": "",
+                    "precision3": "Fenêtre",
+                    "subSystem": "",
+                    "failure": "Cassé, dégradé, manquant"
+                    }
             ]
         }
     }
