@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.IconButton
@@ -20,6 +21,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.example.appv1.api.IncidentAnalysisResponse
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +32,21 @@ fun ConfirmationScreen(
     response: IncidentAnalysisResponse?,
     onBack: () -> Unit,
 ) {
+    if (response == null) {
+        // Affichage d'un message d'erreur ou d'un loader si besoin
+        Text("Aucune donnée à afficher.")
+        return
+    }
+    // États locaux pour chaque champ modifiable
+    val (location, setLocation) = remember { mutableStateOf(response.location) }
+    val (category, setCategory) = remember { mutableStateOf(response.category) }
+    val (system, setSystem) = remember { mutableStateOf(response.system) }
+    val (precision1, setPrecision1) = remember { mutableStateOf(response.precision1) }
+    val (precision2, setPrecision2) = remember { mutableStateOf(response.precision2) }
+    val (precision3, setPrecision3) = remember { mutableStateOf(response.precision3) }
+    val (subSystem, setSubSystem) = remember { mutableStateOf(response.subSystem) }
+    val (failure, setFailure) = remember { mutableStateOf(response.failure) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,28 +64,68 @@ fun ConfirmationScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Succès!",
-                style = MaterialTheme.typography.headlineMedium
+                text = "Vérifiez et modifiez les informations de l'incident :",
+                style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Votre rapport a été envoyé avec succès.",
-                style = MaterialTheme.typography.bodyLarge
+            OutlinedTextField(
+                value = location,
+                onValueChange = setLocation,
+                label = { Text("Lieu") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            if (response != null) {
-                Text("Catégorie : ${response.category}")
-                Text("Système : ${response.system}")
-                Text("Lieu : ${response.location}")
-                Text("Sous-système : ${response.subSystem}")
-                Text("Défaillance : ${response.failure}")
+            OutlinedTextField(
+                value = category,
+                onValueChange = setCategory,
+                label = { Text("Catégorie") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = system,
+                onValueChange = setSystem,
+                label = { Text("Système") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = precision1,
+                onValueChange = setPrecision1,
+                label = { Text("Précision 1") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = precision2,
+                onValueChange = setPrecision2,
+                label = { Text("Précision 2") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = precision3,
+                onValueChange = setPrecision3,
+                label = { Text("Précision 3") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = subSystem,
+                onValueChange = setSubSystem,
+                label = { Text("Sous-système") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            OutlinedTextField(
+                value = failure,
+                onValueChange = setFailure,
+                label = { Text("Défaillance") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(onClick = { /* TODO: callback de sauvegarde ou validation */ }) {
+                Text("Sauvegarder les modifications")
             }
-            Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick=onBack) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = onBack) {
                 Text("Retour à la saisie")
             }
         }
