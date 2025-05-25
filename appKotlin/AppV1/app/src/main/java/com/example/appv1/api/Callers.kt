@@ -87,6 +87,37 @@ fun getCompletion(
     }
 }
 
+fun loadOptionsForLevel(
+    level: String,
+    selections: ConservedInformations,
+    context: Context,
+    onSuccess: (List<String>) -> Unit,
+    onError: (String) -> Unit
+) {
+    val request = IncidentCompletionRequest(level, selections)
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.getCompletionApiService(context).completeIncident(request)
+            withContext(Dispatchers.Main) {
+                onSuccess(response.options)
+            }
+        } catch (e: retrofit2.HttpException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur HTTP ${e.code()}")
+            }
+        } catch (e: IOException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur réseau : ${e.message}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue : ${e.message}")
+            }
+        }
+    }
+}
+
+
 
 fun submitIncident(
     incident: IncidentAnalysisResponse,

@@ -19,31 +19,34 @@ data class IncidentAnalysisResponse(
     val precision2 : String,
     val precision3 : String,
     val subSystem : String,
-    val failure : String,
+    val failure : String
 )
 
 data class IncidentSubmittingResponse(
-    val status: String,
+    val status: String
 )
 
 data class ConservedInformations(
-    location: Optional[str] = None 
-    category: Optional[str] = None 
-    system: Optional[str] = None   
-    precision1: Optional[str] = None 
-    precision2: Optional[str] = None 
-    precision3: Optional[str] = None 
-    subSystem: Optional[str] = None
-    failure: Optional[str] = None
+    val location: String? = null,
+    val category: String? = null,
+    val system: String? = null,
+    val precision1: String? = null,
+    val precision2: String? = null,
+    val precision3: String? = null,
+    val subSystem: String? = null,
+    val failure: String? = null
 )
 
-class IncidentCompletionRequest(BaseModel):
-    level: String
-    selections: ConservedInformations
+
+data class IncidentCompletionRequest(
+    val level: String,
+    val selections: ConservedInformations
+)
 
 
-data class IncidentCompletionResponse(BaseModel):
-    options: List[String]
+data class IncidentCompletionResponse(
+    val options: List<String>
+)
 
 interface IncidentAnalysisApiService {
     @POST(BuildConfig.BACKEND_AI_ROUTE)
@@ -58,5 +61,5 @@ interface IncidentAnalysisApiService {
 
 interface IncidentCompletionApiService {
     @POST(BuildConfig.BACKEND_COMPLETION_ROUTE)
-    suspend fun completeIncident(@Body request: IncidentCompletionRequest): IncidentCompletionResponse
+    suspend fun findCompletion(@Body request: IncidentCompletionRequest): IncidentCompletionResponse
 }

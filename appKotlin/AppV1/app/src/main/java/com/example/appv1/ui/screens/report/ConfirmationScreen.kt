@@ -1,63 +1,34 @@
 package com.example.appv1.ui.screens.report
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.platform.LocalContext
-
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TopAppBar
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.example.appv1.api.IncidentAnalysisResponse
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.material3.MenuAnchorType
-import com.example.appv1.api.submitIncident
 import com.example.appv1.ui.components.showErrorDialog
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmationScreen(
     response: IncidentAnalysisResponse?,
     onBack: () -> Unit,
-    // Ajoute un callback pour charger dynamiquement les options
+    trainType: String,
+    car: String,
     loadOptions: suspend (level: String, selections: Map<String, String>) -> List<String> = { _, _ -> emptyList() }
 ) {
     val context = LocalContext.current
     if (response == null) {
-        // Affichage d'un message d'erreur ou d'un loader si besoin
         Text("Aucune donnée à afficher.")
         return
     }
     val scope = rememberCoroutineScope()
-    // États pour chaque champ et leurs options
+
     var location by remember { mutableStateOf(response.location) }
     var locationOptions by remember { mutableStateOf(listOf(response.location)) }
     var category by remember { mutableStateOf(response.category) }
@@ -75,7 +46,6 @@ fun ConfirmationScreen(
     var failure by remember { mutableStateOf(response.failure) }
     var failureOptions by remember { mutableStateOf(listOf(response.failure)) }
 
-    // Dropdown states
     var expandedLocation by remember { mutableStateOf(false) }
     var expandedCategory by remember { mutableStateOf(false) }
     var expandedSystem by remember { mutableStateOf(false) }
@@ -85,7 +55,6 @@ fun ConfirmationScreen(
     var expandedSubSystem by remember { mutableStateOf(false) }
     var expandedFailure by remember { mutableStateOf(false) }
 
-    // Chargement dynamique des options à chaque ouverture de dropdown
     fun resetBelow(level: String) {
         when (level) {
             "location" -> {
@@ -130,7 +99,6 @@ fun ConfirmationScreen(
             "subSystem" -> {
                 failure = ""; failureOptions = listOf()
             }
-            // Ajoute d'autres niveaux si nécessaire
         }
     }
 
@@ -154,331 +122,134 @@ fun ConfirmationScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Succès!",
-                style = MaterialTheme.typography.headlineMedium
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            // LOCATION DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedLocation,
-                onExpandedChange = {
-                    expandedLocation = !expandedLocation
-                    if (expandedLocation) {
-                        scope.launch {
-                            locationOptions = loadOptions("location", mapOf())
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = location,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Lieu") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedLocation) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedLocation,
-                    onDismissRequest = { expandedLocation = false }
-                ) {
-                    locationOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                location = option
-                                expandedLocation = false
-                                resetBelow("location")
-                            }
-                        )
-                    }
-                }
-            }
-            // CATEGORY DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedCategory,
-                onExpandedChange = {
-                    expandedCategory = !expandedCategory
-                    if (expandedCategory && location.isNotBlank()) {
-                        scope.launch {
-                            categoryOptions = loadOptions("category", mapOf("location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = category,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Catégorie") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCategory) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedCategory,
-                    onDismissRequest = { expandedCategory = false }
-                ) {
-                    categoryOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                category = option
-                                expandedCategory = false
-                                resetBelow("category")
-                            }
-                        )
-                    }
-                }
-            }
-            // SYSTEM DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedSystem,
-                onExpandedChange = {
-                    expandedSystem = !expandedSystem
-                    if (expandedSystem && category.isNotBlank()) {
-                        scope.launch {
-                            systemOptions = loadOptions("system", mapOf("category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = system,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Système") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSystem) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedSystem,
-                    onDismissRequest = { expandedSystem = false }
-                ) {
-                    systemOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                system = option
-                                expandedSystem = false
-                                resetBelow("system")
-                            }
-                        )
-                    }
-                }
-            }
-            // PRECISION 1 DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedPrecision1,
-                onExpandedChange = {
-                    expandedPrecision1 = !expandedPrecision1
-                    if (expandedPrecision1 && system.isNotBlank()) {
-                        scope.launch {
-                            precision1Options = loadOptions("precision1", mapOf("system" to system, "category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = precision1,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Précision 1") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPrecision1) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedPrecision1,
-                    onDismissRequest = { expandedPrecision1 = false }
-                ) {
-                    precision1Options.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                precision1 = option
-                                expandedPrecision1 = false
-                                resetBelow("precision1")
-                            }
-                        )
-                    }
-                }
-            }
-            // PRECISION 2 DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedPrecision2,
-                onExpandedChange = {
-                    expandedPrecision2 = !expandedPrecision2
-                    if (expandedPrecision2 && precision1.isNotBlank()) {
-                        scope.launch {
-                            precision2Options = loadOptions("precision2", mapOf("precision1" to precision1, "system" to system, "category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = precision2,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Précision 2") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPrecision2) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedPrecision2,
-                    onDismissRequest = { expandedPrecision2 = false }
-                ) {
-                    precision2Options.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                precision2 = option
-                                expandedPrecision2 = false
-                                resetBelow("precision2")
-                            }
-                        )
-                    }
-                }
-            }
-            // PRECISION 3 DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedPrecision3,
-                onExpandedChange = {
-                    expandedPrecision3 = !expandedPrecision3
-                    if (expandedPrecision3 && precision2.isNotBlank()) {
-                        scope.launch {
-                            precision3Options = loadOptions("precision3", mapOf("precision2" to precision2, "precision1" to precision1, "system" to system, "category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = precision3,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Précision 3") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPrecision3) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedPrecision3,
-                    onDismissRequest = { expandedPrecision3 = false }
-                ) {
-                    precision3Options.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                precision3 = option
-                                expandedPrecision3 = false
-                                resetBelow("precision3")
-                            }
-                        )
-                    }
-                }
-            }
-            // SUB-SYSTEM DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedSubSystem,
-                onExpandedChange = {
-                    expandedSubSystem = !expandedSubSystem
-                    if (expandedSubSystem && precision3.isNotBlank()) {
-                        scope.launch {
-                            subSystemOptions = loadOptions("subSystem", mapOf("precision3" to precision3, "precision2" to precision2, "precision1" to precision1, "system" to system, "category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = subSystem,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Sous-système") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedSubSystem) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedSubSystem,
-                    onDismissRequest = { expandedSubSystem = false }
-                ) {
-                    subSystemOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                subSystem = option
-                                expandedSubSystem = false
-                                resetBelow("subSystem")
-                            }
-                        )
-                    }
-                }
-            }
-            // FAILURE DROPDOWN
-            ExposedDropdownMenuBox(
-                expanded = expandedFailure,
-                onExpandedChange = {
-                    expandedFailure = !expandedFailure
-                    if (expandedFailure && subSystem.isNotBlank()) {
-                        scope.launch {
-                            failureOptions = loadOptions("failure", mapOf("subSystem" to subSystem, "precision3" to precision3, "precision2" to precision2, "precision1" to precision1, "system" to system, "category" to category, "location" to location))
-                        }
-                    }
-                }
-            ) {
-                OutlinedTextField(
-                    value = failure,
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("Défaillance") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedFailure) },
-                    modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, true).fillMaxWidth().padding(vertical = 4.dp)
-                )
-                ExposedDropdownMenu(
-                    expanded = expandedFailure,
-                    onDismissRequest = { expandedFailure = false }
-                ) {
-                    failureOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option) },
-                            onClick = {
-                                failure = option
-                                expandedFailure = false
-                            }
-                        )
-                    }
-                }
-            }
-            // Ajoute un bouton de sauvegarde ou de validation si besoin
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(onClick = {
-                // Soumettre les données modifiées
-                submitIncident(
-                    IncidentAnalysisResponse(
-                        location = location,
-                        category = category,
-                        system = system,
-                        precision1 = precision1,
-                        precision2 = precision2,
-                        precision3 = precision3,
-                        subSystem = subSystem,
-                        failure = failure
-                    ),
-                    context,
-                    onResult = { response ->
-                        // Gérer la réponse de l'API
-                        if (response.status == "success") {
-                            // Afficher un message de succès ou naviguer ailleurs
-                            onBack()
-                        } else {
-                            showErrorDialog(context, "Erreur lors de la soumission : ${response.status}")
-                        }
-                    },
-                    onError = { errorMessage ->
-                        // Afficher un message d'erreur
-                    }
-                )
+            Text("Succès!", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(16.dp))
+
+            DropdownField("Lieu", location, locationOptions, expandedLocation, {
+                expandedLocation = it
+                if (it) scope.launch { locationOptions = loadOptions("location", mapOf()) }
             }) {
-                Text("Sauvegarder les modifications")
+                location = it; resetBelow("location")
+            }
+
+            DropdownField("Catégorie", category, categoryOptions, expandedCategory, {
+                expandedCategory = it
+                if (it && location.isNotBlank()) scope.launch {
+                    categoryOptions = loadOptions("category", mapOf("location" to location))
+                }
+            }) {
+                category = it; resetBelow("category")
+            }
+
+            DropdownField("Système", system, systemOptions, expandedSystem, {
+                expandedSystem = it
+                if (it && category.isNotBlank()) scope.launch {
+                    systemOptions = loadOptions("system", mapOf("location" to location, "category" to category))
+                }
+            }) {
+                system = it; resetBelow("system")
+            }
+
+            DropdownField("Précision 1", precision1, precision1Options, expandedPrecision1, {
+                expandedPrecision1 = it
+                if (it && system.isNotBlank()) scope.launch {
+                    precision1Options = loadOptions("precision1", mapOf(
+                        "location" to location, "category" to category, "system" to system
+                    ))
+                }
+            }) {
+                precision1 = it; resetBelow("precision1")
+            }
+
+            DropdownField("Précision 2", precision2, precision2Options, expandedPrecision2, {
+                expandedPrecision2 = it
+                if (it && precision1.isNotBlank()) scope.launch {
+                    precision2Options = loadOptions("precision2", mapOf(
+                        "location" to location, "category" to category, "system" to system, "precision1" to precision1
+                    ))
+                }
+            }) {
+                precision2 = it; resetBelow("precision2")
+            }
+
+            DropdownField("Précision 3", precision3, precision3Options, expandedPrecision3, {
+                expandedPrecision3 = it
+                if (it && precision2.isNotBlank()) scope.launch {
+                    precision3Options = loadOptions("precision3", mapOf(
+                        "location" to location, "category" to category, "system" to system,
+                        "precision1" to precision1, "precision2" to precision2
+                    ))
+                }
+            }) {
+                precision3 = it; resetBelow("precision3")
+            }
+
+            DropdownField("Sous-système", subSystem, subSystemOptions, expandedSubSystem, {
+                expandedSubSystem = it
+                if (it && precision3.isNotBlank()) scope.launch {
+                    subSystemOptions = loadOptions("subSystem", mapOf(
+                        "location" to location, "category" to category, "system" to system,
+                        "precision1" to precision1, "precision2" to precision2, "precision3" to precision3
+                    ))
+                }
+            }) {
+                subSystem = it; resetBelow("subSystem")
+            }
+
+            DropdownField("Défaillance", failure, failureOptions, expandedFailure, {
+                expandedFailure = it
+                if (it && subSystem.isNotBlank()) scope.launch {
+                    failureOptions = loadOptions("failure", mapOf(
+                        "location" to location, "category" to category, "system" to system,
+                        "precision1" to precision1, "precision2" to precision2, "precision3" to precision3,
+                        "subSystem" to subSystem
+                    ))
+                }
+            }) {
+                failure = it
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownField(
+    label: String,
+    value: String,
+    options: List<String>,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    onSelected: (String) -> Unit
+) {
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = onExpandedChange
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            modifier = Modifier
+                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                .fillMaxWidth()
+                .padding(vertical = 4.dp)
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { onExpandedChange(false) }
+        ) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(option) },
+                    onClick = {
+                        onSelected(option)
+                        onExpandedChange(false)
+                    }
+                )
+            }
+        }
+    }
+}

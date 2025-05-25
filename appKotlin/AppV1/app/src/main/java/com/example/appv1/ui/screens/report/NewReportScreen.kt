@@ -80,6 +80,8 @@ fun NewReportScreen(
     var numberOfSeat by remember { mutableStateOf("") }
     var transcription by remember { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
+   
+
     var isOnlineAILoading by remember { mutableStateOf(false) }
     var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
     var isLoadingGemma by remember { mutableStateOf(false) }
