@@ -53,6 +53,41 @@ fun getIncidentAnalysis(
     }
 }
 
+
+fun getCompletion(
+    informations: IncidentCompletionRequest,
+    context: Context,
+    onResult: (ConservedInformations) -> Unit,
+    onError: (String) -> Unit,
+) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.getCompletionApiService(context)
+                .findCompletion(informations)
+            withContext(Dispatchers.Main) {
+                onResult(response)
+            }
+        } catch (e: retrofit2.HttpException) {
+            withContext(Dispatchers.Main) {
+                when (e.code()) {
+                    404 -> onError("Aucun incident trouvé")
+                    500 -> onError("Erreur serveur")
+                    else -> onError("Erreur HTTP ${e.code()}")
+                }
+            }
+        } catch (e: IOException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur de réseau lors de l'appel API : ${e.message}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue lors de l'appel API : ${e.message}")
+            }
+        }
+    }
+}
+
+
 fun submitIncident(
     incident: IncidentAnalysisResponse,
     context: Context,

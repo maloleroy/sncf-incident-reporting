@@ -34,6 +34,8 @@ android {
         buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
         val backendAiRoute = getEnvVar("BACKEND_AI_ROUTE", "/openai")
         buildConfigField("String", "BACKEND_AI_ROUTE", "\"$backendAiRoute\"")
+        val backendCompletionRoute = getEnvVar("BACKEND_COMPLETION_ROUTE", "/incident-options")
+        buildConfigField("String", "BACKEND_COMPLETION_ROUTE", "\"$backendCompletionRoute\"")
         val backendObjectsListRoute = getEnvVar("BACKEND_OBJECTS_LIST_ROUTE", "/objects")
         buildConfigField("String", "BACKEND_OBJECTS_LIST_ROUTE", "\"$backendObjectsListRoute\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
