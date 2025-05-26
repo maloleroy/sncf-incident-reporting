@@ -1,5 +1,6 @@
 package com.example.appv1.ui.screens.report
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -9,9 +10,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.appv1.api.ConservedInformations
 import com.example.appv1.api.IncidentAnalysisResponse
+import com.example.appv1.api.IncidentCompletionRequest
+import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.ui.components.showErrorDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +35,15 @@ fun ConfirmationScreen(
         return
     }
     val scope = rememberCoroutineScope()
+    val loadOptions (String, Map<String, String>) -> List<String> = { level, selections ->
+        var lOptions by remember { mutableStateOf<List<String>>(emptyList()) }
+        loadOptionsWithContext(context, trainType, trainCar, level, selections,
+            onSuccess = { options ->
+                lOptions = options
+            }
+        )
+        lOptions // Last expression is implicitly returned
+    }
 
     var location by remember { mutableStateOf(response.location) }
     var locationOptions by remember { mutableStateOf(listOf(response.location)) }
@@ -245,6 +262,51 @@ fun DropdownField(
                         onExpandedChange(false)
                     }
                 )
+            }
+        }
+    }
+}
+
+fun loadOptionsWithContext(
+    context: Context,
+    trainType: String,
+    trainCar: String,
+    level: String,
+    selections: Map<String, String>,
+    onSuccess: (List<String>) -> Unit,
+    onError: (String) -> Unit = { error -> showErrorDialog(context, "Erreur lors du chargement des options : ${error}") }
+) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            onSuccess(
+            RetrofitInstance.getCompletionApiService(context).findCompletion(
+                IncidentCompletionRequest(
+                    trainType,
+                    trainCar,
+                    level,
+                    ConservedInformations(
+                        location = selections["location"],
+                        category = selections["category"],
+                        system = selections["system"],
+                        precision1 = selections["precision1"],
+                        precision2 = selections["precision2"],
+                        precision3 = selections["precision3"],
+                        subSystem = selections["subSystem"],
+                        failure = selections["failure"]
+                    )
+                )
+            ).options)
+        } catch (e: retrofit2.HttpException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur HTTP ${e.code()}")
+            }
+        } catch (e: IOException) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur réseau : ${e.message}")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                onError("Erreur inattendue : ${e.message}")
             }
         }
     }
