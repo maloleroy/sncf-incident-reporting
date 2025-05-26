@@ -57,7 +57,7 @@ fun getIncidentAnalysis(
 fun getCompletion(
     informations: IncidentCompletionRequest,
     context: Context,
-    onResult: (ConservedInformations) -> Unit,
+    onResult: (IncidentCompletionResponse) -> Unit,
     onError: (String) -> Unit,
 ) {
     CoroutineScope(Dispatchers.IO).launch {
@@ -97,7 +97,8 @@ fun loadOptionsForLevel(
     val request = IncidentCompletionRequest(level, selections)
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = RetrofitInstance.getCompletionApiService(context).completeIncident(request)
+            
+            val response = RetrofitInstance.getCompletionApiService(context).findCompletion(request)
             withContext(Dispatchers.Main) {
                 onSuccess(response.options)
             }
