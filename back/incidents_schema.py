@@ -63,7 +63,7 @@ def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentComp
 
     # Construire la clause WHERE avec placeholders et paramètres
     where_clauses = []
-    params = []
+    params = [request.trainCar]
     for cat in kept_categories:
         where_clauses.append(f"{cat} LIKE ?")
         # on ajoute %valeur% pour LIKE (tu peux adapter selon besoin)
