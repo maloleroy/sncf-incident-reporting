@@ -102,4 +102,4 @@ def get_llm_prompt_messages_from_objects(list_objects, message) -> list[dict[str
 
 def get_response(message, possibilities):
     prompt = get_llm_prompt_messages_from_objects(possibilities, message)
-    return get_completions(ModelName.MISTRAL, ChatRequest(messages=prompt))
+    return get_completions(ModelName.OPENAI, ChatRequest(messages=prompt))
