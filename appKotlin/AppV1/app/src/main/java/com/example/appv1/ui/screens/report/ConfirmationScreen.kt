@@ -19,8 +19,7 @@ fun ConfirmationScreen(
     response: IncidentAnalysisResponse?,
     onBack: () -> Unit,
     trainType: String,
-    car: String,
-    loadOptions: suspend (level: String, selections: Map<String, String>) -> List<String> = { _, _ -> emptyList() }
+    trainCar: String,
 ) {
     val context = LocalContext.current
     if (response == null) {
