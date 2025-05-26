@@ -58,14 +58,14 @@ fun ConfirmationScreen(
 
     var location by remember { mutableStateOf(response.location) }
     var locationOptions by remember { mutableStateOf(listOf(response.location)) }
-    var category by remember { mutableStateOf(response.category) }
-    var categoryOptions by remember { mutableStateOf(listOf(response.category)) }
-    var system by remember { mutableStateOf(response.system) }
-    var systemOptions by remember { mutableStateOf(listOf(response.system)) }
     var precision1 by remember { mutableStateOf(response.precision1) }
     var precision1Options by remember { mutableStateOf(listOf(response.precision1)) }
+    var category by remember { mutableStateOf(response.category) }
+    var categoryOptions by remember { mutableStateOf(listOf(response.category)) }
     var precision2 by remember { mutableStateOf(response.precision2) }
     var precision2Options by remember { mutableStateOf(listOf(response.precision2)) }
+    var system by remember { mutableStateOf(response.system) }
+    var systemOptions by remember { mutableStateOf(listOf(response.system)) }
     var precision3 by remember { mutableStateOf(response.precision3) }
     var precision3Options by remember { mutableStateOf(listOf(response.precision3)) }
     var subSystem by remember { mutableStateOf(response.subSystem) }
@@ -74,47 +74,47 @@ fun ConfirmationScreen(
     var failureOptions by remember { mutableStateOf(listOf(response.failure)) }
 
     var expandedLocation by remember { mutableStateOf(false) }
-    var expandedCategory by remember { mutableStateOf(false) }
-    var expandedSystem by remember { mutableStateOf(false) }
     var expandedPrecision1 by remember { mutableStateOf(false) }
-    var expandedPrecision2 by remember { mutableStateOf(false) }
+    var expandedCategory by remember { mutableStateOf(false) }
     var expandedPrecision3 by remember { mutableStateOf(false) }
+    var expandedSystem by remember { mutableStateOf(false) }
+    var expandedPrecision2 by remember { mutableStateOf(false) }
     var expandedSubSystem by remember { mutableStateOf(false) }
     var expandedFailure by remember { mutableStateOf(false) }
 
     fun resetBelow(level: String) {
         when (level) {
             "location" -> {
-                category = ""; categoryOptions = listOf()
-                system = ""; systemOptions = listOf()
                 precision1 = ""; precision1Options = listOf()
+                category = ""; categoryOptions = listOf()
                 precision2 = ""; precision2Options = listOf()
+                system = ""; systemOptions = listOf()
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
             }
             "precision1" -> {
                 category = ""; categoryOptions = listOf()
-                system = ""; systemOptions = listOf()
                 precision2 = ""; precision2Options = listOf()
+                system = ""; systemOptions = listOf()
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
             }
             "category" -> {
+                precision2 = ""; precision2Options = listOf()
                 system = ""; systemOptions = listOf()
-                precision2 = ""; precision2Options = listOf()
-                precision3 = ""; precision3Options = listOf()
-                subSystem = ""; subSystemOptions = listOf()
-                failure = ""; failureOptions = listOf()
-            }
-            "system" -> {
-                precision2 = ""; precision2Options = listOf()
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
             }
             "precision2" -> {
+                system = ""; systemOptions = listOf()
+                precision3 = ""; precision3Options = listOf()
+                subSystem = ""; subSystemOptions = listOf()
+                failure = ""; failureOptions = listOf()
+            }
+            "system" -> {
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
@@ -189,8 +189,6 @@ fun ConfirmationScreen(
                                 "precision1",
                                 mapOf(
                                     "location" to location,
-                                    "category" to category,
-                                    "system" to system
                                 )
                             )
                         }
@@ -213,7 +211,12 @@ fun ConfirmationScreen(
                     if (isExpanded && categoryOptions.isEmpty() && location.isNotBlank()) {
                         scope.launch {
                             try {
-                                val result = loadOptionsSuspend(context, trainType, trainCar, "category", mapOf("location" to location))
+                                val result = loadOptionsSuspend(context, trainType, trainCar, "category",
+                                    mapOf(
+                                        "location" to location,
+                                        "precision1" to precision1,
+                                    )
+                                )
                                 categoryOptions = result
                             } catch (e: Exception) {
                                 showErrorDialog(context, e.message ?: "Erreur inconnue")
@@ -243,9 +246,8 @@ fun ConfirmationScreen(
                                 "precision2",
                                 mapOf(
                                     "location" to location,
+                                    "precision1" to precision1,
                                     "category" to category,
-                                    "system" to system,
-                                    "precision1" to precision1
                                 )
                             )
                         }
@@ -267,7 +269,14 @@ fun ConfirmationScreen(
                     expandedSystem = expanded
                     if (expanded && category.isNotBlank()) {
                         scope.launch {
-                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system", mapOf("location" to location, "category" to category))
+                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system",
+                                mapOf(
+                                    "location" to location,
+                                    "precision1" to precision1,
+                                    "category" to category,
+                                    "precision2" to precision2,
+                                )
+                            )
                         }
                     }
                 },
@@ -294,10 +303,10 @@ fun ConfirmationScreen(
                                 "precision3",
                                 mapOf(
                                     "location" to location,
-                                    "category" to category,
-                                    "system" to system,
                                     "precision1" to precision1,
-                                    "precision2" to precision2
+                                    "category" to category,
+                                    "precision2" to precision2,
+                                    "system" to system,
                                 )
                             )
                         }
@@ -326,11 +335,11 @@ fun ConfirmationScreen(
                                 "subSystem",
                                 mapOf(
                                     "location" to location,
-                                    "category" to category,
-                                    "system" to system,
                                     "precision1" to precision1,
+                                    "category" to category,
                                     "precision2" to precision2,
-                                    "precision3" to precision3
+                                    "system" to system,
+                                    "precision3" to precision3,
                                 )
                             )
                         }
@@ -364,7 +373,7 @@ fun ConfirmationScreen(
                                     "precision1" to precision1,
                                     "precision2" to precision2,
                                     "precision3" to precision3,
-                                    "subSystem" to subSystem
+                                    "subSystem" to subSystem,
                                 )
                             )
                         }
@@ -379,14 +388,13 @@ fun ConfirmationScreen(
             // Pass navigateToNewReport to SubmitIncidentButton
             val incidentToSubmit = IncidentAnalysisResponse(
                 location = location,
-                category = category,
-                system = system,
                 precision1 = precision1,
+                category = category,
                 precision2 = precision2,
+                system = system,
                 precision3 = precision3,
                 subSystem = subSystem,
-                failure = failure
-                // Removed options and completed as they are not in the data class
+                failure = failure,
             )
 
             SubmitIncidentButton(
@@ -396,8 +404,6 @@ fun ConfirmationScreen(
                 onSubmissionSuccess = navigateToNewReport, // Keep this as it was intended
                 modifier = Modifier.fillMaxWidth() // Keep this as it was intended
             )
-
-
         }
     }
 }

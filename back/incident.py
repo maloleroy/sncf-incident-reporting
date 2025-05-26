@@ -26,10 +26,10 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
 def create_incident_response(response_parsed):
     return IncidentAnalysisResponse(
         location = response_parsed[0],
-        category = response_parsed[1],
-        system = response_parsed[2],
-        precision1 = response_parsed[3],
-        precision2 = response_parsed[4],
+        precision1 = response_parsed[1],
+        category = response_parsed[2],
+        precision2 = response_parsed[3],
+        system = response_parsed[4],
         precision3 = response_parsed[5],
         subSystem = response_parsed[6],
         failure = response_parsed[7],
