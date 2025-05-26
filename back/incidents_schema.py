@@ -54,15 +54,26 @@ def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.Inci
     
     sql_query = sql_query.replace("{train}", conserved_infos.trainType)
     sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
-
+    values_params = [conserved_infos.trainCar]
     for key, value in conserved_infos.selections.dict().items():
         logger.info(f"Processing key: {trad[key]}, value: {value}")
         if value:
-            sql_query = sql_query + f" AND {trad[key]} = '{value}'"
+            sql_query = sql_query + f" AND {trad[key]} LIKE '%' || ? || '%'"
+            values_params.append(value)
     sql_query = sql_query + ";"
 
     logger.info(f"Executing SQL query: {sql_query}")
-    response = cursor.execute(sql_query, (conserved_infos.trainCar,)).fetchall()
+    # Compter combien de paramètres sont attendus
+    expected_params_count = sql_query.count("?")
+    logger.info(f"Liste options query: {tuple(values_params)}")
+    # S'assurer que values_params contient exactement le bon nombre
+    if len(values_params) != expected_params_count:
+        raise ValueError(f"Nombre de paramètres incorrect : SQL attend {expected_params_count}, mais {len(values_params)} fournis.\n"
+                        f"SQL : {sql_query}\nParams : {values_params}")
+
+    # Exécuter la requête avec les bons paramètres
+    response = cursor.execute(sql_query, tuple(values_params)).fetchall()
+    logger.info(f"Response: {response}")
 
     rep_tries = []
     for row in response:
