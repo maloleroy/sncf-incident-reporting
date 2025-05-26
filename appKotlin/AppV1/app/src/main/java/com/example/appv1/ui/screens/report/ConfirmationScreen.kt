@@ -1,3 +1,4 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.appv1.ui.screens.report
 
 import android.content.Context
@@ -15,7 +16,6 @@ import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.IncidentCompletionRequest
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.domain.model.trainTypes
-import com.example.appv1.ui.components.SubmitIncidentButton
 import com.example.appv1.ui.components.showErrorDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -145,105 +145,239 @@ fun ConfirmationScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            DropdownField("Lieu", location, locationOptions, expandedLocation, {
-                expandedLocation = it
-                if (it) scope.launch { locationOptions = loadOptions("location", mapOf()) }
-            }) {
-                location = it; resetBelow("location")
-            }
-
-            DropdownField("Catégorie", category, categoryOptions, expandedCategory, {
-                expandedCategory = it
-                if (it && location.isNotBlank()) scope.launch {
-                    categoryOptions = loadOptions("category", mapOf("location" to location))
+            DropdownField(
+    label = "Lieu",
+    value = location,
+    options = locationOptions,
+    expanded = expandedLocation,
+    onExpandedChange = { isExpanded ->
+        expandedLocation = isExpanded
+        if (isExpanded && locationOptions.isEmpty()) {
+            scope.launch {
+                try {
+                    val result = loadOptionsSuspend(context, trainType, trainCar, "location", mapOf())
+                    locationOptions = result
+                } catch (e: Exception) {
+                    showErrorDialog(context, e.message ?: "Erreur inconnue")
                 }
-            }) {
-                category = it; resetBelow("category")
-            }
-
-            DropdownField("Système", system, systemOptions, expandedSystem, {
-                expandedSystem = it
-                if (it && category.isNotBlank()) scope.launch {
-                    systemOptions = loadOptions("system", mapOf("location" to location, "category" to category))
-                }
-            }) {
-                system = it; resetBelow("system")
-            }
-
-            DropdownField("Précision 1", precision1, precision1Options, expandedPrecision1, {
-                expandedPrecision1 = it
-                if (it && system.isNotBlank()) scope.launch {
-                    precision1Options = loadOptions("precision1", mapOf(
-                        "location" to location, "category" to category, "system" to system
-                    ))
-                }
-            }) {
-                precision1 = it; resetBelow("precision1")
-            }
-
-            DropdownField("Précision 2", precision2, precision2Options, expandedPrecision2, {
-                expandedPrecision2 = it
-                if (it && precision1.isNotBlank()) scope.launch {
-                    precision2Options = loadOptions("precision2", mapOf(
-                        "location" to location, "category" to category, "system" to system, "precision1" to precision1
-                    ))
-                }
-            }) {
-                precision2 = it; resetBelow("precision2")
-            }
-
-            DropdownField("Précision 3", precision3, precision3Options, expandedPrecision3, {
-                expandedPrecision3 = it
-                if (it && precision2.isNotBlank()) scope.launch {
-                    precision3Options = loadOptions("precision3", mapOf(
-                        "location" to location, "category" to category, "system" to system,
-                        "precision1" to precision1, "precision2" to precision2
-                    ))
-                }
-            }) {
-                precision3 = it; resetBelow("precision3")
-            }
-
-            DropdownField("Sous-système", subSystem, subSystemOptions, expandedSubSystem, {
-                expandedSubSystem = it
-                if (it && precision3.isNotBlank()) scope.launch {
-                    subSystemOptions = loadOptions("subSystem", mapOf(
-                        "location" to location, "category" to category, "system" to system,
-                        "precision1" to precision1, "precision2" to precision2, "precision3" to precision3
-                    ))
-                }
-            }) {
-                subSystem = it; resetBelow("subSystem")
-            }
-
-            DropdownField("Défaillance", failure, failureOptions, expandedFailure, {
-                expandedFailure = it
-                if (it && subSystem.isNotBlank()) scope.launch {
-                    failureOptions = loadOptions("failure", mapOf(
-                        "location" to location, "category" to category, "system" to system,
-                        "precision1" to precision1, "precision2" to precision2, "precision3" to precision3,
-                        "subSystem" to subSystem
-                    ))
-                }
-            }) {
-                failure = it
             }
         }
+    },
+    onSelected = {
+        location = it
+        resetBelow("location")
     }
+)
 
-    SubmitIncidentButton(scope, context, IncidentAnalysisResponse(
-        location = location,
-        category = category,
-        system = system,
-        precision1 = precision1,
-        precision2 = precision2,
-        precision3 = precision3,
-        subSystem = subSystem,
-        failure = failure
-    ))
+            DropdownField(
+                label = "Catégorie",
+                value = category,
+                options = categoryOptions,
+                expanded = expandedCategory,
+                onExpandedChange = { isExpanded ->
+                    expandedCategory = isExpanded
+                    if (isExpanded && categoryOptions.isEmpty() && location.isNotBlank()) {
+                        scope.launch {
+                            try {
+                                val result = loadOptionsSuspend(context, trainType, trainCar, "category", mapOf("location" to location))
+                                categoryOptions = result
+                            } catch (e: Exception) {
+                                showErrorDialog(context, e.message ?: "Erreur inconnue")
+                            }
+                        }
+                    }
+                },
+                onSelected = {
+                    category = it
+                    resetBelow("category")
+                }
+            )
+            
+
+            DropdownField(
+                label = "Système",
+                value = system,
+                options = systemOptions,
+                expanded = expandedSystem,
+                onExpandedChange = { expanded ->
+                    expandedSystem = expanded
+                    if (expanded && category.isNotBlank()) {
+                        scope.launch {
+                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system", mapOf("location" to location, "category" to category))
+                        }
+                    }
+                },
+                onSelected = {
+                    system = it
+                    resetBelow("system")
+                },
+                onRequestOptions = { emptyList() } // ou null si paramètre nullable, car on charge via onExpandedChange
+            )
+            
+
+            DropdownField(
+    label = "Précision 1",
+    value = precision1,
+    options = precision1Options,
+    expanded = expandedPrecision1,
+    onExpandedChange = { expanded ->
+        expandedPrecision1 = expanded
+        if (expanded && system.isNotBlank()) {
+            scope.launch {
+                precision1Options = loadOptionsSuspend(
+                    context,
+                    trainType,
+                    trainCar,
+                    "precision1",
+                    mapOf(
+                        "location" to location,
+                        "category" to category,
+                        "system" to system
+                    )
+                )
+            }
+        }
+    },
+    onSelected = {
+        precision1 = it
+        resetBelow("precision1")
+    },
+    onRequestOptions = { emptyList() } // ou null si paramètre nullable
+)
+
+
+DropdownField(
+    label = "Précision 2",
+    value = precision2,
+    options = precision2Options,
+    expanded = expandedPrecision2,
+    onExpandedChange = { expanded ->
+        expandedPrecision2 = expanded
+        if (expanded && precision1.isNotBlank()) {
+            scope.launch {
+                precision2Options = loadOptionsSuspend(
+                    context,
+                    trainType,
+                    trainCar,
+                    "precision2",
+                    mapOf(
+                        "location" to location,
+                        "category" to category,
+                        "system" to system,
+                        "precision1" to precision1
+                    )
+                )
+            }
+        }
+    },
+    onSelected = {
+        precision2 = it
+        resetBelow("precision2")
+    },
+    onRequestOptions = { emptyList() }
+)
+
+DropdownField(
+    label = "Précision 3",
+    value = precision3,
+    options = precision3Options,
+    expanded = expandedPrecision3,
+    onExpandedChange = { expanded ->
+        expandedPrecision3 = expanded
+        if (expanded && precision2.isNotBlank()) {
+            scope.launch {
+                precision3Options = loadOptionsSuspend(
+                    context,
+                    trainType,
+                    trainCar,
+                    "precision3",
+                    mapOf(
+                        "location" to location,
+                        "category" to category,
+                        "system" to system,
+                        "precision1" to precision1,
+                        "precision2" to precision2
+                    )
+                )
+            }
+        }
+    },
+    onSelected = {
+        precision3 = it
+        resetBelow("precision3")
+    },
+    onRequestOptions = { emptyList() }
+)
+
+DropdownField(
+    label = "Sous-système",
+    value = subSystem,
+    options = subSystemOptions,
+    expanded = expandedSubSystem,
+    onExpandedChange = { expanded ->
+        expandedSubSystem = expanded
+        if (expanded && precision3.isNotBlank()) {
+            scope.launch {
+                subSystemOptions = loadOptionsSuspend(
+                    context,
+                    trainType,
+                    trainCar,
+                    "subSystem",
+                    mapOf(
+                        "location" to location,
+                        "category" to category,
+                        "system" to system,
+                        "precision1" to precision1,
+                        "precision2" to precision2,
+                        "precision3" to precision3
+                    )
+                )
+            }
+        }
+    },
+    onSelected = {
+        subSystem = it
+        resetBelow("subSystem")
+    },
+    onRequestOptions = { emptyList() }
+)
+
+DropdownField(
+    label = "Défaillance",
+    value = failure,
+    options = failureOptions,
+    expanded = expandedFailure,
+    onExpandedChange = { expanded ->
+        expandedFailure = expanded
+        if (expanded && subSystem.isNotBlank()) {
+            scope.launch {
+                failureOptions = loadOptionsSuspend(
+                    context,
+                    trainType,
+                    trainCar,
+                    "failure",
+                    mapOf(
+                        "location" to location,
+                        "category" to category,
+                        "system" to system,
+                        "precision1" to precision1,
+                        "precision2" to precision2,
+                        "precision3" to precision3,
+                        "subSystem" to subSystem
+                    )
+                )
+            }
+        }
+    },
+    onSelected = {
+        failure = it
+    },
+    onRequestOptions = { emptyList() }
+)
+
+        }
+    }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownField(
     label: String,
@@ -251,7 +385,8 @@ fun DropdownField(
     options: List<String>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onSelected: (String) -> Unit
+    onSelected: (String) -> Unit,
+    onRequestOptions: () -> List<String> = { emptyList() } // Optionnel, pas forcément suspend ici
 ) {
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -281,9 +416,12 @@ fun DropdownField(
                     }
                 )
             }
+
         }
     }
 }
+
+
 
 fun loadOptionsWithContext(
     scope: CoroutineScope,
@@ -329,5 +467,38 @@ fun loadOptionsWithContext(
                 onError("Erreur inattendue : ${e.message}")
             }
         }
+    }
+}
+suspend fun loadOptionsSuspend(
+    context: Context,
+    trainType: String,
+    trainCar: String,
+    level: String,
+    selections: Map<String, String>
+): List<String> {
+    return try {
+        RetrofitInstance.getCompletionApiService(context).findCompletion(
+            IncidentCompletionRequest(
+                trainTypes[trainType]!!,
+                trainCar,
+                level,
+                ConservedInformations(
+                    location = selections["location"],
+                    category = selections["category"],
+                    system = selections["system"],
+                    precision1 = selections["precision1"],
+                    precision2 = selections["precision2"],
+                    precision3 = selections["precision3"],
+                    subSystem = selections["subSystem"],
+                    failure = selections["failure"]
+                )
+            )
+        ).options
+    } catch (e: retrofit2.HttpException) {
+        throw Exception("Erreur HTTP ${e.code()}")
+    } catch (e: IOException) {
+        throw Exception("Erreur réseau : ${e.message}")
+    } catch (e: Exception) {
+        throw Exception("Erreur inattendue : ${e.message}")
     }
 }

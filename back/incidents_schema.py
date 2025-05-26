@@ -1,6 +1,10 @@
 import sqlite3
 import model
 import incidents_db
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def get_db() -> sqlite3.Connection:
     conn = sqlite3.connect("../arborescence_analyse/DBs/incidents.db", check_same_thread=False)
@@ -31,19 +35,17 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
     cursor.execute(sql_query, (voiture,))
     response = cursor.fetchall()
     return response
-
 def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentCompletionRequest) -> dict:
-    import logging
-
+    logger.info("demande pour : %s", request)
     cursor = db.cursor()
-    conserved_infos = request.selections
+    conserved_infos = request.selections  # ex: {"location": "Paris", "category": "A"}
 
     list_categories = ["location", "precision1", "category", "precision2", "system", "precision3", "subSystem", "failure"]
     kept_categories = []
     categories_to_propose = []
     last_category = ""
 
-    # 🧠 Lecture des catégories déjà remplies et à compléter
+    # Déterminer catégories connues et à proposer
     for cat in list_categories:
         if cat not in conserved_infos:
             categories_to_propose.append(cat)
@@ -51,53 +53,45 @@ def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentComp
             last_category = cat
             kept_categories.append(cat)
 
-    logging.debug(f"[DEBUG] Catégories conservées (déjà remplies) : {kept_categories}")
-    logging.debug(f"[DEBUG] Catégories à compléter : {categories_to_propose}")
-    logging.debug(f"[DEBUG] Dernière catégorie connue : {last_category}")
-
     if not categories_to_propose:
-        logging.debug("[DEBUG] Aucune catégorie à compléter, retour vide.")
+        logger.debug("[DEBUG] Aucune catégorie à compléter, retour vide.")
         return {}
 
-    # 📄 Lecture du template SQL
+    # Charger template SQL pour last_category
     with open(f'sql/get_incidents_{last_category}.sql', 'r') as file:
         sql_template = file.read()
 
-    # 🔒 Sécurité sur le nom de table
-    if not request.trainType.isidentifier():
-        raise ValueError("Nom de table non valide.")
-
-    # 🏗 Construction dynamique de la requête SQL
-    sql_query = sql_template.replace("{train}", request.trainType)
+    # Construire la clause WHERE avec placeholders et paramètres
+    where_clauses = []
+    params = []
     for cat in kept_categories:
-        sql_query = sql_query.replace(f"{{{cat}}}", f"{cat} = '{conserved_infos[cat]}'")
+        where_clauses.append(f"{cat} LIKE ?")
+        # on ajoute %valeur% pour LIKE (tu peux adapter selon besoin)
+        params.append(f"%{conserved_infos[cat]}%")
 
-    logging.debug(f"[DEBUG] Requête SQL finale exécutée :\n{sql_query}")
-    logging.debug(f"[DEBUG] Paramètre passé à la requête (car): {request.trainCar}")
+    # Injecter la clause WHERE dans le template SQL
+    # (Le template doit contenir un token genre {where_conditions})
+    sql_query = sql_template.replace("{where_conditions}", " AND ".join(where_clauses))
+    sql_query = sql_template.replace("{train}", request.trainType)
 
-    # 🔍 Exécution SQL
-    cursor.execute(sql_query, (request.trainCar,))
+    logger.debug(f"[DEBUG] Requête SQL finale :\n{sql_query}")
+    logger.debug(f"[DEBUG] Paramètres SQL : {params}")
+
+    # Exécuter la requête avec les paramètres
+    cursor.execute(sql_query, params)
     rows = cursor.fetchall()
 
-    logging.debug(f"[DEBUG] Résultat brut SQL (rows): {rows}")
+    logger.debug(f"[DEBUG] Résultats SQL (rows) : {rows}")
 
-    # 🔁 Association colonnes <-> catégories
+    # Préparer réponse : associer colonnes retournées aux catégories à proposer
     response_by_category = {cat: set() for cat in categories_to_propose}
     for row in rows:
         for i, cat in enumerate(categories_to_propose):
             if i < len(row):
                 response_by_category[cat].add(row[i])
-                logging.debug(f"[DEBUG] Ajouté {row[i]} à la catégorie {cat}")
 
-    # 🔄 Conversion en listes
+    # Convertir sets en listes
     final_response = {cat: list(values) for cat, values in response_by_category.items()}
-    logging.debug(f"[DEBUG] Résultat final structuré : {final_response}")
+    logger.debug(f"[DEBUG] Résultat final structuré : {final_response}")
 
     return model.IncidentCompletionResponse(options=final_response[request.level])
-
-# conserved_1.precision2 = "Boulevard de la République"
-# conserved_1.system = "Boulevard"
-# conserved_1.precision3 = "Boulevard de la République"
-# conserved_1.subSystem = "Boulevard"
-# conserved_1.failure = "Boulevard"
-
