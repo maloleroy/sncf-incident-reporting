@@ -9,8 +9,14 @@ import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Close // Add Close icon import
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -64,6 +71,7 @@ import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -75,7 +83,7 @@ import java.io.IOException
 fun NewReportScreen(
     onBack: () -> Unit,
     onSuccess: (IncidentAnalysisResponse, String, String) -> Unit,
-    showSuccessMessage: Boolean // Added parameter
+    showSuccessMessage: Boolean // Parameter from navigation
 ) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
@@ -89,14 +97,27 @@ fun NewReportScreen(
 
     var isOnlineAILoading by remember { mutableStateOf(false) }
 
-    // Clear form fields if showSuccessMessage is true
+    // Internal state to control the visibility of the success message
+    var internalShowSuccessMessage by rememberSaveable { mutableStateOf(false) }
+
+    // Effect to clear form and show message based on navigation argument
     LaunchedEffect(showSuccessMessage) {
         if (showSuccessMessage) {
+            internalShowSuccessMessage = true // Show the message
+            // Clear form fields
             trainType = ""
             trainCar = ""
             numberOfSeat = ""
             transcription = ""
             // Potentially reset other relevant states here if needed
+        }
+    }
+
+    // Effect to auto-hide the success message after 5 seconds
+    LaunchedEffect(internalShowSuccessMessage) {
+        if (internalShowSuccessMessage) {
+            delay(5000L) // 5 seconds delay
+            internalShowSuccessMessage = false // Hide the message
         }
     }
 
@@ -148,20 +169,37 @@ fun NewReportScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
-            // Display success message if showSuccessMessage is true
-            if (showSuccessMessage) {
+            // Display success message with animation
+            AnimatedVisibility(
+                visible = internalShowSuccessMessage,
+                exit = slideOutVertically(animationSpec = tween(durationMillis = 600)) + fadeOut(animationSpec = tween(durationMillis = 600))
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color(0xFF4CAF50), shape = RoundedCornerShape(8.dp)) // Green background
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Signalement enregistré avec succès!",
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Signalement enregistré avec succès!",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(onClick = { internalShowSuccessMessage = false }) {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "Fermer le message",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 }
                 Spacer(modifier = Modifier.height(16.dp)) // Add some space after the message
             }
