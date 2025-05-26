@@ -116,7 +116,7 @@ fun NewReportScreen(
     // Effect to auto-hide the success message after 5 seconds
     LaunchedEffect(internalShowSuccessMessage) {
         if (internalShowSuccessMessage) {
-            delay(5000L) // 5 seconds delay
+            delay(3000L) // 3 seconds delay
             internalShowSuccessMessage = false // Hide the message
         }
     }
