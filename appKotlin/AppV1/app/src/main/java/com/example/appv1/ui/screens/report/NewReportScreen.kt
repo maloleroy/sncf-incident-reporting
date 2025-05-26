@@ -215,7 +215,7 @@ fun NewReportScreen(
                 onValueChange = { transcription = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp),
+                    .height(200.dp),
                 placeholder = { Text("Décrivez votre signalement ici…") },
                 label = { Text("Description initiale") } // Ajout d'un label
 
