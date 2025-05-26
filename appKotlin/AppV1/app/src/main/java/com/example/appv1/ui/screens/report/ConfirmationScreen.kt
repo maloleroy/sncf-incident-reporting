@@ -33,6 +33,7 @@ fun ConfirmationScreen(
     onBack: () -> Unit,
     trainType: String,
     trainCar: String,
+    navigateToNewReport: () -> Unit // Added this parameter
 ) {
     val context = LocalContext.current
     if (response == null) {
@@ -376,7 +377,8 @@ fun ConfirmationScreen(
                 onRequestOptions = { emptyList() }
             )
 
-            SubmitIncidentButton(scope, context, IncidentAnalysisResponse(
+            // Pass navigateToNewReport to SubmitIncidentButton
+            val incidentToSubmit = IncidentAnalysisResponse(
                 location = location,
                 category = category,
                 system = system,
@@ -385,7 +387,16 @@ fun ConfirmationScreen(
                 precision3 = precision3,
                 subSystem = subSystem,
                 failure = failure
-            ))
+                // Removed options and completed as they are not in the data class
+            )
+
+            SubmitIncidentButton(
+                scope = scope,
+                context = context,
+                incident = incidentToSubmit,
+                onSubmissionSuccess = navigateToNewReport, // Keep this as it was intended
+                modifier = Modifier.fillMaxWidth() // Keep this as it was intended
+            )
 
 
         }

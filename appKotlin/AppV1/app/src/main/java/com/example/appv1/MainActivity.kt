@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.appv1.ui.screens.home.HomeScreen
 import com.example.appv1.ui.screens.report.ConfirmationScreen
 import com.example.appv1.ui.screens.report.NewReportScreen
@@ -27,7 +29,11 @@ class MainActivity : ComponentActivity() {
                             onViewReports = { /* TODO: lister les rapports */ }
                         )
                     }
-                    composable("new_report") {
+                    composable(
+                        route = "new_report?showSuccess={showSuccess}",
+                        arguments = listOf(navArgument("showSuccess") { type = NavType.BoolType; defaultValue = false })
+                    ) { backStackEntry ->
+                        val showSuccess = backStackEntry.arguments?.getBoolean("showSuccess") ?: false
                         NewReportScreen(
                             onBack = { navController.popBackStack() },
                             onSuccess = { response, trainType, trainCar ->
@@ -36,14 +42,23 @@ class MainActivity : ComponentActivity() {
                                 sharedViewModel.trainCar = trainCar
                                 navController.navigate("confirm_report")
                             },
+                            showSuccessMessage = showSuccess
                         )
                     }
                     composable("confirm_report") {
                         ConfirmationScreen(
                             response = sharedViewModel.lastIncidentAnalysisResponse,
                             onBack = { navController.popBackStack() },
-                            trainType = sharedViewModel.trainType!!,
-                            trainCar = sharedViewModel.trainCar!!,
+                            trainType = sharedViewModel.trainType ?: "", // Fournir une valeur par défaut si null
+                            trainCar = sharedViewModel.trainCar ?: "",   // Fournir une valeur par défaut si null
+                            navigateToNewReport = {
+                                navController.navigate("new_report?showSuccess=true") {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = false
+                                    }
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
                 }

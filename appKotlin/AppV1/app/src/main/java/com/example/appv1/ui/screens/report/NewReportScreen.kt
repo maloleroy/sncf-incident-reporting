@@ -9,6 +9,7 @@ import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -40,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +50,7 @@ import androidx.compose.runtime.saveable.rememberSaveable // Import rememberSave
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,7 +74,8 @@ import java.io.IOException
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: (IncidentAnalysisResponse, String, String) -> Unit
+    onSuccess: (IncidentAnalysisResponse, String, String) -> Unit,
+    showSuccessMessage: Boolean // Added parameter
 ) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
@@ -83,6 +88,17 @@ fun NewReportScreen(
    
 
     var isOnlineAILoading by remember { mutableStateOf(false) }
+
+    // Clear form fields if showSuccessMessage is true
+    LaunchedEffect(showSuccessMessage) {
+        if (showSuccessMessage) {
+            trainType = ""
+            trainCar = ""
+            numberOfSeat = ""
+            transcription = ""
+            // Potentially reset other relevant states here if needed
+        }
+    }
 
     /* ---------- 1) launcher pour l’Intent de reconnaissance vocale ---------- */
     val speechLauncher = rememberLauncherForActivityResult(
@@ -132,6 +148,24 @@ fun NewReportScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
+            // Display success message if showSuccessMessage is true
+            if (showSuccessMessage) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF4CAF50), shape = RoundedCornerShape(8.dp)) // Green background
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Signalement enregistré avec succès!",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp)) // Add some space after the message
+            }
+
             // Champ pour le type de train
             var expanded by remember { mutableStateOf(false) }
 

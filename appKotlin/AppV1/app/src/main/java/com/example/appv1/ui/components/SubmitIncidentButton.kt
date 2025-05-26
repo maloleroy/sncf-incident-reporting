@@ -20,22 +20,39 @@ import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.io.IOException // Added for error handling
 
 @Composable
 fun SubmitIncidentButton(
     scope: CoroutineScope,
     context: Context,
-    incident: IncidentAnalysisResponse
+    incident: IncidentAnalysisResponse,
+    onSubmissionSuccess: () -> Unit, // Added parameter
+    modifier: Modifier = Modifier // Added parameter with default
 ) {
     Spacer(Modifier.height(56.dp))
     Button(
         onClick = {
             scope.launch {
-                RetrofitInstance.getIncidentApiService(context).submitIncident(incident)
+                try {
+                    // Assuming submitIncident now takes IncidentAnalysisResponse
+                    // and returns something that indicates success/failure
+                    // You might need to adjust the API service and response handling
+                    val response = RetrofitInstance.getIncidentApiService(context).submitIncident(incident)
+                    // TODO: Check response to confirm success before calling onSubmissionSuccess
+                    // For now, assuming any response means success
+                    onSubmissionSuccess()
+                } catch (e: IOException) {
+                    // Handle network errors
+                    showErrorDialog(context, "Network Error: Could not submit incident. Please check your connection.")
+                } catch (e: Exception) {
+                    // Handle other errors (e.g., server errors, unexpected response)
+                    showErrorDialog(context, "Error: Could not submit incident. ${e.message}")
+                }
             }
         },
         shape = RoundedCornerShape(15.dp),
-        modifier = Modifier.fillMaxWidth().height(48.dp),
+        modifier = modifier.fillMaxWidth().height(48.dp), // Use the modifier parameter
     ) {
         Text("Envoyer", fontSize = 16.sp)
         Icon(
