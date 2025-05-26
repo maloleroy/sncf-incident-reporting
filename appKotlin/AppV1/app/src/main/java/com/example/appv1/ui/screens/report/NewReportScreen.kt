@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable // Import rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -75,10 +76,10 @@ fun NewReportScreen(
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
-    var trainType by remember { mutableStateOf("") }
-    var trainCar by remember { mutableStateOf("") }
-    var numberOfSeat by remember { mutableStateOf("") }
-    var transcription by remember { mutableStateOf("") }
+    var trainType by rememberSaveable { mutableStateOf("") }
+    var trainCar by rememberSaveable { mutableStateOf("") }
+    var numberOfSeat by rememberSaveable { mutableStateOf("") }
+    var transcription by rememberSaveable { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
    
 
