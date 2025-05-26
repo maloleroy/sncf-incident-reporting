@@ -35,6 +35,18 @@ async def get_openai_completion(chat_request: model.ChatRequest, _ = Depends(val
 async def get_objects(trainType: str, car: str, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+import logging
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+	exc_str = f'{exc}'.replace('\n', ' ').replace('   ', ' ')
+	logging.error(f"{request}: {exc_str}")
+	content = {'status_code': 10422, 'message': exc_str, 'data': None}
+	return JSONResponse(content=content, status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
 @app.post("/incident-options/", response_model = model.IncidentCompletionResponse)
 async def get_completion_options(conserved_infos: model.IncidentCompletionRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
     return incidents_schema.get_incidents_completion(db, conserved_infos)

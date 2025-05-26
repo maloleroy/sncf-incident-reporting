@@ -14,6 +14,7 @@ import com.example.appv1.api.ConservedInformations
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.IncidentCompletionRequest
 import com.example.appv1.api.RetrofitInstance
+import com.example.appv1.domain.model.trainTypes
 import com.example.appv1.ui.components.showErrorDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -287,7 +288,7 @@ fun loadOptionsWithContext(
             onSuccess(
                 RetrofitInstance.getCompletionApiService(context).findCompletion(
                     IncidentCompletionRequest(
-                        trainType,
+                        trainTypes[trainType]!!,
                         trainCar,
                         level,
                         ConservedInformations(
