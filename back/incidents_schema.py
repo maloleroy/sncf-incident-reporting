@@ -6,6 +6,17 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+trad = {
+    "location" : "localisation",
+    "precision1": "precision_n1",
+    "precision2": "precision_n2",
+    "precision3": "precision_n3",
+    "subSystem" : "sous_organe",
+    'system' : 'organe',
+    "failure" : "defaillance",
+    "category" : "categorie"
+}
+
 def get_db() -> sqlite3.Connection:
     conn = sqlite3.connect("../arborescence_analyse/DBs/incidents.db", check_same_thread=False)
     try:
@@ -35,64 +46,56 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
     cursor.execute(sql_query, (voiture,))
     response = cursor.fetchall()
     return response
-def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentCompletionRequest) -> dict:
-    logger.info("demande pour : %s", request)
+
+def get_incidents_completion(db: sqlite3.Connection, train: str, voiture: str, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
     cursor = db.cursor()
-    conserved_infos = request.selections  # ex: {"location": "Paris", "category": "A"}
+    with open('sql/get_incidents_.sql', 'r') as file:
+        sql_query = file.read()
+    
+    sql_query = sql_query.replace("{train}", train)
+    sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
 
-    list_categories = ["location", "precision1", "category", "precision2", "system", "precision3", "subSystem", "failure"]
-    kept_categories = []
-    categories_to_propose = []
-    last_category = ""
+    for key, value in conserved_infos.selections.dict().items():
+        logger.info(f"Processing key: {trad[key]}, value: {value}")
+        if value:
+            sql_query = sql_query + f" AND {trad[key]} = '{value}'"
+    sql_query = sql_query + ";"
 
-    # Déterminer catégories connues et à proposer
-    for cat in list_categories:
-        if cat not in conserved_infos:
-            categories_to_propose.append(cat)
-        else:
-            last_category = cat
-            kept_categories.append(cat)
+    logger.info(f"Executing SQL query: {sql_query}")
+    response = cursor.execute(sql_query, (voiture,)).fetchall()
 
-    if not categories_to_propose:
-        logger.debug("[DEBUG] Aucune catégorie à compléter, retour vide.")
-        return {}
+    rep_tries = []
+    for row in response:
+        if row[0] not in rep_tries:
+            rep_tries.append(row[0])
+    rep_tries = set(rep_tries)  # Convert to set to remove duplicates
+    logger.info(f"Unique incidents found: {rep_tries}")
+    return model.IncidentCompletionResponse(options = list(rep_tries))
 
-    logger.info(f"[DEBUG] Catégories à proposer : {categories_to_propose} et catégories conservées : {kept_categories}")
-    # Charger template SQL pour last_category
-    with open(f'sql/get_incidents_{last_category}.sql', 'r') as file:
-        sql_template = file.read()
+    
+def get_incidents_completion_old(db: sqlite3.Connection, train: str, voiture: str, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
+    cursor = db.cursor()
+    level = conserved_infos.level
+    with open(f'sql/get_incidents_{level}.sql', 'r') as file:
+        sql_query = file.read()
+    
+    # for key, value in conserved_infos.selections.dict().items():
+    #     print(f"Processing key: {key}, value: {value}")
+    #     if value is not None and key in sql_query:
+    #         sql_query = sql_query.replace(f"{{{key}}}", value)
+    #     elif key in sql_query:
+    #         sql_query = sql_query.replace(f"{{{key}}}", "NONE")
+    
 
-    # Construire la clause WHERE avec placeholders et paramètres
-    where_clauses = []
-    params = [request.trainCar]
-    for cat in kept_categories:
-        where_clauses.append(f"{cat} LIKE ?")
-        # on ajoute %valeur% pour LIKE (tu peux adapter selon besoin)
-        params.append(f"%{conserved_infos[cat]}%")
 
-    # Injecter la clause WHERE dans le template SQL
-    # (Le template doit contenir un token genre {where_conditions})
-    sql_query = sql_template.replace("{where_conditions}", " AND ".join(where_clauses))
-    sql_query = sql_template.replace("{train}", request.trainType)
-
-    logger.info(f"[DEBUG] Requête SQL finale :\n{sql_query}")
-    logger.info(f"[DEBUG] Paramètres SQL : {params}")
-
-    # Exécuter la requête avec les paramètres
-    cursor.execute(sql_query, params)
-    rows = cursor.fetchall()
-
-    logger.info(f"[DEBUG] Résultats SQL (rows) : {rows}")
-
-    # Préparer réponse : associer colonnes retournées aux catégories à proposer
-    response_by_category = {cat: set() for cat in categories_to_propose}
-    for row in rows:
-        for i, cat in enumerate(categories_to_propose):
-            if i < len(row):
-                response_by_category[cat].add(row[i])
-
-    # Convertir sets en listes
-    final_response = {cat: list(values) for cat, values in response_by_category.items()}
-    logger.debug(f"[DEBUG] Résultat final structuré : {final_response}")
-
-    return model.IncidentCompletionResponse(options=final_response[request.level])
+    sql_query = sql_query.replace("{train}", train)
+    logger.info(f"Executing SQL query: {sql_query}")
+    cursor.execute(sql_query, (voiture, conserved_infos.selections.dict()["location"],))
+    response = cursor.fetchall()
+    rep_tries = []
+    for row in response:
+        if row[0] not in rep_tries:
+            rep_tries.append(row[0])
+    rep_tries = set(rep_tries)  # Convert to set to remove duplicates
+    logger.info(f"Unique incidents found: {rep_tries}")
+    return model.IncidentCompletionResponse(options = list(rep_tries))
