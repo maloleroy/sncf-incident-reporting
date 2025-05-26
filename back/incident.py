@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse:
     possibilities = get_incidents(db, train, voiture)
-    response = "('Place', '', 'Siège', '', 'Accoudoir', '', '', 'Cassé, dégradé, manquant')" # get_response(transcription, possibilities)['content']
+    # response = "('Place', '', 'Siège', '', 'Accoudoir', '', '', 'Cassé, dégradé, manquant')"
+    response = get_response(transcription, possibilities)['content']
     logger.info("LLM Response: %s", response)
     if response.lower().replace(" ", "").replace(".", "") == "jenesaispas":
         raise HTTPException(status_code=404, detail="No incident found")
