@@ -17,6 +17,7 @@ import com.example.appv1.api.IncidentCompletionRequest
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.domain.model.trainTypes
 import com.example.appv1.ui.components.showErrorDialog
+import com.example.appv1.ui.components.SubmitIncidentButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -216,164 +217,176 @@ fun ConfirmationScreen(
             
 
             DropdownField(
-    label = "Précision 1",
-    value = precision1,
-    options = precision1Options,
-    expanded = expandedPrecision1,
-    onExpandedChange = { expanded ->
-        expandedPrecision1 = expanded
-        if (expanded && system.isNotBlank()) {
-            scope.launch {
-                precision1Options = loadOptionsSuspend(
-                    context,
-                    trainType,
-                    trainCar,
-                    "precision1",
-                    mapOf(
-                        "location" to location,
-                        "category" to category,
-                        "system" to system
-                    )
-                )
-            }
-        }
-    },
-    onSelected = {
-        precision1 = it
-        resetBelow("precision1")
-    },
-    onRequestOptions = { emptyList() } // ou null si paramètre nullable
-)
+                label = "Précision 1",
+                value = precision1,
+                options = precision1Options,
+                expanded = expandedPrecision1,
+                onExpandedChange = { expanded ->
+                    expandedPrecision1 = expanded
+                    if (expanded && system.isNotBlank()) {
+                        scope.launch {
+                            precision1Options = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "precision1",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    precision1 = it
+                    resetBelow("precision1")
+                },
+                onRequestOptions = { emptyList() } // ou null si paramètre nullable
+            )
 
 
-DropdownField(
-    label = "Précision 2",
-    value = precision2,
-    options = precision2Options,
-    expanded = expandedPrecision2,
-    onExpandedChange = { expanded ->
-        expandedPrecision2 = expanded
-        if (expanded && precision1.isNotBlank()) {
-            scope.launch {
-                precision2Options = loadOptionsSuspend(
-                    context,
-                    trainType,
-                    trainCar,
-                    "precision2",
-                    mapOf(
-                        "location" to location,
-                        "category" to category,
-                        "system" to system,
-                        "precision1" to precision1
-                    )
-                )
-            }
-        }
-    },
-    onSelected = {
-        precision2 = it
-        resetBelow("precision2")
-    },
-    onRequestOptions = { emptyList() }
-)
+            DropdownField(
+                label = "Précision 2",
+                value = precision2,
+                options = precision2Options,
+                expanded = expandedPrecision2,
+                onExpandedChange = { expanded ->
+                    expandedPrecision2 = expanded
+                    if (expanded && precision1.isNotBlank()) {
+                        scope.launch {
+                            precision2Options = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "precision2",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system,
+                                    "precision1" to precision1
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    precision2 = it
+                    resetBelow("precision2")
+                },
+                onRequestOptions = { emptyList() }
+            )
 
-DropdownField(
-    label = "Précision 3",
-    value = precision3,
-    options = precision3Options,
-    expanded = expandedPrecision3,
-    onExpandedChange = { expanded ->
-        expandedPrecision3 = expanded
-        if (expanded && precision2.isNotBlank()) {
-            scope.launch {
-                precision3Options = loadOptionsSuspend(
-                    context,
-                    trainType,
-                    trainCar,
-                    "precision3",
-                    mapOf(
-                        "location" to location,
-                        "category" to category,
-                        "system" to system,
-                        "precision1" to precision1,
-                        "precision2" to precision2
-                    )
-                )
-            }
-        }
-    },
-    onSelected = {
-        precision3 = it
-        resetBelow("precision3")
-    },
-    onRequestOptions = { emptyList() }
-)
+            DropdownField(
+                label = "Précision 3",
+                value = precision3,
+                options = precision3Options,
+                expanded = expandedPrecision3,
+                onExpandedChange = { expanded ->
+                    expandedPrecision3 = expanded
+                    if (expanded && precision2.isNotBlank()) {
+                        scope.launch {
+                            precision3Options = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "precision3",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system,
+                                    "precision1" to precision1,
+                                    "precision2" to precision2
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    precision3 = it
+                    resetBelow("precision3")
+                },
+                onRequestOptions = { emptyList() }
+            )
 
-DropdownField(
-    label = "Sous-système",
-    value = subSystem,
-    options = subSystemOptions,
-    expanded = expandedSubSystem,
-    onExpandedChange = { expanded ->
-        expandedSubSystem = expanded
-        if (expanded && precision3.isNotBlank()) {
-            scope.launch {
-                subSystemOptions = loadOptionsSuspend(
-                    context,
-                    trainType,
-                    trainCar,
-                    "subSystem",
-                    mapOf(
-                        "location" to location,
-                        "category" to category,
-                        "system" to system,
-                        "precision1" to precision1,
-                        "precision2" to precision2,
-                        "precision3" to precision3
-                    )
-                )
-            }
-        }
-    },
-    onSelected = {
-        subSystem = it
-        resetBelow("subSystem")
-    },
-    onRequestOptions = { emptyList() }
-)
+            DropdownField(
+                label = "Sous-système",
+                value = subSystem,
+                options = subSystemOptions,
+                expanded = expandedSubSystem,
+                onExpandedChange = { expanded ->
+                    expandedSubSystem = expanded
+                    if (expanded && precision3.isNotBlank()) {
+                        scope.launch {
+                            subSystemOptions = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "subSystem",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system,
+                                    "precision1" to precision1,
+                                    "precision2" to precision2,
+                                    "precision3" to precision3
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    subSystem = it
+                    resetBelow("subSystem")
+                },
+                onRequestOptions = { emptyList() }
+            )
 
-DropdownField(
-    label = "Défaillance",
-    value = failure,
-    options = failureOptions,
-    expanded = expandedFailure,
-    onExpandedChange = { expanded ->
-        expandedFailure = expanded
-        if (expanded && subSystem.isNotBlank()) {
-            scope.launch {
-                failureOptions = loadOptionsSuspend(
-                    context,
-                    trainType,
-                    trainCar,
-                    "failure",
-                    mapOf(
-                        "location" to location,
-                        "category" to category,
-                        "system" to system,
-                        "precision1" to precision1,
-                        "precision2" to precision2,
-                        "precision3" to precision3,
-                        "subSystem" to subSystem
-                    )
-                )
-            }
-        }
-    },
-    onSelected = {
-        failure = it
-    },
-    onRequestOptions = { emptyList() }
-)
+            DropdownField(
+                label = "Défaillance",
+                value = failure,
+                options = failureOptions,
+                expanded = expandedFailure,
+                onExpandedChange = { expanded ->
+                    expandedFailure = expanded
+                    if (expanded && subSystem.isNotBlank()) {
+                        scope.launch {
+                            failureOptions = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "failure",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system,
+                                    "precision1" to precision1,
+                                    "precision2" to precision2,
+                                    "precision3" to precision3,
+                                    "subSystem" to subSystem
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    failure = it
+                },
+                onRequestOptions = { emptyList() }
+            )
+
+            SubmitIncidentButton(scope, context, IncidentAnalysisResponse(
+                location = location,
+                category = category,
+                system = system,
+                precision1 = precision1,
+                precision2 = precision2,
+                precision3 = precision3,
+                subSystem = subSystem,
+                failure = failure
+            ))
+
 
         }
     }
