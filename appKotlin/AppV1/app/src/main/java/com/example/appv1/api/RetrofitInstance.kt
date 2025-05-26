@@ -64,4 +64,13 @@ object RetrofitInstance {
             .build()
             .create(IncidentAnalysisApiService::class.java)
     }
+
+    fun getCompletionApiService(context: Context): IncidentCompletionApiService {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BACKEND_URL)
+            .client(createSecureClient(context))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(IncidentCompletionApiService::class.java)
+    }
 }

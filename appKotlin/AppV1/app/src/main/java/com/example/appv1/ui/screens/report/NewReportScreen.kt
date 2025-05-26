@@ -9,13 +9,21 @@ import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +31,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Close // Add Close icon import
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
@@ -39,27 +48,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable // Import rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.example.appv1.GemmaEngine
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.api.getIncidentAnalysis
+import com.example.appv1.domain.model.trainTypes
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -70,48 +82,42 @@ import java.io.IOException
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: (IncidentAnalysisResponse) -> Unit
+    onSuccess: (IncidentAnalysisResponse, String, String) -> Unit,
+    showSuccessMessage: Boolean // Parameter from navigation
 ) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
 
-    var trainType by remember { mutableStateOf("") }
-    var trainCar by remember { mutableStateOf("") }
-    var numberOfSeat by remember { mutableStateOf("") }
-    var transcription by remember { mutableStateOf("") }
+    var trainType by rememberSaveable { mutableStateOf("") }
+    var trainCar by rememberSaveable { mutableStateOf("") }
+    var numberOfSeat by rememberSaveable { mutableStateOf("") }
+    var transcription by rememberSaveable { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
+   
+
     var isOnlineAILoading by remember { mutableStateOf(false) }
-    var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
-    var isLoadingGemma by remember { mutableStateOf(false) }
-    val trainTypes = mapOf(
-        "Dasye" to "DASYE_eau_incidents",
-        "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
-        "DUPLEX WC EAU" to "DUPLEX_WC_EAU_incidents",
-        "NEODUPLEX chimique" to "NEODUPLEX_chimique_incidents",
-        "OCEANE LIKE" to "OCEANE_LIKE_incidents",
-        "OUIGO1" to "OUIGO1_incidents",
-        "OUIGO2" to "OUIGO2_incidents",
-        "PLT" to "PLT_incidents",
-        "POS" to "POS_incidents",
-        "P DUPLEX" to "P_DUPLEX_incidents",
-        "RDOM" to "RDOM_incidents",
-        "RITA" to "RITA_incidents",
-        "TANGO" to "TANGO_incidents",
-        "TGV R TRI FO" to "TGV_R_TRI_FO_incidents",
-        "TGV R TRI" to "TGV_R_TRI_incidents",
-        "TRAIN 2N2 3UA LYRIA" to "TRAIN_2N2_3UA_LYRIA_incidents",
-        "TRAIN 2N2 3UA" to "TRAIN_2N2_3UA_incidents",
-        "TRAIN 2N2 3UFC" to "TRAIN_2N2_3UFC_incidents",
-        "TRAIN 2N2 3UF" to "TRAIN_2N2_3UF_incidents",
-        "TRAIN 2N2 3UH" to "TRAIN_2N2_3UH_incidents"
-    )
 
+    // Internal state to control the visibility of the success message
+    var internalShowSuccessMessage by rememberSaveable { mutableStateOf(false) }
 
-    // ----> 1. Initialiser GemmaEngine et gérer son cycle de vie <----
-    val gemmaEngine = remember { GemmaEngine(context) }
-    DisposableEffect(Unit) {
-        onDispose {
-            gemmaEngine.close() // Fermer l'engine quand l'écran est quitté
+    // Effect to clear form and show message based on navigation argument
+    LaunchedEffect(showSuccessMessage) {
+        if (showSuccessMessage) {
+            internalShowSuccessMessage = true // Show the message
+            // Clear form fields
+            trainType = ""
+            trainCar = ""
+            numberOfSeat = ""
+            transcription = ""
+            // Potentially reset other relevant states here if needed
+        }
+    }
+
+    // Effect to auto-hide the success message after 5 seconds
+    LaunchedEffect(internalShowSuccessMessage) {
+        if (internalShowSuccessMessage) {
+            delay(3000L) // 3 seconds delay
+            internalShowSuccessMessage = false // Hide the message
         }
     }
 
@@ -163,6 +169,41 @@ fun NewReportScreen(
                 .padding(16.dp)
                 .verticalScroll(rememberScrollState()) // Ajout du scroll
         ) {
+            // Display success message with animation
+            AnimatedVisibility(
+                visible = internalShowSuccessMessage,
+                exit = slideOutVertically(animationSpec = tween(durationMillis = 600)) + fadeOut(animationSpec = tween(durationMillis = 600))
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF4CAF50), shape = RoundedCornerShape(8.dp)) // Green background
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Signalement enregistré avec succès!",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.weight(1f)
+                        )
+                        IconButton(onClick = { internalShowSuccessMessage = false }) {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "Fermer le message",
+                                tint = Color.White
+                            )
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp)) // Add some space after the message
+            }
+
             // Champ pour le type de train
             var expanded by remember { mutableStateOf(false) }
 
@@ -224,7 +265,7 @@ fun NewReportScreen(
                 onValueChange = { transcription = it },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp),
+                    .height(200.dp),
                 placeholder = { Text("Décrivez votre signalement ici…") },
                 label = { Text("Description initiale") } // Ajout d'un label
 
@@ -271,7 +312,7 @@ fun NewReportScreen(
                             onResult = { result ->
                                 generatedReportText = result.failure
                                 isOnlineAILoading = false
-                                onSuccess(result)
+                                onSuccess(result, trainType, trainCar)
                             },
                             onError = { errorMessage ->
                                 isOnlineAILoading = false
@@ -320,21 +361,6 @@ fun NewReportScreen(
                 Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(generatedReportText!!)
-            }
-
-            // Affichage chargement Gemma
-            if (isLoadingGemma) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Génération Gemma en cours...", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-            // Affichage résultat Gemma
-            else if (generatedGemmaText != null) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Rapport généré par Gemma :", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                Text(generatedGemmaText!!)
             }
         }
     }

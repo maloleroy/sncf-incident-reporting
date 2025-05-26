@@ -1,6 +1,21 @@
 import sqlite3
 import model
 import incidents_db
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+trad = {
+    "location" : "localisation",
+    "precision1": "precision_n1",
+    "precision2": "precision_n2",
+    "precision3": "precision_n3",
+    "subSystem" : "sous_organe",
+    'system' : 'organe',
+    "failure" : "defaillance",
+    "category" : "categorie"
+}
 
 def get_db() -> sqlite3.Connection:
     conn = sqlite3.connect("../arborescence_analyse/DBs/incidents.db", check_same_thread=False)
@@ -32,71 +47,29 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
     response = cursor.fetchall()
     return response
 
-def get_incidents_completion(db: sqlite3.Connection, trainType: str, car: str, request: model.IncidentCompletionRequest) -> dict:
-    import logging
-
+def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
     cursor = db.cursor()
-    conserved_infos = request.selections
+    with open('sql/get_incidents_.sql', 'r') as file:
+        sql_query = file.read()
+    
+    sql_query = sql_query.replace("{train}", conserved_infos.trainType)
+    sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
 
-    list_categories = ["location", "precision1", "category", "precision2", "system", "precision3", "subSystem", "failure"]
-    kept_categories = []
-    categories_to_propose = []
-    last_category = ""
+    for key, value in conserved_infos.selections.dict().items():
+        logger.info(f"Processing key: {trad[key]}, value: {value}")
+        if value:
+            sql_query = sql_query + f" AND {trad[key]} = '{value}'"
+    sql_query = sql_query + ";"
 
-    # 🧠 Lecture des catégories déjà remplies et à compléter
-    for cat in list_categories:
-        if cat not in conserved_infos:
-            categories_to_propose.append(cat)
-        else:
-            last_category = cat
-            kept_categories.append(cat)
+    logger.info(f"Executing SQL query: {sql_query}")
+    response = cursor.execute(sql_query, (conserved_infos.trainCar,)).fetchall()
 
-    logging.debug(f"[DEBUG] Catégories conservées (déjà remplies) : {kept_categories}")
-    logging.debug(f"[DEBUG] Catégories à compléter : {categories_to_propose}")
-    logging.debug(f"[DEBUG] Dernière catégorie connue : {last_category}")
+    rep_tries = []
+    for row in response:
+        if row[0] not in rep_tries:
+            rep_tries.append(row[0])
+    rep_tries = set(rep_tries)  # Convert to set to remove duplicates
+    logger.info(f"Unique incidents found: {rep_tries}")
+    return model.IncidentCompletionResponse(options = list(rep_tries))
 
-    if not categories_to_propose:
-        logging.debug("[DEBUG] Aucune catégorie à compléter, retour vide.")
-        return {}
-
-    # 📄 Lecture du template SQL
-    with open(f'sql/get_incidents_{last_category}.sql', 'r') as file:
-        sql_template = file.read()
-
-    # 🔒 Sécurité sur le nom de table
-    if not trainType.isidentifier():
-        raise ValueError("Nom de table non valide.")
-
-    # 🏗 Construction dynamique de la requête SQL
-    sql_query = sql_template.replace("{train}", trainType)
-    for cat in kept_categories:
-        sql_query = sql_query.replace(f"{{{cat}}}", f"{cat} = '{conserved_infos[cat]}'")
-
-    logging.debug(f"[DEBUG] Requête SQL finale exécutée :\n{sql_query}")
-    logging.debug(f"[DEBUG] Paramètre passé à la requête (car): {car}")
-
-    # 🔍 Exécution SQL
-    cursor.execute(sql_query, (car,))
-    rows = cursor.fetchall()
-
-    logging.debug(f"[DEBUG] Résultat brut SQL (rows): {rows}")
-
-    # 🔁 Association colonnes <-> catégories
-    response_by_category = {cat: set() for cat in categories_to_propose}
-    for row in rows:
-        for i, cat in enumerate(categories_to_propose):
-            if i < len(row):
-                response_by_category[cat].add(row[i])
-                logging.debug(f"[DEBUG] Ajouté {row[i]} à la catégorie {cat}")
-
-    # 🔄 Conversion en listes
-    final_response = {cat: list(values) for cat, values in response_by_category.items()}
-    logging.debug(f"[DEBUG] Résultat final structuré : {final_response}")
-
-    return model.IncidentCompletionResponse(options=final_response[request.level])
-
-# conserved_1.precision2 = "Boulevard de la République"
-# conserved_1.system = "Boulevard"
-# conserved_1.precision3 = "Boulevard de la République"
-# conserved_1.subSystem = "Boulevard"
-# conserved_1.failure = "Boulevard"
+  

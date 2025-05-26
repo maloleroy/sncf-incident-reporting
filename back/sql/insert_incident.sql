@@ -1,9 +1,9 @@
 INSERT INTO incidents (
     location,
-    category,
-    system,
     precision1,
+    category,
     precision2,
+    system,
     precision3,
     subSystem,
     failure

@@ -34,8 +34,8 @@ android {
         buildConfigField("String", "BACKEND_PASSWORD", "\"$backendPassword\"")
         val backendAiRoute = getEnvVar("BACKEND_AI_ROUTE", "/openai")
         buildConfigField("String", "BACKEND_AI_ROUTE", "\"$backendAiRoute\"")
-        val backendObjectsListRoute = getEnvVar("BACKEND_OBJECTS_LIST_ROUTE", "/objects")
-        buildConfigField("String", "BACKEND_OBJECTS_LIST_ROUTE", "\"$backendObjectsListRoute\"")
+        val backendCompletionRoute = getEnvVar("BACKEND_COMPLETION_ROUTE", "/incident-options")
+        buildConfigField("String", "BACKEND_COMPLETION_ROUTE", "\"$backendCompletionRoute\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -77,8 +77,6 @@ dependencies {
     implementation(libs.retrofit) // Ou version plus récente
     implementation(libs.retrofit.converter.gson) // Ou version plus récente
     implementation(libs.okhttp) // Ou version plus récente
-    // Ajoutez la dépendance MediaPipe GenAI Tasks
-    implementation(libs.tasks.genai) // Vérifiez la dernière version stable
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)

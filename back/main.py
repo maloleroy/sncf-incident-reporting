@@ -36,8 +36,9 @@ async def get_objects(trainType: str, car: str, db: Connection = Depends(inciden
     return incidents_schema.get_incidents_objets(db, trainType, car)
 
 @app.post("/incident-options/", response_model = model.IncidentCompletionResponse)
-async def get_completion_options(trainType: str, car: str, conserved_infos: model.IncidentCompletionRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
-    return incidents_schema.get_incidents_completion(db, trainType, car, conserved_infos)
+async def get_completion_options(conserved_infos: model.IncidentCompletionRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
+    print(incidents_schema.get_incidents_completion(db, conserved_infos))
+    return incidents_schema.get_incidents_completion(db, conserved_infos)
 
 @app.post("/incident-analysis/", response_model= model.IncidentAnalysisResponse)
 async def get_incident_analysis(incident_info: model.IncidentAnalysisRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):

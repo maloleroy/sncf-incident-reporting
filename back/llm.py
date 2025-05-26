@@ -8,7 +8,7 @@ from env import require_environment_variables
 from security import PASSWORD_ENV_VAR
 
 class ModelName(str, Enum):
-    MISTRAL = "mistral-small-latest"
+    MISTRAL = "mistral-large-latest"
     OPENAI = "gpt-4.1"
 
 def get_completions(model: ModelName, messages: ChatRequest):
@@ -102,4 +102,4 @@ def get_llm_prompt_messages_from_objects(list_objects, message) -> list[dict[str
 
 def get_response(message, possibilities):
     prompt = get_llm_prompt_messages_from_objects(possibilities, message)
-    return get_completions(ModelName.OPENAI, ChatRequest(messages=prompt))
+    return get_completions(ModelName.MISTRAL, ChatRequest(messages=prompt))

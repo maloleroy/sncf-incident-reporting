@@ -1,3 +1,5 @@
-SELECT categorie, precision_n2, organe, precision_n3, sous_organe, defaillance
+SELECT category, precision2, system, precision3, subSystem, failure
 FROM {train}
-WHERE rames LIKE '%' || ? || '%' AND localisation LIKE '%' || ? || '%' AND categorie LIKE '%' || ? || '%';
+WHERE rames LIKE '%' || ? || '%' 
+  AND localisation LIKE '%' || ? || '%'
+  AND precision1 LIKE '%' || ? || '%';
