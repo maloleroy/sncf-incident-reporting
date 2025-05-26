@@ -15,6 +15,7 @@ import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.IncidentCompletionRequest
 import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.domain.model.trainTypes
+import com.example.appv1.ui.components.SubmitIncidentButton
 import com.example.appv1.ui.components.showErrorDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -229,6 +230,17 @@ fun ConfirmationScreen(
             }
         }
     }
+
+    SubmitIncidentButton(scope, context, IncidentAnalysisResponse(
+        location = location,
+        category = category,
+        system = system,
+        precision1 = precision1,
+        precision2 = precision2,
+        precision3 = precision3,
+        subSystem = subSystem,
+        failure = failure
+    ))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
