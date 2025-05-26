@@ -69,7 +69,7 @@ import java.io.IOException
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: (IncidentAnalysisResponse) -> Unit
+    onSuccess: (IncidentAnalysisResponse, String, String) -> Unit
 ) {
     val context = LocalContext.current
     rememberCoroutineScope() // Coroutine scope pour les appels asynchrones
@@ -262,7 +262,7 @@ fun NewReportScreen(
                             onResult = { result ->
                                 generatedReportText = result.failure
                                 isOnlineAILoading = false
-                                onSuccess(result)
+                                onSuccess(result, trainType, trainCar)
                             },
                             onError = { errorMessage ->
                                 isOnlineAILoading = false

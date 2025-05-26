@@ -13,6 +13,7 @@ import com.example.appv1.ui.screens.report.ConfirmationScreen
 import com.example.appv1.ui.theme.AppV1Theme
 import com.example.appv1.ui.screens.report.ReportSharedViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.appv1.api.IncidentAnalysisResponse
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,18 +32,20 @@ class MainActivity : ComponentActivity() {
                     composable("new_report") {
                         NewReportScreen(
                             onBack = { navController.popBackStack() },
-                            onSuccess = { response ->
+                            onSuccess = { response, trainType, trainCar ->
                                 sharedViewModel.lastIncidentAnalysisResponse = response
+                                sharedViewModel.trainType = trainType
+                                sharedViewModel.trainCar = trainCar
                                 navController.navigate("confirm_report")
-                            }
+                            },
                         )
                     }
                     composable("confirm_report") {
                         ConfirmationScreen(
                             response = sharedViewModel.lastIncidentAnalysisResponse,
                             onBack = { navController.popBackStack() },
-                            trainType = TODO(),
-                            car = TODO()
+                            trainType = sharedViewModel.trainType!!,
+                            car = sharedViewModel.trainCar!!
                         )
                     }
                 }
