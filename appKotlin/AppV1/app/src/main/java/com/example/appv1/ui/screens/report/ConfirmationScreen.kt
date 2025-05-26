@@ -35,14 +35,19 @@ fun ConfirmationScreen(
         return
     }
     val scope = rememberCoroutineScope()
-    val loadOptions (String, Map<String, String>) -> List<String> = { level, selections ->
-        var lOptions by remember { mutableStateOf<List<String>>(emptyList()) }
-        loadOptionsWithContext(context, trainType, trainCar, level, selections,
-            onSuccess = { options ->
-                lOptions = options
-            }
+    val loadOptions: (String, Map<String, String>) -> List<String> = { level, selections ->
+        val options = mutableListOf<String>()
+        loadOptionsWithContext(
+            scope,
+            context,
+            trainType,
+            trainCar,
+            level,
+            selections,
+            onSuccess = { options.addAll(it) },
+            onError = { error -> showErrorDialog(context, "Erreur lors du chargement des options : $error") }
         )
-        lOptions // Last expression is implicitly returned
+        options
     }
 
     var location by remember { mutableStateOf(response.location) }
@@ -268,6 +273,7 @@ fun DropdownField(
 }
 
 fun loadOptionsWithContext(
+    scope: CoroutineScope,
     context: Context,
     trainType: String,
     trainCar: String,
@@ -276,26 +282,27 @@ fun loadOptionsWithContext(
     onSuccess: (List<String>) -> Unit,
     onError: (String) -> Unit = { error -> showErrorDialog(context, "Erreur lors du chargement des options : ${error}") }
 ) {
-    CoroutineScope(Dispatchers.IO).launch {
+    scope.launch {
         try {
             onSuccess(
-            RetrofitInstance.getCompletionApiService(context).findCompletion(
-                IncidentCompletionRequest(
-                    trainType,
-                    trainCar,
-                    level,
-                    ConservedInformations(
-                        location = selections["location"],
-                        category = selections["category"],
-                        system = selections["system"],
-                        precision1 = selections["precision1"],
-                        precision2 = selections["precision2"],
-                        precision3 = selections["precision3"],
-                        subSystem = selections["subSystem"],
-                        failure = selections["failure"]
+                RetrofitInstance.getCompletionApiService(context).findCompletion(
+                    IncidentCompletionRequest(
+                        trainType,
+                        trainCar,
+                        level,
+                        ConservedInformations(
+                            location = selections["location"],
+                            category = selections["category"],
+                            system = selections["system"],
+                            precision1 = selections["precision1"],
+                            precision2 = selections["precision2"],
+                            precision3 = selections["precision3"],
+                            subSystem = selections["subSystem"],
+                            failure = selections["failure"]
+                        )
                     )
-                )
-            ).options)
+                ).options
+            )
         } catch (e: retrofit2.HttpException) {
             withContext(Dispatchers.Main) {
                 onError("Erreur HTTP ${e.code()}")
