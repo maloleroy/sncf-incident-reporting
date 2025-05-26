@@ -226,27 +226,6 @@ fun ConfirmationScreen(
                     resetBelow("category")
                 }
             )
-            
-
-            DropdownField(
-                label = "Système",
-                value = system,
-                options = systemOptions,
-                expanded = expandedSystem,
-                onExpandedChange = { expanded ->
-                    expandedSystem = expanded
-                    if (expanded && category.isNotBlank()) {
-                        scope.launch {
-                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system", mapOf("location" to location, "category" to category))
-                        }
-                    }
-                },
-                onSelected = {
-                    system = it
-                    resetBelow("system")
-                },
-                onRequestOptions = { emptyList() } // ou null si paramètre nullable, car on charge via onExpandedChange
-            )
 
             DropdownField(
                 label = "Précision 2",
@@ -277,6 +256,26 @@ fun ConfirmationScreen(
                     resetBelow("precision2")
                 },
                 onRequestOptions = { emptyList() }
+            )
+
+            DropdownField(
+                label = "Système",
+                value = system,
+                options = systemOptions,
+                expanded = expandedSystem,
+                onExpandedChange = { expanded ->
+                    expandedSystem = expanded
+                    if (expanded && category.isNotBlank()) {
+                        scope.launch {
+                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system", mapOf("location" to location, "category" to category))
+                        }
+                    }
+                },
+                onSelected = {
+                    system = it
+                    resetBelow("system")
+                },
+                onRequestOptions = { emptyList() } // ou null si paramètre nullable, car on charge via onExpandedChange
             )
 
             DropdownField(
