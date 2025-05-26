@@ -92,22 +92,22 @@ fun ConfirmationScreen(
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
             }
+            "precision1" -> {
+                category = ""; categoryOptions = listOf()
+                system = ""; systemOptions = listOf()
+                precision2 = ""; precision2Options = listOf()
+                precision3 = ""; precision3Options = listOf()
+                subSystem = ""; subSystemOptions = listOf()
+                failure = ""; failureOptions = listOf()
+            }
             "category" -> {
                 system = ""; systemOptions = listOf()
-                precision1 = ""; precision1Options = listOf()
                 precision2 = ""; precision2Options = listOf()
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
                 failure = ""; failureOptions = listOf()
             }
             "system" -> {
-                precision1 = ""; precision1Options = listOf()
-                precision2 = ""; precision2Options = listOf()
-                precision3 = ""; precision3Options = listOf()
-                subSystem = ""; subSystemOptions = listOf()
-                failure = ""; failureOptions = listOf()
-            }
-            "precision1" -> {
                 precision2 = ""; precision2Options = listOf()
                 precision3 = ""; precision3Options = listOf()
                 subSystem = ""; subSystemOptions = listOf()
@@ -149,28 +149,58 @@ fun ConfirmationScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             DropdownField(
-    label = "Lieu",
-    value = location,
-    options = locationOptions,
-    expanded = expandedLocation,
-    onExpandedChange = { isExpanded ->
-        expandedLocation = isExpanded
-        if (isExpanded && locationOptions.isEmpty()) {
-            scope.launch {
-                try {
-                    val result = loadOptionsSuspend(context, trainType, trainCar, "location", mapOf())
-                    locationOptions = result
-                } catch (e: Exception) {
-                    showErrorDialog(context, e.message ?: "Erreur inconnue")
+                label = "Lieu",
+                value = location,
+                options = locationOptions,
+                expanded = expandedLocation,
+                onExpandedChange = { isExpanded ->
+                    expandedLocation = isExpanded
+                    if (isExpanded && locationOptions.isEmpty()) {
+                        scope.launch {
+                            try {
+                                val result = loadOptionsSuspend(context, trainType, trainCar, "location", mapOf())
+                                locationOptions = result
+                            } catch (e: Exception) {
+                                showErrorDialog(context, e.message ?: "Erreur inconnue")
+                            }
+                        }
+                    }
+                },
+                onSelected = {
+                    location = it
+                    resetBelow("location")
                 }
-            }
-        }
-    },
-    onSelected = {
-        location = it
-        resetBelow("location")
-    }
-)
+            )
+
+            DropdownField(
+                label = "Précision 1",
+                value = precision1,
+                options = precision1Options,
+                expanded = expandedPrecision1,
+                onExpandedChange = { expanded ->
+                    expandedPrecision1 = expanded
+                    if (expanded && system.isNotBlank()) {
+                        scope.launch {
+                            precision1Options = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "precision1",
+                                mapOf(
+                                    "location" to location,
+                                    "category" to category,
+                                    "system" to system
+                                )
+                            )
+                        }
+                    }
+                },
+                onSelected = {
+                    precision1 = it
+                    resetBelow("precision1")
+                },
+                onRequestOptions = { emptyList() } // ou null si paramètre nullable
+            )
 
             DropdownField(
                 label = "Catégorie",
@@ -216,38 +246,6 @@ fun ConfirmationScreen(
                 },
                 onRequestOptions = { emptyList() } // ou null si paramètre nullable, car on charge via onExpandedChange
             )
-            
-
-            DropdownField(
-                label = "Précision 1",
-                value = precision1,
-                options = precision1Options,
-                expanded = expandedPrecision1,
-                onExpandedChange = { expanded ->
-                    expandedPrecision1 = expanded
-                    if (expanded && system.isNotBlank()) {
-                        scope.launch {
-                            precision1Options = loadOptionsSuspend(
-                                context,
-                                trainType,
-                                trainCar,
-                                "precision1",
-                                mapOf(
-                                    "location" to location,
-                                    "category" to category,
-                                    "system" to system
-                                )
-                            )
-                        }
-                    }
-                },
-                onSelected = {
-                    precision1 = it
-                    resetBelow("precision1")
-                },
-                onRequestOptions = { emptyList() } // ou null si paramètre nullable
-            )
-
 
             DropdownField(
                 label = "Précision 2",
