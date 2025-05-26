@@ -47,12 +47,12 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
     response = cursor.fetchall()
     return response
 
-def get_incidents_completion(db: sqlite3.Connection, train: str, voiture: str, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
+def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
     cursor = db.cursor()
     with open('sql/get_incidents_.sql', 'r') as file:
         sql_query = file.read()
     
-    sql_query = sql_query.replace("{train}", train)
+    sql_query = sql_query.replace("{train}", conserved_infos.trainType)
     sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
 
     for key, value in conserved_infos.selections.dict().items():
@@ -62,7 +62,7 @@ def get_incidents_completion(db: sqlite3.Connection, train: str, voiture: str, c
     sql_query = sql_query + ";"
 
     logger.info(f"Executing SQL query: {sql_query}")
-    response = cursor.execute(sql_query, (voiture,)).fetchall()
+    response = cursor.execute(sql_query, (conserved_infos.trainCar,)).fetchall()
 
     rep_tries = []
     for row in response:
@@ -72,30 +72,4 @@ def get_incidents_completion(db: sqlite3.Connection, train: str, voiture: str, c
     logger.info(f"Unique incidents found: {rep_tries}")
     return model.IncidentCompletionResponse(options = list(rep_tries))
 
-    
-def get_incidents_completion_old(db: sqlite3.Connection, train: str, voiture: str, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
-    cursor = db.cursor()
-    level = conserved_infos.level
-    with open(f'sql/get_incidents_{level}.sql', 'r') as file:
-        sql_query = file.read()
-    
-    # for key, value in conserved_infos.selections.dict().items():
-    #     print(f"Processing key: {key}, value: {value}")
-    #     if value is not None and key in sql_query:
-    #         sql_query = sql_query.replace(f"{{{key}}}", value)
-    #     elif key in sql_query:
-    #         sql_query = sql_query.replace(f"{{{key}}}", "NONE")
-    
-
-
-    sql_query = sql_query.replace("{train}", train)
-    logger.info(f"Executing SQL query: {sql_query}")
-    cursor.execute(sql_query, (voiture, conserved_infos.selections.dict()["location"],))
-    response = cursor.fetchall()
-    rep_tries = []
-    for row in response:
-        if row[0] not in rep_tries:
-            rep_tries.append(row[0])
-    rep_tries = set(rep_tries)  # Convert to set to remove duplicates
-    logger.info(f"Unique incidents found: {rep_tries}")
-    return model.IncidentCompletionResponse(options = list(rep_tries))
+  
