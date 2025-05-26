@@ -122,9 +122,6 @@ fun ConfirmationScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Succès!", style = MaterialTheme.typography.headlineMedium)
-            Spacer(Modifier.height(16.dp))
-
             DropdownField("Lieu", location, locationOptions, expandedLocation, {
                 expandedLocation = it
                 if (it) scope.launch { locationOptions = loadOptions("location", mapOf()) }
