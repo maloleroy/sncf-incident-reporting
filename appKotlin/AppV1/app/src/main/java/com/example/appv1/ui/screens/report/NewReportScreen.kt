@@ -51,7 +51,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.example.appv1.GemmaEngine
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
@@ -83,8 +82,7 @@ fun NewReportScreen(
    
 
     var isOnlineAILoading by remember { mutableStateOf(false) }
-    var generatedGemmaText by remember { mutableStateOf<String?>(null) } // Pour Gemma
-    var isLoadingGemma by remember { mutableStateOf(false) }
+
     val trainTypes = mapOf(
         "Dasye" to "DASYE_eau_incidents",
         "DUPLEX WC chimique" to "DUPLEX_WC_chimique_incidents",
@@ -107,15 +105,6 @@ fun NewReportScreen(
         "TRAIN 2N2 3UF" to "TRAIN_2N2_3UF_incidents",
         "TRAIN 2N2 3UH" to "TRAIN_2N2_3UH_incidents"
     )
-
-
-    // ----> 1. Initialiser GemmaEngine et gérer son cycle de vie <----
-    val gemmaEngine = remember { GemmaEngine(context) }
-    DisposableEffect(Unit) {
-        onDispose {
-            gemmaEngine.close() // Fermer l'engine quand l'écran est quitté
-        }
-    }
 
     /* ---------- 1) launcher pour l’Intent de reconnaissance vocale ---------- */
     val speechLauncher = rememberLauncherForActivityResult(
@@ -322,21 +311,6 @@ fun NewReportScreen(
                 Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 Text(generatedReportText!!)
-            }
-
-            // Affichage chargement Gemma
-            if (isLoadingGemma) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Génération Gemma en cours...", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-            // Affichage résultat Gemma
-            else if (generatedGemmaText != null) {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Rapport généré par Gemma :", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                Text(generatedGemmaText!!)
             }
         }
     }
