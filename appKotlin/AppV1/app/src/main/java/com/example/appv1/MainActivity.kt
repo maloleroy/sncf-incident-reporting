@@ -40,7 +40,9 @@ class MainActivity : ComponentActivity() {
                     composable("confirm_report") {
                         ConfirmationScreen(
                             response = sharedViewModel.lastIncidentAnalysisResponse,
-                            onBack = { navController.popBackStack() }
+                            onBack = { navController.popBackStack() },
+                            trainType = TODO(),
+                            car = TODO()
                         )
                     }
                 }
