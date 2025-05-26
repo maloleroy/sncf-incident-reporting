@@ -57,6 +57,7 @@ def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentComp
         logger.debug("[DEBUG] Aucune catégorie à compléter, retour vide.")
         return {}
 
+    logger.info(f"[DEBUG] Catégories à proposer : {categories_to_propose} et catégories conservées : {kept_categories}")
     # Charger template SQL pour last_category
     with open(f'sql/get_incidents_{last_category}.sql', 'r') as file:
         sql_template = file.read()
@@ -74,14 +75,14 @@ def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentComp
     sql_query = sql_template.replace("{where_conditions}", " AND ".join(where_clauses))
     sql_query = sql_template.replace("{train}", request.trainType)
 
-    logger.debug(f"[DEBUG] Requête SQL finale :\n{sql_query}")
-    logger.debug(f"[DEBUG] Paramètres SQL : {params}")
+    logger.info(f"[DEBUG] Requête SQL finale :\n{sql_query}")
+    logger.info(f"[DEBUG] Paramètres SQL : {params}")
 
     # Exécuter la requête avec les paramètres
     cursor.execute(sql_query, params)
     rows = cursor.fetchall()
 
-    logger.debug(f"[DEBUG] Résultats SQL (rows) : {rows}")
+    logger.info(f"[DEBUG] Résultats SQL (rows) : {rows}")
 
     # Préparer réponse : associer colonnes retournées aux catégories à proposer
     response_by_category = {cat: set() for cat in categories_to_propose}
