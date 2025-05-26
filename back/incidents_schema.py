@@ -32,7 +32,7 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
     response = cursor.fetchall()
     return response
 
-def get_incidents_completion(db: sqlite3.Connection, trainType: str, car: str, request: model.IncidentCompletionRequest) -> dict:
+def get_incidents_completion(db: sqlite3.Connection, request: model.IncidentCompletionRequest) -> dict:
     import logging
 
     cursor = db.cursor()
@@ -64,19 +64,19 @@ def get_incidents_completion(db: sqlite3.Connection, trainType: str, car: str, r
         sql_template = file.read()
 
     # 🔒 Sécurité sur le nom de table
-    if not trainType.isidentifier():
+    if not request.trainType.isidentifier():
         raise ValueError("Nom de table non valide.")
 
     # 🏗 Construction dynamique de la requête SQL
-    sql_query = sql_template.replace("{train}", trainType)
+    sql_query = sql_template.replace("{train}", request.trainType)
     for cat in kept_categories:
         sql_query = sql_query.replace(f"{{{cat}}}", f"{cat} = '{conserved_infos[cat]}'")
 
     logging.debug(f"[DEBUG] Requête SQL finale exécutée :\n{sql_query}")
-    logging.debug(f"[DEBUG] Paramètre passé à la requête (car): {car}")
+    logging.debug(f"[DEBUG] Paramètre passé à la requête (car): {request.trainCar}")
 
     # 🔍 Exécution SQL
-    cursor.execute(sql_query, (car,))
+    cursor.execute(sql_query, (request.trainCar,))
     rows = cursor.fetchall()
 
     logging.debug(f"[DEBUG] Résultat brut SQL (rows): {rows}")

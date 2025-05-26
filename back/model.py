@@ -161,7 +161,9 @@ class ConservedInformations(BaseModel):
     failure: Optional[str] = None     # defaillance
 
 class IncidentCompletionRequest(BaseModel):
-    level: str
+    trainType: TrainType = TrainType.DASYE
+    trainCar: str = "R6H"
+    level: str = "category"
     selections: ConservedInformations
 
 class IncidentCompletionResponse(BaseModel):
