@@ -33,7 +33,7 @@ def test_create_incident():
     assert len(incidents) > 0
     for i in incident_data:
         assert i in incidents[-1]
-        assert incident_data[i] == incidents[-1][i]
+        assert incident_data[i] == incidents[-1][i], f"Expected {incident_data[i]} but got {incidents[-1][i]} for key {i}"
 
 def test_read_incidents():
     response = client.get("/incidents/", headers=get_security_header())
