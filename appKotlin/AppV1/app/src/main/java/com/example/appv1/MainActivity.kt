@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.appv1.ui.screens.home.HomeScreen
+import com.example.appv1.ui.screens.list.ListReportsScreen
 import com.example.appv1.ui.screens.report.ConfirmationScreen
 import com.example.appv1.ui.screens.report.NewReportScreen
 import com.example.appv1.ui.screens.report.ReportSharedViewModel
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
                     composable("home") {
                         HomeScreen(
                             onNewReport = { navController.navigate("new_report") },
-                            onViewReports = { /* TODO: lister les rapports */ }
+                            onViewReports = { navController.navigate("list_reports") }
                         )
                     }
                     composable(
@@ -61,6 +62,11 @@ class MainActivity : ComponentActivity() {
                                     launchSingleTop = true
                                 }
                             }
+                        )
+                    }
+                    composable("list_reports") {
+                        ListReportsScreen(
+                            onBack = { navController.popBackStack() }
                         )
                     }
                 }
