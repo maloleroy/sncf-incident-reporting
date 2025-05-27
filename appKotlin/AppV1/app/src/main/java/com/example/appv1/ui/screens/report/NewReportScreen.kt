@@ -368,14 +368,11 @@ fun NewReportScreen(
             // Affichage chargement IA
             if (isOnlineAILoading) {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-                Text("Génération en cours...", style = MaterialTheme.typography.titleMedium)
+                Text("Chargement...", style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
             } else if (generatedReportText != null) { // Cette partie pourrait être enlevée si on navigue directement
                 NewReportScreenDivider()
-                Text("Rapport généré par l'IA :", style = MaterialTheme.typography.titleMedium)
-                Spacer(Modifier.height(8.dp))
-                Text(generatedReportText!!)
             }
         }
     }
