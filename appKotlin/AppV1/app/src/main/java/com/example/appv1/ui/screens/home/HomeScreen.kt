@@ -21,13 +21,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color // Import Color
-import androidx.compose.foundation.BorderStroke // <-- Ajoutez cet import
-import androidx.compose.material3.ButtonDefaults // <-- Ajoutez cet import
-
-import com.example.appv1.data.remote.DebugRemoteIncidentSynchronizer
+import com.example.appv1.data.local.LocalIncidentSynchronizer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +37,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("SNCF Signalements", fontSize = 20.sp) },
                 actions = {
-                    SyncStatusIcon(DebugRemoteIncidentSynchronizer())
+                    SyncStatusIcon(LocalIncidentSynchronizer.getInstance(LocalContext.current))
                 }
             )
         },

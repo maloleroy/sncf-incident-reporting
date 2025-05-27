@@ -18,13 +18,12 @@ import com.example.appv1.data.SynchronizationStatus
 @Composable
 fun SyncStatusIcon(synchronizer: IncidentSynchronizer) {
     val syncStatus = synchronizer.getStatus()
-    val pendingIncidents = synchronizer.getPendingIncidents()
 
     IconButton(onClick = { /* Optionnel : action à exécuter au clic */ }) {
         BadgedBox(
             badge = {
-                if (syncStatus != SynchronizationStatus.COMPLETED && pendingIncidents.isNotEmpty()) {
-                    Badge { Text(text = pendingIncidents.size.toString()) }
+                if (syncStatus != SynchronizationStatus.COMPLETED) {
+                    Badge { Text(text = "NO") }
                 }
             }
         ) {
