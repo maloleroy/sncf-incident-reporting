@@ -156,25 +156,27 @@ fun ConfirmationScreen(
                 value = location,
                 options = locationOptions,
                 expanded = expandedLocation,
-                onExpandedChange = { isExpanded ->
-                    expandedLocation = isExpanded
-                    if (isExpanded && locationOptions.isEmpty()) {
+                onExpandedChange = { expanded ->
+                    expandedLocation = expanded
+                    if (expanded && system.isNotBlank()) {
                         scope.launch {
-                            try {
-                                val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "location", mapOf())
-                                locationOptions = result
-                            } catch (e: Exception) {
-                                showErrorDialog(context, e.message ?: "Erreur inconnue")
-                            }
+                            locationOptions = loadOptionsSuspend(
+                                context,
+                                trainType,
+                                trainCar,
+                                "location",
+                                mapOf()
+                            )
                         }
                     }
                 },
                 onSelected = {
                     location = it
                     resetBelow("location")
-                }
+                },
+                onRequestOptions = { emptyList() } // ou null si paramètre nullable
             )
-
+            
             DropdownField(
                 label = "Précision 1",
                 value = precision1,
