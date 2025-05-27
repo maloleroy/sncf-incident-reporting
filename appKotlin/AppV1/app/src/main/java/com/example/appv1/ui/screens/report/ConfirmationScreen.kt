@@ -158,12 +158,13 @@ fun ConfirmationScreen(
                 expanded = expandedLocation,
                 onExpandedChange = { expanded ->
                     expandedLocation = expanded
-                    if (expanded && system.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             locationOptions = loadOptionsSuspend(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "location",
                                 mapOf()
                             )
@@ -184,7 +185,7 @@ fun ConfirmationScreen(
                 expanded = expandedPrecision1,
                 onExpandedChange = { expanded ->
                     expandedPrecision1 = expanded
-                    if (expanded && system.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             precision1Options = loadOptionsSuspend(
                                 context,
@@ -213,7 +214,7 @@ fun ConfirmationScreen(
                 expanded = expandedCategory,
                 onExpandedChange = { isExpanded ->
                     expandedCategory = isExpanded
-                    if (isExpanded && categoryOptions.isEmpty() && location.isNotBlank()) {
+                    if (isExpanded && location.isNotBlank()) {
                         scope.launch {
                             try {
                                 val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "category",
@@ -242,7 +243,7 @@ fun ConfirmationScreen(
                 expanded = expandedPrecision2,
                 onExpandedChange = { expanded ->
                     expandedPrecision2 = expanded
-                    if (expanded && precision1.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             precision2Options = loadOptionsSuspend(
                                 context,
@@ -273,7 +274,7 @@ fun ConfirmationScreen(
                 expanded = expandedSystem,
                 onExpandedChange = { expanded ->
                     expandedSystem = expanded
-                    if (expanded && category.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             systemOptions = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "system",
                                 mapOf(
@@ -300,7 +301,7 @@ fun ConfirmationScreen(
                 expanded = expandedPrecision3,
                 onExpandedChange = { expanded ->
                     expandedPrecision3 = expanded
-                    if (expanded && precision2.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             precision3Options = loadOptionsSuspend(
                                 context,
