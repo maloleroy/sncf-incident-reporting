@@ -139,7 +139,7 @@ class IncidentAnalysisResponse(BaseModel):
                     "precision3": "Fenêtre",
                     "subSystem": "",
                     "failure": "Cassé, dégradé, manquant"
-                    }
+                }
             ]
         }
     }
