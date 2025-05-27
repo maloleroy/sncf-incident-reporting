@@ -33,10 +33,10 @@ def insert_incident(incident: model.IncidentAnalysisResponse, db: Connection):
             sql_query,
             (
                 incident.location,
-                incident.category,
-                incident.system,
                 incident.precision1,
+                incident.category,
                 incident.precision2,
+                incident.system,
                 incident.precision3,
                 incident.subSystem,
                 incident.failure
@@ -60,10 +60,10 @@ def list_incidents(db: Connection):
     incidents = [
         model.IncidentAnalysisResponse(
             location=row['location'],
-            category=row['category'],
-            system=row['system'],
             precision1=row['precision1'],
+            category=row['category'],
             precision2=row['precision2'],
+            system=row['system'],
             precision3=row['precision3'],
             subSystem=row['subSystem'],
             failure=row['failure'],
