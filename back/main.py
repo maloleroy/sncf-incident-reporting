@@ -12,12 +12,11 @@ import incidents_db
 import incidents_schema
 from health import ensure_health
 
+
 import logging
 
-logging.basicConfig(
-    level=logging.INFO,  # ← INFO pour voir les logs sans activer DEBUG
-    format="%(asctime)s [%(levelname)s] %(message)s"
-)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 load_dotenv()
@@ -44,6 +43,7 @@ async def get_objects(trainType: str, car: str, db: Connection = Depends(inciden
 
 @app.post("/incident-options/", response_model = model.IncidentCompletionResponse)
 async def get_completion_options(conserved_infos: model.IncidentCompletionRequest, db: Connection = Depends(incidents_schema.get_db), _ = Depends(validate_token)):
+    logger.info(f"Requete avec: {conserved_infos}")
     print(incidents_schema.get_incidents_completion(db, conserved_infos))
     return incidents_schema.get_incidents_completion(db, conserved_infos)
 

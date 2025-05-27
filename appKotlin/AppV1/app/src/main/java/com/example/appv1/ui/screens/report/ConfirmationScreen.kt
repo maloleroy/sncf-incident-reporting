@@ -333,7 +333,7 @@ fun ConfirmationScreen(
                 expanded = expandedSubSystem,
                 onExpandedChange = { expanded ->
                     expandedSubSystem = expanded
-                    if (expanded && precision3.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             subSystemOptions = loadOptionsSuspend(
                                 context,
@@ -367,7 +367,7 @@ fun ConfirmationScreen(
                 expanded = expandedFailure,
                 onExpandedChange = { expanded ->
                     expandedFailure = expanded
-                    if (expanded && subSystem.isNotBlank()) {
+                    if (expanded) {
                         scope.launch {
                             failureOptions = loadOptionsSuspend(
                                 context,
@@ -377,10 +377,10 @@ fun ConfirmationScreen(
                                 "failure",
                                 mapOf(
                                     "location" to location,
-                                    "category" to category,
-                                    "system" to system,
                                     "precision1" to precision1,
+                                    "category" to category,
                                     "precision2" to precision2,
+                                    "system" to system,
                                     "precision3" to precision3,
                                     "subSystem" to subSystem,
                                 )
@@ -390,6 +390,7 @@ fun ConfirmationScreen(
                 },
                 onSelected = {
                     failure = it
+                    resetBelow("failure")
                 },
                 onRequestOptions = { emptyList() }
             )
