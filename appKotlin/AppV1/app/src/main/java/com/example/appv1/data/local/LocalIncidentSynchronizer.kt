@@ -11,8 +11,14 @@ import kotlinx.coroutines.withContext
 import androidx.core.content.edit
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
+import com.example.appv1.api.RetrofitInstance
+import com.example.appv1.api.IncidentAnalysisApiService
 import com.example.appv1.data.SynchronizationCallback
+import com.example.appv1.ui.components.showErrorDialog
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 class LocalIncidentSynchronizer private constructor(private val context: Context)
     : IncidentSynchronizer {
@@ -47,22 +53,101 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         sharedPreferences.edit { putString(KEY_INCIDENT_ANALYSIS_REQUESTS, json) }
     }
 
-    override fun addIncidentAnalysisRequest(incident: IncidentAnalysisRequest) {
-        pendingIncidentAnalysisRequests.add(incident)
+    override fun addIncidentAnalysisRequest(
+        incidentAnalysisRequest: IncidentAnalysisRequest,
+        onResult: (IncidentAnalysisResponse) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        pendingIncidentAnalysisRequests.add(incidentAnalysisRequest)
+        syncIncidentAnalysisRequest(incidentAnalysisRequest, onResult, onError)
         saveIncidents()
     }
 
-    override fun addIncidentAnalysisResponse(incident: IncidentAnalysisResponse) {
-        pendingIncidentAnalysisResponses.add(incident)
+    override fun addIncidentAnalysisResponse(
+        incidentAnalysisResponse: IncidentAnalysisResponse,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        pendingIncidentAnalysisResponses.add(incidentAnalysisResponse)
+        syncIncidentAnalysisResponse(incidentAnalysisResponse, onResult, onError)
         saveIncidents()
     }
 
     override suspend fun synchronize() {
         withContext(Dispatchers.IO) {
-            // Dans une vraie implémentation, on enverrait les incidents au serveur ici
-            // En cas de succès, on vide la liste des incidents en attente
-            TODO()
+            for (request in pendingIncidentAnalysisRequests) {
+                syncIncidentAnalysisRequest(request,
+                    onResult = { response ->
+                        pendingIncidentAnalysisResponses.add(response)
+                        pendingIncidentAnalysisRequests.remove(request)
+                        saveIncidents()
+                    },
+                    onError = { errorMessage ->
+                        showErrorDialog(context, "Erreur lors de l'analyse de l'incident : $errorMessage")
+                    }
+                )
+            }
+
+            for (response in pendingIncidentAnalysisResponses) {
+                syncIncidentAnalysisResponse(response,
+                    onResult = { status ->
+                        // Log or handle the status
+                        println("Statut de l'incident soumis : $status")                    
+                        pendingIncidentAnalysisResponses.remove(response)
+                    },
+                    onError = { errorMessage ->
+                        // Log or handle the error message
+                        showErrorDialog(context, "Erreur lors de la soumission de l'incident : $errorMessage")
+                    }
+                )
+            }
             saveIncidents()
+        }
+    }
+
+    private fun syncIncidentAnalysisRequest(
+        incidentAnalysisRequest: IncidentAnalysisRequest,
+        onResult: (IncidentAnalysisResponse) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = API_SERVICE_INSTANCE!!.generateIncidentAnalysis(incidentAnalysisRequest)
+                withContext(Dispatchers.Main) {
+                    onResult(response)
+                }
+            } catch (e: IOException) { // Catch only network errors (IOException)
+                withContext(Dispatchers.Main) {
+                    onError("Erreur de réseau lors de l'appel API : ${e.message}")
+                }
+            } catch (e: Exception) { // Catch other exceptions with a generic message
+                withContext(Dispatchers.Main) {
+                    onError("Erreur inattendue lors de l'appel API : ${e.message}")
+                }
+            }
+        }
+    }
+
+    private fun syncIncidentAnalysisResponse(
+        incidentAnalysisResponse: IncidentAnalysisResponse,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = API_SERVICE_INSTANCE!!.submitIncident(incidentAnalysisResponse)
+                withContext(Dispatchers.Main) {
+                    onResult(response.status)
+                }
+            } catch (e: IOException) { // Catch only network errors (IOException)
+                withContext(Dispatchers.Main) {
+                    onError("Erreur de réseau lors de l'appel API : ${e.message}")
+                }
+            } catch (e: Exception) { // Catch other exceptions with a generic message
+                withContext(Dispatchers.Main) {
+                    onError("Erreur inattendue lors de l'appel API : ${e.message}")
+                }
+            }
         }
     }
 
@@ -102,12 +187,18 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
     companion object {
         @Volatile
         private var INSTANCE: LocalIncidentSynchronizer? = null
+
+        private var API_SERVICE_INSTANCE: IncidentAnalysisApiService? = null
         
         fun getInstance(context: Context): LocalIncidentSynchronizer {
+            if (API_SERVICE_INSTANCE == null) {
+                API_SERVICE_INSTANCE = RetrofitInstance.getIncidentApiService(context)
+            }
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: LocalIncidentSynchronizer(context.applicationContext).also { INSTANCE = it }
             }
         }
+
         private const val PREFS_NAME = "incident_prefs"
         private const val KEY_INCIDENT_ANALYSIS_REQUESTS = "incident_analysis_requests"
         private const val KEY_INCIDENT_ANALYSIS_RESPONSES = "incident_analysis_responses"

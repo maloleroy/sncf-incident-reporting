@@ -16,11 +16,19 @@ fun interface SynchronizationCallback {
 }
 
 interface IncidentSynchronizer {
-    fun addIncidentAnalysisRequest(incident: IncidentAnalysisRequest)
+    fun addIncidentAnalysisRequest(
+        incidentAnalysisRequest: IncidentAnalysisRequest,
+        onResult: (IncidentAnalysisResponse) -> Unit,
+        onError: (String) -> Unit
+    )
 
     fun getPendingIncidentAnalysisRequests(): List<IncidentAnalysisRequest>
 
-    fun addIncidentAnalysisResponse(incident: IncidentAnalysisResponse)
+    fun addIncidentAnalysisResponse(
+        incidentAnalysisResponse: IncidentAnalysisResponse,
+        onResult: (String) -> Unit,
+        onError: (String) -> Unit
+    )
 
     fun getPendingIncidentAnalysisResponses(): List<IncidentAnalysisResponse>
 

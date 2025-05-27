@@ -17,12 +17,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.appv1.data.local.LocalIncidentSynchronizer
 import com.example.appv1.ui.components.IncidentAnalysisRequestCard
 import com.example.appv1.ui.components.IncidentAnalysisResponseCard
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +33,7 @@ fun ListReportsScreen(
 )
 {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,7 +61,7 @@ fun ListReportsScreen(
             for (incidents in LocalIncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisRequests()) {
                 IncidentAnalysisRequestCard(
                     incidents,
-                    onClick = {}
+                    scope = coroutineScope,
                 )
             }
 

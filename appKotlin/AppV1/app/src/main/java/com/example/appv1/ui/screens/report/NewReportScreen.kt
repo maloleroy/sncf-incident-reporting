@@ -73,6 +73,7 @@ import com.example.appv1.domain.model.trainTypes
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
+import com.example.appv1.data.local.LocalIncidentSynchronizer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
@@ -317,13 +318,12 @@ fun NewReportScreen(
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(
+                        LocalIncidentSynchronizer.getInstance(context).addIncidentAnalysisRequest(
                             IncidentAnalysisRequest(
                                 trainTypes[trainType]!!,
                                 trainCar,
                                 transcription
                             ),
-                            context,
                             onResult = { result ->
                                 generatedReportText = result.failure
                                 isOnlineAILoading = false
