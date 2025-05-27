@@ -36,10 +36,11 @@ class MainActivity : ComponentActivity() {
                         val showSuccess = backStackEntry.arguments?.getBoolean("showSuccess") ?: false
                         NewReportScreen(
                             onBack = { navController.popBackStack() },
-                            onSuccess = { response, trainType, trainCar ->
+                            onSuccess = { response, trainType, trainCar, seatNumber ->
                                 sharedViewModel.lastIncidentAnalysisResponse = response
                                 sharedViewModel.trainType = trainType
                                 sharedViewModel.trainCar = trainCar
+                                sharedViewModel.seatNumber = seatNumber
                                 navController.navigate("confirm_report")
                             },
                             showSuccessMessage = showSuccess
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
                             onBack = { navController.popBackStack() },
                             trainType = sharedViewModel.trainType ?: "", // Fournir une valeur par défaut si null
                             trainCar = sharedViewModel.trainCar ?: "",   // Fournir une valeur par défaut si null
+                            seatNumber = sharedViewModel.seatNumber,
                             navigateToNewReport = {
                                 navController.navigate("new_report?showSuccess=true") {
                                     popUpTo(navController.graph.startDestinationId) {

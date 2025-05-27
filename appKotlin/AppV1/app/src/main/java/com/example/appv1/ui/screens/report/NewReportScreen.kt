@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -59,6 +60,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -82,7 +85,7 @@ import java.io.IOException
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: (IncidentAnalysisResponse, String, String) -> Unit,
+    onSuccess: (IncidentAnalysisResponse, String, String, Int?) -> Unit,
     showSuccessMessage: Boolean // Parameter from navigation
 ) {
     val context = LocalContext.current
@@ -90,7 +93,7 @@ fun NewReportScreen(
 
     var trainType by rememberSaveable { mutableStateOf("") }
     var trainCar by rememberSaveable { mutableStateOf("") }
-    var numberOfSeat by rememberSaveable { mutableStateOf("") }
+    var seatNumber by rememberSaveable { mutableStateOf<Int?>(null) }
     var transcription by rememberSaveable { mutableStateOf("") }
     var generatedReportText by remember { mutableStateOf<String?>(null) }
    
@@ -107,7 +110,7 @@ fun NewReportScreen(
             // Clear form fields
             trainType = ""
             trainCar = ""
-            numberOfSeat = ""
+            seatNumber = null
             transcription = ""
             // Potentially reset other relevant states here if needed
         }
@@ -248,12 +251,24 @@ fun NewReportScreen(
                     .padding(bottom = 16.dp)
             )
 
-                        // Champ pour le numéro de siège
             OutlinedTextField(
-                value = numberOfSeat,
-                onValueChange = { numberOfSeat = it },
+                value = seatNumber?.toString() ?: "",
+                onValueChange = { input ->
+                    val filteredInput = input.filter { it.isDigit() }
+                    val cleanedInput = if (filteredInput.length > 1 && filteredInput.startsWith("0")) {
+                        filteredInput.trimStart('0')
+                    } else {
+                        filteredInput
+                    }
+                    // Convert to Int? or null if empty
+                    seatNumber = if (cleanedInput.isEmpty()) null else cleanedInput.toInt()
+                },
                 label = { Text("Numéro de siège") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
@@ -312,7 +327,7 @@ fun NewReportScreen(
                             onResult = { result ->
                                 generatedReportText = result.failure
                                 isOnlineAILoading = false
-                                onSuccess(result, trainType, trainCar)
+                                onSuccess(result, trainType, trainCar, seatNumber)
                             },
                             onError = { errorMessage ->
                                 isOnlineAILoading = false

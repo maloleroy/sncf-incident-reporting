@@ -33,6 +33,7 @@ fun ConfirmationScreen(
     onBack: () -> Unit,
     trainType: String,
     trainCar: String,
+    seatNumber: Int?,
     navigateToNewReport: () -> Unit // Added this parameter
 ) {
     val context = LocalContext.current
@@ -48,6 +49,7 @@ fun ConfirmationScreen(
             context,
             trainType,
             trainCar,
+            seatNumber,
             level,
             selections,
             onSuccess = { options.addAll(it) },
@@ -159,7 +161,7 @@ fun ConfirmationScreen(
                     if (isExpanded && locationOptions.isEmpty()) {
                         scope.launch {
                             try {
-                                val result = loadOptionsSuspend(context, trainType, trainCar, "location", mapOf())
+                                val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "location", mapOf())
                                 locationOptions = result
                             } catch (e: Exception) {
                                 showErrorDialog(context, e.message ?: "Erreur inconnue")
@@ -186,6 +188,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "precision1",
                                 mapOf(
                                     "location" to location,
@@ -211,7 +214,7 @@ fun ConfirmationScreen(
                     if (isExpanded && categoryOptions.isEmpty() && location.isNotBlank()) {
                         scope.launch {
                             try {
-                                val result = loadOptionsSuspend(context, trainType, trainCar, "category",
+                                val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "category",
                                     mapOf(
                                         "location" to location,
                                         "precision1" to precision1,
@@ -243,6 +246,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "precision2",
                                 mapOf(
                                     "location" to location,
@@ -269,7 +273,7 @@ fun ConfirmationScreen(
                     expandedSystem = expanded
                     if (expanded && category.isNotBlank()) {
                         scope.launch {
-                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, "system",
+                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "system",
                                 mapOf(
                                     "location" to location,
                                     "precision1" to precision1,
@@ -300,6 +304,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "precision3",
                                 mapOf(
                                     "location" to location,
@@ -332,6 +337,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "subSystem",
                                 mapOf(
                                     "location" to location,
@@ -365,6 +371,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
+                                seatNumber,
                                 "failure",
                                 mapOf(
                                     "location" to location,
@@ -457,6 +464,7 @@ fun loadOptionsWithContext(
     context: Context,
     trainType: String,
     trainCar: String,
+    seatNumber: Int?,
     level: String,
     selections: Map<String, String>,
     onSuccess: (List<String>) -> Unit,
@@ -469,6 +477,7 @@ fun loadOptionsWithContext(
                     IncidentCompletionRequest(
                         trainTypes[trainType]!!,
                         trainCar,
+                        seatNumber,
                         level,
                         ConservedInformations(
                             location = selections["location"],
@@ -502,6 +511,7 @@ suspend fun loadOptionsSuspend(
     context: Context,
     trainType: String,
     trainCar: String,
+    seatNumber: Int?,
     level: String,
     selections: Map<String, String>
 ): List<String> {
@@ -510,6 +520,7 @@ suspend fun loadOptionsSuspend(
             IncidentCompletionRequest(
                 trainTypes[trainType]!!,
                 trainCar,
+                seatNumber,
                 level,
                 ConservedInformations(
                     location = selections["location"],

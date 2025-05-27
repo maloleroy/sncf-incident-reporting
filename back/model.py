@@ -100,6 +100,7 @@ class ConservedInformations(BaseModel):
 class IncidentCompletionRequest(BaseModel):
     trainType: TrainType = TrainType.DASYE
     trainCar: str = "R6H"
+    seatNumber: Optional[int] = None
     level: str = "category"
     selections: ConservedInformations
 

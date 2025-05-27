@@ -40,6 +40,7 @@ data class ConservedInformations(
 data class IncidentCompletionRequest(
     val trainType: String,
     val trainCar: String,
+    val seatNumber: Int?,
     val level: String,
     val selections: ConservedInformations
 )
