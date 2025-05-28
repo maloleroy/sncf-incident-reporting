@@ -14,9 +14,23 @@ from health import ensure_health
 
 
 import logging
+from logging.handlers import RotatingFileHandler
+from fastapi import Request
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Configure logging with rotation (10 MB per file, keep 5 backups)
+log_dir = os.path.join(os.path.dirname(__file__), "logs")
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, "app.log")
+handler = RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5)
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s %(name)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+handler.setFormatter(formatter)
+logging.getLogger().handlers = [handler]
+logging.getLogger().setLevel(logging.INFO)
+logger = logging.getLogger("app")
 
 app = FastAPI()
 load_dotenv()
@@ -55,3 +69,12 @@ async def get_incident_analysis(incident_info: model.IncidentAnalysisRequest, db
 async def health_check():
     ensure_health()
     return model.HealthCheckResponse()
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    client_host = request.client.host if request.client else "unknown"
+    client_port = request.client.port if request.client else "unknown"
+    log_msg = f"Request: {request.method} {request.url.path} from {client_host}:{client_port}"
+    logger.info(log_msg)
+    response = await call_next(request)
+    return response
