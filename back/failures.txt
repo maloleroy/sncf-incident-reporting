@@ -1,0 +1,35 @@
+Incident réel:
+('R2B, R3B, R5B, R6B, R7B, R8B', 'Salle', 'Principale', 'Habillage', '', 'Bagagerie', 'D entrée de salle', 'Cloison G', 'Cassée, dégradée', 'OUIGO1_incidents')
+Transcription donnée:
+"Bonjour, ici l'agent SNCF. On a un souci avec les rames R2B, R3B, R5B, R6B, R7B, et R8B. Dans la salle principale, l'habillage de la bagagerie à l'entrée de la salle, côté gauche, est cassé et dégradé. Merci de noter pour l'incident OUIGO1."
+Réponse find_incident:
+location='Salle' precision1='Principale' category='Habillage' precision2='' system='Bagagerie' precision3='G entrée de salle' subSystem='Cloison G' failure='Cassée, dégradée'
+----------------------------------------
+Incident réel:
+('R5H', 'Salle', 'Voyageurs', 'Climatisation', '', 'Trop chaud', '', 'Absence de ventilation', 'DJ-REF déclenché', 'TRAIN_2N2_3UF_incidents')
+Transcription donnée:
+"Salut, c'est pour signaler un problème sur le train R5H. On a des voyageurs qui se plaignent de la climatisation dans la salle, ils disent qu'il fait trop chaud. Pas de ventilation apparemment, et le DJ-REF a été déclenché. C'est enregistré sous TRAIN_2N2_3UF_incidents. Merci."
+Réponse find_incident:
+location='Salle' precision1='Voyageurs' category='Climatisation' precision2='' system='Trop chaud' precision3='' subSystem='Présence de ventilation' failure='DJ-REF déclenché'
+----------------------------------------
+Incident réel:
+('R4H', 'Salle bar', '', 'Accessoires/ Environnement', '', 'Poubelle mange-debout', '2G- Droite', 'Poubelle', 'Problème de fixation, cassée, dégradée, manquante', 'TRAIN_2N2_3UA_incidents')
+Transcription donnée:
+"Oui, bonjour, j'appelle pour signaler un problème dans le train R4H, voiture Salle bar. C'est la poubelle mange-debout qui est cassée, elle est mal fixée ou dégradée, je sais pas trop. C'est à l'emplacement 2G, à droite. Merci de faire le nécessaire. C'est urgent, le train est en service."
+Réponse find_incident:
+location='Salle bar' precision1='' category='Accessoires/ Environnement' precision2='' system='Poubelle mange-debout' precision3='2G- Droite' subSystem='Habillage' failure='Problème de fixation, cassé, dégradé, manquant'
+----------------------------------------
+Incident réel:
+('R4H', 'Salle bar', '', 'Info/Communication', '', 'AIV (Affichage Intérieur Voiture)', 'Salle', '', 'VITRE Cassée, fissurée, rayée, gravée', 'TRAIN_2N2_3UFC_incidents')
+Transcription donnée:
+Bonjour, j'appelle pour signaler un problème dans la salle bar du train R4H. Il y a une vitre cassée, fissurée, rayée et gravée. C'est urgent, merci.
+Réponse find_incident:
+location='Salle bar' precision1='' category='Equipements SECURITE' precision2='' system='Vitre latérale' precision3='De toute la salle' subSystem='' failure='Rayées, gravées'
+----------------------------------------
+Incident réel:
+('R1, R2, R3, R5, R6, R7, R8', 'Plateforme Accès', 'Gauche', 'Info/Communication', '', 'Signalétique', '', 'Repère côté Gauche', 'Dégradée, décollée, manquante', 'RDOM_incidents')
+Transcription donnée:
+"Bonjour, j'appelle pour signaler un problème avec la signalétique sur les trains R1, R2, R3, R5, R6, R7 et R8. C'est sur la plateforme d'accès, côté gauche. Les panneaux sont dégradés, décollés, ou même manquants. Merci de prendre en compte."
+Réponse find_incident:
+location='Plateforme Accès' precision1='Gauche' category='Info/Communication' precision2='' system='Signalétique' precision3='' subSystem='Casier à bagages' failure='Dégradée, décollée, manquante'
+----------------------------------------

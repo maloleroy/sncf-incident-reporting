@@ -1,0 +1,229 @@
+Incident:
+('R4', 'Plateforme Accès', 'Espace Restauration Gauche', 'Equipements froids', 'Meuble Rep 9 - (3°C)', 'Réfrigération', '', '', 'Ne fonctionne pas et Z(RFG) est sur ARRET', 'PLT_incidents')
+Transcription générée:
+"Bonjour, ici un agent de la SNCF. On a un problème avec un frigo au niveau de l'espace restauration gauche sur la plateforme d'accès R4. C'est le meuble Rep 9, normalement réglé à 3 degrés. La réfrigération ne marche pas et le voyant Z(RFG) est sur arrêt. Pourriez-vous intervenir rapidement ? Merci."
+----------------------------------------
+Incident:
+('R1B, R2B, R3B, R5B, R6B, R7B, R8B', 'Plateforme Accès', 'Gauche', 'Eclairage', '', "Luminaire latéral porte d'accès", '', '', 'Ne fonctionne pas, cassé, dégradé', 'TRAIN_2N2_3UH_incidents')
+Transcription générée:
+Bonjour, je déclare un incident sur les trains R1B, R2B, R3B, R5B, R6B, R7B, R8B. Y'a un problème avec l'éclairage sur la plateforme d'accès à gauche. Le luminaire latéral de la porte est cassé et ne fonctionne plus. Code incident : TRAIN_2N2_3UH_incidents. Merci.
+----------------------------------------
+Incident:
+('R4H', 'Local de service', '', 'Accessoires/ Environnement', '', 'Distributeur papier essuie-mains', '', '', 'Cassé, dégradé, manquant', 'DUPLEX_WC_eau_incidents')
+Transcription générée:
+Salut, c'est pour un incident sur le R4H. Dans le local de service, y'a le distributeur de papier essuie-mains qui est cassé ou dégradé. C'est pour le groupe DUPLEX WC eau incidents. Merci.
+----------------------------------------
+Incident:
+('R1', 'Plateforme Accès', 'Droite', 'Accessoires PMR', '', 'Siège de transfert', '', '', 'Cassé, dégradé, manquant', 'PLT_incidents')
+Transcription générée:
+Salut, c'est pour signaler un problème sur la plateforme d'accès du train R1, côté droit. Un des sièges de transfert pour les personnes à mobilité réduite est cassé et dégradé. Merci de faire le nécessaire.
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Porte de salle', 'Côté R5', "Robinet d'isolement porte", '', '', 'Isolé', 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription générée:
+"Bonjour, c'est pour signaler un problème sur le R4H, salle bar. La porte côté R5 est bloquée, le robinet d'isolement est endommagé. C'est isolé pour le moment. C'est pour le train 2N2 3UA LYRIA. Merci."
+----------------------------------------
+Incident:
+('R1', 'Sanitaire', 'PSH', 'Accessoires/ Environnement', '', 'Distributeur de papier toilette', 'Externe', '', 'La porte/trappe du distributeur ne ferme pas', 'TGV_R_TRI_incidents')
+Transcription générée:
+Salut, c'est pour signaler un problème sur le TGV R1. Y'a un souci avec le distributeur de papier toilette dans les sanitaires PSH. La porte ne ferme pas. C'est un problème externe, probablement un truc qui bloque. Faut checker ça. Merci.
+----------------------------------------
+Incident:
+('R1B', 'Salle', 'Principale', 'Accessoires PMR', '', "Ceinture d'arrimage siège de transfert", '', '', 'Cassée, dégradée, manquante', 'NEODUPLEX_chimique_incidents')
+Transcription générée:
+"Bonjour, j'appelle pour signaler un problème dans la rame R1B, salle principale. La ceinture d'arrimage du siège de transfert pour les PMR est cassée et dégradée. C'est urgent. Merci."
+----------------------------------------
+Incident:
+('R4H', 'Local de service', '', 'Info/Communication', '', 'Console', '', 'PROG SIV/AED', '2-BE2 : Affichage incorrect', 'OCEANE_LIKE_incidents')
+Transcription générée:
+Salut, ici l'agent de la SNCF. On a un souci sur le R4H dans le local de service. C'est un problème d'affichage incorrect sur la console PROG SIV/AED. C'est signalé sous le code 2-BE2. Merci de vérifier.
+----------------------------------------
+Incident:
+('R1H, R2H, R3H, R4H, R5H, R6H, R7H', 'Plateforme Intercirculation', 'Intercirculation', 'Habillage', 'Côté R8', 'Paroi', 'Côté Droit', '', 'Problème de fixation, cassée, dégradée, manquante', 'TRAIN_2N2_3UA_incidents')
+Transcription générée:
+"Ouais, salut, c'est pour signaler un souci sur les rames R1H à R7H. C'est sur la plateforme d'intercirculation, côté droit de la paroi, vers le R8. L'habillage a un problème de fixation, c'est cassé ou dégradé. Merci de vérifier, c'est pour le train 2N2 3UA."
+----------------------------------------
+Incident:
+('R5, R6, R7, R8', 'Sanitaire', 'D', 'WC', '', "Chasse d'eau", '', 'Pédale/bouton', 'Cassé, dégradé', 'POS_incidents')
+Transcription générée:
+Allô, bonjour, c'est pour signaler un problème sur les rames R5, R6, R7 et R8. C'est un souci sanitaire, dans les toilettes, la chasse d'eau est cassée, la pédale ou le bouton est dégradé. Merci de noter ça dans le POS incidents.
+----------------------------------------
+Incident:
+('R1', 'Salle', 'Fourgon', 'Habillage', '', 'Support latéral', 'Cloison G', '', 'Problème de fixation, cassé, dégradé, manquant', 'PLT_incidents')
+Transcription générée:
+Bonjour, c'est pour signaler un souci dans la salle du fourgon R1. Le problème est au niveau du support latéral de la cloison G, côté habillage. Y'a un truc qui cloche avec la fixation, c'est cassé ou dégradé, voire carrément manquant. C'est à enregistrer dans la base PLT_incidents. Merci.
+----------------------------------------
+Incident:
+('R4', 'Salle bar', '', 'Accessoires/ Environnement', '', 'Table mange-debout', '3-Droite (côté salle voyageurs)', '', 'Problème de fixation, cassée, dégradée, manquante', 'TGV_R_TRI_incidents')
+Transcription générée:
+"Bonjour, j'appelle pour signaler un problème dans la rame R4, dans la salle bar. Il y a une table mange-debout sur la droite, côté salle voyageurs, qui a une fixation cassée ou dégradée. C'est urgent, merci."
+----------------------------------------
+Incident:
+('R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R6H, R8B, R8H', 'Sanitaire', '', 'Habillage', '', 'Grille', 'En partie haute', '', 'Cassée, dégradée, manquante', 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription générée:
+"Bonjour, c'est pour signaler un souci sur les voitures R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R6H, R8B, R8H. C'est au niveau des sanitaires, la grille en haut est cassée. C'est pour le train TRAIN_2N2_3UA_LYRIA. Merci."
+----------------------------------------
+Incident:
+('R4', 'Office bar', '', 'Equipements froids', 'Meuble Rep 2 - (3°C)', 'Réfrigération', '', '', 'Condensation excessive, prise en glace', 'TGV_R_TRI_FO_incidents')
+Transcription générée:
+"Bonjour, c'est pour signaler un problème au niveau du meuble réfrigéré dans le bar du TGV R4. Il y a de la condensation excessive et ça commence à geler. Merci de faire le nécessaire."
+----------------------------------------
+Incident:
+('R1H, R2H, R3H, R5H, R6H, R7H, R8H', 'Plateforme Intercirculation', 'Couloir', 'Equipements SECURITE', '', 'Extincteur', '', '', 'Percuté', 'OUIGO1_incidents')
+Transcription générée:
+"Bonjour, c'est pour un incident sur les trains R1H à R8H. On a un problème avec un extincteur sur la plateforme intercirculation, dans le couloir. Il a été percuté. C'est pour le groupe OUIGO1."
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Climatisation', '', 'Trop froid', '', 'Présence de ventilation', 'CC-SM(E) déclenché', 'TRAIN_2N2_3UF_incidents')
+Transcription générée:
+Salut, c'est pour un problème sur le R4H, dans la salle bar. La climatisation est trop froide. Y'a de la ventilation et le CC-SM(E) est déclenché. C'est pour le train 2N2 3UF. Merci !
+----------------------------------------
+Incident:
+('R7H', 'Nurserie', '', 'Accessoires/ Environnement', '', 'Poubelle', '', 'Trappe', 'Problème de fixation, cassée, dégradée, manquante', 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription générée:
+Salut, c'est pour signaler un souci sur le R7H, dans la nurserie. Y'a un problème avec la poubelle, plus précisément la trappe. Elle est cassée ou manquante. Merci de voir ça.
+----------------------------------------
+Incident:
+('R1, R2, R3, R5, R6, R7, R8, R9, R10', 'Salle', 'Principale', 'Info/Communication', '', 'Signalétique', 'Côté Accès', 'QRCode place géné', 'MSG  Localisation inconnue, introuvable', 'RITA_incidents')
+Transcription générée:
+"Bonjour, j'ai un problème avec les QR codes des places dans la salle principale. Ils sont introuvables, impossible de les localiser. Ça concerne les rames R1 à R10, sauf R4. C'est du côté de l'accès. Merci de faire le nécessaire."
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Equipements SECURITE', '', 'Vitre latérale', 'D-3ème baie (milieu)', '', 'Bruyante, vibrations, sifflement, embuée', 'DUPLEX_WC_eau_incidents')
+Transcription générée:
+"Oui, bonjour, j'appelle pour signaler un problème sur le R4H, dans la salle bar. Y'a une vitre latérale, celle de la troisième baie au milieu, qui fait un bruit bizarre. Elle vibre, siffle et est toute embuée. C'est vraiment gênant. Merci."
+----------------------------------------
+Incident:
+('R1B', 'Salle', 'Principale', 'Accessoires PMR', '', "Ceinture d'arrimage siège de transfert", '', '', 'Cassée, dégradée, manquante', 'OCEANE_LIKE_incidents')
+Transcription générée:
+Ouais, bonjour, c'est pour un incident sur le R1B, dans la salle principale. Les accessoires PMR, y'a un problème avec la ceinture d'arrimage du siège de transfert. Elle est cassée, dégradée, ou même manquante. Merci, c'est tout.
+----------------------------------------
+Incident:
+('R1, R2, R3, R5, R6, R7, R8', 'Salle', 'Principale', 'Habillage', '', 'Plafond', 'Partie centrale', '', 'Revêtement usé, abimé, décollé', 'PLT_incidents')
+Transcription générée:
+"Bonjour, j'appelle pour signaler un problème dans la salle principale des rames R1, R2, R3, R5, R6, R7 et R8. Le revêtement du plafond, au centre, est usé, abîmé et commence à se décoller. Merci de bien vouloir intervenir. Fin de message."
+----------------------------------------
+Incident:
+('R4', 'Salle bar', '', 'Equipements SECURITE', '', 'Vitre latérale', 'D-4ème baie (côté salle voyageurs)', '', "Problème d'étanchéité, Infiltration d'eau", 'POS_incidents')
+Transcription générée:
+Salut, c'est pour signaler un problème dans la salle bar du train R4. Y'a une infiltration d'eau au niveau de la vitre latérale, côté voyageurs, 4ème baie. C'est pas étanche. Merci de vérifier.
+----------------------------------------
+Incident:
+('R1H', 'Place', '71, 72', 'Pack inoui', '', 'Film Baie', '', 'Siège avec vue', 'Abîmé, dégradé, manquant', 'DUPLEX_WC_chimique_incidents')
+Transcription générée:
+"Bonjour, j'appelle pour signaler un problème dans le train R1H, voiture Place, sièges 71 et 72. C'est un pack inoui avec un film baie. Le siège avec vue est abîmé, dégradé, et il manque des éléments. C'est au niveau du DUPLEX WC chimique. Merci."
+Réponse:
+location='Place' precision1='71, 72' category='Pack inoui' precision2='' system='Film Baie' precision3='' subSystem='Siège avec vue' failure='Abîmé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R1H, R2H, R3H, R6H, R7H, R8H', 'Salle', 'Principale', 'Info/Communication', '', 'AIV (Affichage Intérieur Voiture)', 'Côté intercirculation', '', 'Ne fonctionne pas, cassé, dégradé', 'TRAIN_2N2_3UA_incidents')
+Transcription générée:
+"Bonjour, je signale un problème sur les lignes R1H, R2H, R3H, R6H, R7H, R8H. Dans la salle principale, il y a un souci de communication. L'affichage intérieur voiture, côté intercirculation, est en panne. Merci de prendre en compte. C'est pour le train 2N2 3UA incidents."
+Réponse:
+location='Salle' precision1='Principale' category='Info/Communication' precision2='' system='AIV (Affichage Intérieur Voiture)' precision3='Côté intercirculation' subSystem='' failure='Ne fonctionne pas, cassé, dégradé'
+----------------------------------------
+Incident:
+('R7H', 'Nurserie', '', 'Accessoires/ Environnement', '', 'Porte sous lavabo', '', '', 'Problème de fixation, cassée, dégradée, manquante', 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription générée:
+Salut, c'est pour signaler un souci sur le R7H, dans la nurserie. Y'a un problème avec la porte sous le lavabo, elle est mal fixée, cassée ou dégradée, voire carrément manquante. C'est à noter dans le fichier des incidents pour le TRAIN_2N2_3UA_LYRIA. Merci !
+Réponse:
+location='Nurserie' precision1='' category='Accessoires/ Environnement' precision2='' system='Porte sous lavabo' precision3='' subSystem='' failure='Problème de fixation, cassée, dégradée, manquante'
+----------------------------------------
+Incident:
+('R4H', 'Office bar', '', 'Equipements chauds', '', 'Machine à café', '', 'Machine à café', 'Manquante', 'OCEANE_LIKE_incidents')
+Transcription générée:
+Salut, c'est pour signaler un souci à l'Office bar du R4H. La machine à café est manquante. C'est pour les équipements chauds. Merci.
+Réponse:
+location='Office bar' precision1='' category='Equipements chauds' precision2='' system='Machine à café' precision3='' subSystem='Machine à café' failure='Manquante'
+----------------------------------------
+Incident:
+('R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R6H, R8B, R8H', 'Sanitaire', '', 'WC', '', 'Réservoir de rétention', '', '', 'Réservoir plein, BPL(TEST)RET allumé en plateforme et affichage N-MAX-WC-Rxx', 'DUPLEX_WC_chimique_incidents')
+Transcription générée:
+"Bonjour, on a un souci sanitaire sur les lignes R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R6H, R8B, R8H. Le réservoir de rétention est plein, le voyant BPL est allumé en plateforme et l'affichage indique N-MAX-WC-Rxx. C'est un incident chimique lié aux toilettes. Merci."
+Réponse:
+location='Sanitaire' precision1='' category='WC' precision2='' system='Réservoir de rétention' precision3='' subSystem='' failure='Réservoir plein, BPL(TEST)RET allumé en plateforme et affichage N-MAX-WC-Rxx'
+----------------------------------------
+Incident:
+('R6, R7', 'Plateforme Accès', 'Espace Bureau', 'Habillage', '', 'Paroi', '', '', 'Problème de fixation, cassée, dégradée, manquante', 'RDOM_incidents')
+Transcription générée:
+Salut, c'est pour signaler un problème sur les rames R6 et R7. C'est au niveau de la plateforme d'accès, dans l'espace bureau. Y'a un souci avec l'habillage de la paroi, ça tient plus, c'est cassé ou dégradé. Faudrait voir ça. Merci.
+Réponse:
+location='Plateforme Accès' precision1='Espace Bureau' category='Habillage' precision2='' system='Paroi' precision3='' subSystem='' failure='Problème de fixation, cassée, dégradée, manquante'
+----------------------------------------
+Incident:
+('R1, R2, R3, R5, R6, R8', 'Salle', 'Principale', 'Info/Communication', '', 'Signalétique', 'Côté intercirculation', 'Ouverture manuelle (porte salle)', 'Dégradée, décollée, manquante', 'POS_incidents')
+Transcription générée:
+Bonjour, ici l'agent SNCF. Je dois signaler un problème sur les rames R1, R2, R3, R5, R6 et R8. Dans la salle principale, côté intercirculation, la signalétique pour l'ouverture manuelle des portes est dégradée ou décollée, voire manquante. Merci de rajouter ça dans notre base de données POS_incidents.
+Réponse:
+location='Salle' precision1='Principale' category='Info/Communication' precision2='' system='Signalétique' precision3='Côté intercirculation' subSystem='Ouverture manuelle (porte salle)' failure='Dégradée, décollée, manquante'
+----------------------------------------
+Incident:
+('R5, R6, R7, R8', 'Sanitaire', 'D', 'Info/Communication', '', 'Signalétique', '', 'Poubelle', 'Dégradée, décollée, manquante', 'TGV_R_TRI_incidents')
+Transcription générée:
+Bonjour, j'appelle pour signaler un souci de signalétique sur les lignes R5, R6, R7 et R8. Les affiches sont soit abîmées, soit décollées, soit carrément manquantes. C'est au niveau des poubelles, dans les toilettes. Merci de prendre en compte cet incident pour la maintenance. C'est urgent.
+Réponse:
+location='Sanitaire' precision1='D' category='Info/Communication' precision2='' system='Signalétique' precision3='' subSystem='Poubelle' failure='Dégradée, décollée, manquante'
+----------------------------------------
+Incident:
+('R1, R2, R3, R5, R6, R7, R8, R9, R10', 'Salle', 'Principale', 'Climatisation', '', 'Trop chaud', '', 'Absence de ventilation', 'Aucun DJ ou CC déclenché après action sur ZTI', 'RITA_incidents')
+Transcription générée:
+"Salut, on a un souci dans la salle principale. La clim est en panne, il fait vraiment trop chaud. Y'a pas de ventilation et aucun dispositif de sécurité ne s'est déclenché après qu'on ait essayé de régler le problème. Faut que ça soit réglé vite, c'est urgent. Merci."
+Réponse:
+location='Salle' precision1='Principale' category='Climatisation' precision2='' system='Trop chaud' precision3='' subSystem='Absence de ventilation' failure='Aucun DJ ou CC déclenché après action sur ZTI'
+----------------------------------------
+Incident:
+('R1B, R6H, R7H', 'Place', '', 'Accessoires/ Environnement', '', 'Tablette vis-à-vis', '', 'Caisson de rangement', 'Sale, souillé, tâché, tagué', 'TRAIN_2N2_3UF_incidents')
+Transcription générée:
+"Bonjour, j'appelle pour signaler un souci dans les rames R1B, R6H, et R7H. Les tables en face des sièges sont vraiment dégoûtantes, pleines de saletés et de taches. Les casiers de rangement sont aussi dans un sale état, tagués et tout. Merci de faire le nécessaire. C'est noté sous le dossier TRAIN_2N2_3UF_incidents. À plus."
+Réponse:
+location='Place' precision1='' category='Accessoires/ Environnement' precision2='' system='Tablette vis-à-vis' precision3='' subSystem='Caisson de rangement' failure='Sale, souillé, tâché, tagué'
+----------------------------------------
+Incident:
+('R1', 'Place', '53, 54, 55, 56', 'Pack inoui', '', 'Film Baie', '', 'Laissez vs rever', 'Abîmé, dégradé, manquant', 'TGV_R_TRI_FO_incidents')
+Transcription générée:
+Bonjour, oui, j'appelle pour signaler un problème dans le TGV. C'est dans le wagon R1, aux places 53, 54, 55 et 56. Le film sur la baie "Laissez vs rever" est abîmé et dégradé. C'est un pack Inoui. Merci de noter ça dans le fichier TGV_R_TRI_FO_incidents. Merci, à plus tard.
+Réponse:
+location='Place' precision1='53, 54, 55, 56' category='Pack inoui' precision2='' system='Film Baie' precision3='' subSystem='Laissez vs rever' failure='Abîmé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R1H, R2H, R3H, R5H, R6H, R7H, R8H', 'Plateforme Intercirculation', 'Couloir', 'Accessoires/ Environnement', '', 'Garde-fou', '', 'Rampe', 'Cassée, dégradée, manquante', 'TANGO_incidents')
+Transcription générée:
+Bonjour, ici un agent SNCF. J'ai un souci à signaler sur les lignes R1H, R2H, R3H, R5H, R6H, R7H, R8H. C'est au niveau de la plateforme d'intercirculation, dans le couloir. Il y a un problème avec le garde-fou de la rampe. Elle est cassée, dégradée, voire manquante. Merci de faire le nécessaire.
+Réponse:
+location='Plateforme Intercirculation' precision1='Couloir' category='Accessoires/ Environnement' precision2='' system='Garde-fou' precision3='' subSystem='Rampe' failure='Cassée, dégradée, manquante'
+----------------------------------------
+Incident:
+('R1', 'Sanitaire', 'PSH', 'Lave-mains', '', 'Lavabo', '', '', 'Cassé, dégradé, bouché', 'POS_incidents')
+Transcription générée:
+"Bonjour, ici un agent SNCF. On a un souci au niveau du train R1, dans les sanitaires pour les personnes à mobilité réduite. C'est le lave-mains, plus précisément le lavabo, qui est cassé. Merci de noter l'incident."
+Réponse:
+location='Sanitaire' precision1='PSH' category='Lave-mains' precision2='' system='Lavabo' precision3='' subSystem='' failure='Cassé, dégradé, bouché'
+----------------------------------------
+Incident:
+('R1B, R2B, R3B', 'Plateforme Accès', 'Gauche', 'Info/Communication', '', 'Signalétique', '', 'Extincteur', 'Dégradée, décollée, manquante', 'TRAIN_2N2_3UH_incidents')
+Transcription générée:
+"Bonjour, je signale un problème sur les quais R1B, R2B et R3B. La signalétique pour les extincteurs est en mauvais état, dégradée ou carrément manquante. C'est du côté gauche, au niveau de l'accès à la plateforme. Merci de bien vouloir intervenir rapidement. Code de l'incident : TRAIN_2N2_3UH_incidents."
+Réponse:
+location='Plateforme Accès' precision1='Gauche' category='Info/Communication' precision2='' system='Signalétique' precision3='' subSystem='Extincteur' failure='Dégradée, décollée, manquante'
+----------------------------------------
+Incident:
+('R2H, R3H, R6H, R7H', 'Salle', 'Principale', 'Habillage', '', 'Bagagerie', 'D côté intercirculation', 'Fond', 'Cassé, dégradé', 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription générée:
+Ouais, bonjour, c'est pour signaler un souci sur les voitures R2H, R3H, R6H, R7H. Dans la salle principale, y'a un problème avec l'habillage de la bagagerie, côté intercirculation. C'est vraiment cassé, bien dégradé. Ça concerne le fond. C'est pour le train 2N2 3UA Lyria. Merci.
+Réponse:
+location='Salle' precision1='Principale' category='Habillage' precision2='' system='Bagagerie' precision3='D côté intercirculation' subSystem='Fond' failure='Cassé, dégradé'
+----------------------------------------
+Incident:
+('R4', 'Salle bar', '', 'Equipements SECURITE', '', 'Vitre latérale', 'G-3ème baie (face au défibrillateur)', '', 'Bruyante, vibrations, sifflement, embuée', 'RITA_incidents')
+Transcription générée:
+"Bonjour, c'est pour signaler un problème dans la salle bar du train R4. Y'a une vitre latérale qui fait du bruit, elle vibre et siffle, et en plus elle est embuée. C'est celle à gauche, la troisième baie, juste en face du défibrillateur. Merci de regarder ça. C'est pour le fichier RITA des incidents."
+Réponse:
+location='Salle bar' precision1='' category='Equipements SECURITE' precision2='' system='Vitre latérale' precision3='G-3ème baie (face au défibrillateur)' subSystem='' failure='Bruyante, vibrations, sifflement, embuée'
+----------------------------------------
+Incident réel:
+('R1B, R2B, R3B, R5B, R6B, R7B, R8B', 'Plateforme Accès', 'Droite', 'Eclairage', '', "Luminaire latéral porte d'accès", '', '', 'Ne fonctionne pas, cassé, dégradé', 'TRAIN_2N2_3UF_incidents')
+Transcription donnée:
+"Salut, c'est pour signaler un souci sur les rames R1B, R2B, R3B, R5B, R6B, R7B, R8B. Problème sur la plateforme d'accès, côté droit. Les lumières latérales des portes d'accès sont cassées, elles ne marchent plus. Merci de régler ça rapidement. C'est pour le train 2N2 3UF."
+Réponse find_incident:
+location='Plateforme Accès' precision1='Droite' category='Eclairage' precision2='' system='"Luminaire latéral porte d\'accès"' precision3='' subSystem='' failure='Ne fonctionne pas, cassé, dégradé'
+----------------------------------------
