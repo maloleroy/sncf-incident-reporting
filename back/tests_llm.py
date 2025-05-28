@@ -6,6 +6,7 @@ from env import load_dotenv
 load_dotenv()
 from incident import find_incident
 from incidents_schema import get_db
+import time
 MODEL = ModelName.MISTRAL
 
 def generate_false_transcription(incident):
@@ -35,6 +36,7 @@ def tests():
          open("failures.txt", "a", encoding="utf-8") as failure_file:
         
         for incident in incidents:
+            time.sleep(10)
             # incident = (trainCar, date, description, trainType) ou selon ta table
             trainType = incident[-1]  # nom de la table
             trainCar = incident[0]
@@ -45,12 +47,14 @@ def tests():
             
             # Hypothèse : la fonction find_incident retourne None ou False en cas d'échec
             # et un résultat (objet) en cas de succès
-            if response:
+            if response.location == incident[1] and response.precision1 == incident[2] and response.category == incident[3] and response.precision2 == incident[4] and response.system == incident[5] and response.precision3 == incident[6] and response.subSystem == incident[7] and response.failure == incident[8]:
                 # Succès : on écrit l'incident et la transcription dans successes.txt
                 success_file.write("Incident:\n")
                 success_file.write(str(incident) + "\n")
                 success_file.write("Transcription générée:\n")
                 success_file.write(transcription + "\n")
+                success_file.write("Réponse:\n")
+                success_file.write(str(response) + "\n")
                 success_file.write("-" * 40 + "\n")
             else:
                 # Échec : on écrit le vrai incident, la transcription et la réponse dans failures.txt
