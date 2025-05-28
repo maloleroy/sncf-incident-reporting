@@ -32,6 +32,8 @@ def insert_incident(incident: model.IncidentAnalysisResponse, db: Connection):
         cursor.execute(
             sql_query,
             (
+                str(incident.uuid),
+                incident.timestamp.isoformat(),
                 incident.location,
                 incident.precision1,
                 incident.category,
@@ -59,6 +61,8 @@ def list_incidents(db: Connection):
 
     incidents = [
         model.IncidentAnalysisResponse(
+            uuid=row['uuid'],
+            timestamp=row['timestamp'],
             location=row['location'],
             precision1=row['precision1'],
             category=row['category'],

@@ -1,6 +1,8 @@
 -- Create table for Incident
 CREATE TABLE IF NOT EXISTS incidents (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid TEXT NOT NULL UNIQUE,
+    timestamp TEXT NOT NULL,
     location TEXT NOT NULL,
     precision1 TEXT NOT NULL,
     category TEXT NOT NULL,

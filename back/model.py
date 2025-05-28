@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, UTC
 from pydantic import BaseModel, Field
 from typing import Optional
-
+from uuid import UUID, uuid4
 
 class HealthCheckResponse(BaseModel):
     status: str = "ok"
@@ -119,6 +119,8 @@ class InformationsPossibilities(BaseModel):
 
 
 class IncidentAnalysisResponse(BaseModel):
+    uuid: UUID
+    timestamp: datetime
     location : str # localisation
     precision1 : str # precision_n1
     category : str # categorie
@@ -131,6 +133,8 @@ class IncidentAnalysisResponse(BaseModel):
         "json_schema_extra": {
             "examples": [
                 {
+                    "uuid": "123e4567-e89b-12d3-a456-426614174000",
+                    "timestamp": "2025-05-28T12:00:00+00:00",
                     "location": "Place",
                     "precision1": "",
                     "category": "Siège",

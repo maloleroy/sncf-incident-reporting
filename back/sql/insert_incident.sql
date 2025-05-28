@@ -1,4 +1,6 @@
 INSERT INTO incidents (
+    uuid,
+    timestamp,
     location,
     precision1,
     category,
@@ -8,4 +10,4 @@ INSERT INTO incidents (
     subSystem,
     failure
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)

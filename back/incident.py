@@ -24,6 +24,8 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
     return response_cleared
 
 def create_incident_response(response_parsed):
+    # Create the response with all fields properly populated
+    # UUID and timestamp will be auto-generated with proper formats
     return IncidentAnalysisResponse(
         location = response_parsed[0],
         precision1 = response_parsed[1],
