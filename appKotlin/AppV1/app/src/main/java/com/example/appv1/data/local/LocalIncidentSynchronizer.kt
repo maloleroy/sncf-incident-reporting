@@ -49,8 +49,12 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
     }
 
     private fun saveIncidents() {
-        val json = gson.toJson(pendingIncidentAnalysisRequests)
-        sharedPreferences.edit { putString(KEY_INCIDENT_ANALYSIS_REQUESTS, json) }
+        val requestsJson = gson.toJson(pendingIncidentAnalysisRequests)
+        val responsesJson = gson.toJson(pendingIncidentAnalysisResponses)
+        sharedPreferences.edit {
+            putString(KEY_INCIDENT_ANALYSIS_REQUESTS, requestsJson)
+            putString(KEY_INCIDENT_ANALYSIS_RESPONSES, responsesJson)
+        }
     }
 
     override fun addIncidentAnalysisRequest(
