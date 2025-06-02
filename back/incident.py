@@ -39,6 +39,9 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
 
 
 def create_incident_response(response_parsed):
+    if len(response_parsed) != 8:
+        raise HTTPException(status_code=500, detail="Parsing error: expected 8 categories, got %d" % len(response_parsed))
+
     return IncidentAnalysisResponse(
         uuid = uuid4(),
         # Format timestamp to be compatible with Kotlin's Instant (3 decimal places max)
