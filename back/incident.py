@@ -4,6 +4,8 @@ from incidents_schema import get_incidents
 from llm import get_response
 from model import IncidentAnalysisResponse
 import logging
+from uuid import uuid4
+from datetime import datetime, UTC
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -24,9 +26,11 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
     return response_cleared
 
 def create_incident_response(response_parsed):
-    # Create the response with all fields properly populated
-    # UUID and timestamp will be auto-generated with proper formats
     return IncidentAnalysisResponse(
+        uuid = uuid4(),
+        # Format timestamp to be compatible with Kotlin's Instant (3 decimal places max)
+        # Round to milliseconds
+        timestamp = now.replace(microsecond=datetime.now(UTC).microsecond // 1000 * 1000),
         location = response_parsed[0],
         precision1 = response_parsed[1],
         category = response_parsed[2],

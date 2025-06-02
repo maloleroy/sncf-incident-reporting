@@ -1,5 +1,7 @@
 from sqlite3 import Connection, connect, Row
 import os
+from datetime import datetime, UTC
+from uuid import UUID
 
 import model
 
@@ -58,22 +60,32 @@ def list_incidents(db: Connection):
         sql_query = file.read()
         cursor.execute(sql_query)
     rows = cursor.fetchall()
-
-    incidents = [
-        model.IncidentAnalysisResponse(
-            uuid=row['uuid'],
-            timestamp=row['timestamp'],
-            location=row['location'],
-            precision1=row['precision1'],
-            category=row['category'],
-            precision2=row['precision2'],
-            system=row['system'],
-            precision3=row['precision3'],
-            subSystem=row['subSystem'],
-            failure=row['failure'],
-        )
-        for row in rows
-    ]
-
+    
+    incidents = []
+    for row in rows:
+        # Parse UUID and timestamp from string format
+        try:
+            uuid_val = UUID(row['uuid'])
+            # Handle both full ISO format and simple formats
+            timestamp_str = row['timestamp']
+            timestamp_val = datetime.fromisoformat(timestamp_str) if timestamp_str else datetime.now(UTC)
+            
+            incidents.append(model.IncidentAnalysisResponse(
+                uuid=uuid_val,
+                timestamp=timestamp_val,
+                location=row['location'],
+                precision1=row['precision1'],
+                category=row['category'],
+                precision2=row['precision2'],
+                system=row['system'],
+                precision3=row['precision3'],
+                subSystem=row['subSystem'],
+                failure=row['failure'],
+            ))
+        except (ValueError, TypeError) as e:
+            # Log error but continue processing other records
+            import logging
+            logging.error(f"Error parsing incident data: {e}, row: {row['id']}")
+            continue
+    
     return incidents
-
