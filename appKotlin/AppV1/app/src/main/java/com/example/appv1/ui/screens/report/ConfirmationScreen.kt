@@ -45,21 +45,6 @@ fun ConfirmationScreen(
         return
     }
     val scope = rememberCoroutineScope()
-    val loadOptions: (String, Map<String, String>) -> List<String> = { level, selections ->
-        val options = mutableListOf<String>()
-        loadOptionsWithContext(
-            scope,
-            context,
-            trainType,
-            trainCar,
-            seatNumber,
-            level,
-            selections,
-            onSuccess = { options.addAll(it) },
-            onError = { error -> showErrorDialog(context, "Erreur lors du chargement des options : $error") }
-        )
-        options
-    }
 
     var location by remember { mutableStateOf(response.location) }
     var locationOptions by remember { mutableStateOf(listOf(response.location)) }
