@@ -1,7 +1,10 @@
 package com.example.appv1.api
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.appv1.BuildConfig
 import com.example.appv1.R
+import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -56,20 +59,26 @@ object RetrofitInstance {
         return certificate
     }
 
+    // Create a properly configured Gson instance that can handle UUID and Instant
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val gson: Gson = GsonTypeAdapters.createGson()
+    
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getIncidentApiService(context: Context): IncidentAnalysisApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(createSecureClient(context))
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(IncidentAnalysisApiService::class.java)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCompletionApiService(context: Context): IncidentCompletionApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(createSecureClient(context))
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(IncidentCompletionApiService::class.java)
     }

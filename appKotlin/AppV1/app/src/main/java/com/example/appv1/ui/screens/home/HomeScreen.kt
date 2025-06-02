@@ -1,5 +1,7 @@
 package com.example.appv1.ui.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,14 +28,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.material3.AlertDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.Color // Import Color
-import androidx.compose.foundation.BorderStroke // <-- Ajoutez cet import
-import androidx.compose.material3.ButtonDefaults // <-- Ajoutez cet import
+import com.example.appv1.data.IncidentSynchronizer
+import com.example.appv1.ui.components.SyncStatusIcon
 
-import com.example.appv1.data.remote.DebugRemoteIncidentSynchronizer
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -45,7 +46,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("SNCF Signalements", fontSize = 20.sp) },
                 actions = {
-                    SyncStatusIcon(DebugRemoteIncidentSynchronizer())
+                    SyncStatusIcon(IncidentSynchronizer.getInstance(LocalContext.current))
                 }
             )
         },

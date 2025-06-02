@@ -22,3 +22,7 @@ val trainTypes = mapOf(
     "TRAIN 2N2 3UF" to "TRAIN_2N2_3UF_incidents",
     "TRAIN 2N2 3UH" to "TRAIN_2N2_3UH_incidents"
 )
+
+fun getTrainTypeByCode(code: String): String? {
+    return trainTypes.entries.find { it.value == code }?.key
+}

@@ -5,10 +5,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
@@ -71,19 +73,22 @@ import androidx.core.content.ContextCompat
 import com.example.appv1.api.IncidentAnalysisRequest
 import com.example.appv1.api.IncidentAnalysisResponse
 import com.example.appv1.api.RetrofitInstance
-import com.example.appv1.api.getIncidentAnalysis
 import com.example.appv1.domain.model.trainTypes
 import com.example.appv1.ui.components.NewReportScreenDivider
 import com.example.appv1.ui.components.showErrorDialog
 import com.example.appv1.ui.util.launchSpeech
+import com.example.appv1.data.IncidentSynchronizer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import java.time.Instant
+import java.util.UUID
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewReportScreen(
@@ -324,13 +329,14 @@ fun NewReportScreen(
                     if (transcription.isNotBlank() && trainType.isNotBlank() && trainCar.isNotBlank()) {
                         isOnlineAILoading = true // Début chargement
                         generatedReportText = null // Réinitialiser l'ancienne réponse
-                        getIncidentAnalysis(
+                        IncidentSynchronizer.getInstance(context).addIncidentAnalysisRequest(
                             IncidentAnalysisRequest(
+                                uuid = UUID.randomUUID(),
+                                timestamp = Instant.now(),
                                 trainTypes[trainType]!!,
                                 trainCar,
                                 transcription
                             ),
-                            context,
                             onResult = { result ->
                                 generatedReportText = result.failure
                                 isOnlineAILoading = false
@@ -385,6 +391,7 @@ fun NewReportScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,

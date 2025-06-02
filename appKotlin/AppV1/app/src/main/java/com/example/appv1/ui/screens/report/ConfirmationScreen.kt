@@ -174,8 +174,8 @@ fun ConfirmationScreen(
                 onSelected = {
                     location = it
                     resetBelow("location")
-                },
-                onRequestOptions = { emptyList() } // ou null si paramètre nullable
+                }
+                // ou null si paramètre nullable
             )
             
             DropdownField(
@@ -203,8 +203,8 @@ fun ConfirmationScreen(
                 onSelected = {
                     precision1 = it
                     resetBelow("precision1")
-                },
-                onRequestOptions = { emptyList() } // ou null si paramètre nullable
+                }
+                // ou null si paramètre nullable
             )
 
             DropdownField(
@@ -263,8 +263,7 @@ fun ConfirmationScreen(
                 onSelected = {
                     precision2 = it
                     resetBelow("precision2")
-                },
-                onRequestOptions = { emptyList() }
+                }
             )
 
             DropdownField(
@@ -290,8 +289,8 @@ fun ConfirmationScreen(
                 onSelected = {
                     system = it
                     resetBelow("system")
-                },
-                onRequestOptions = { emptyList() } // ou null si paramètre nullable, car on charge via onExpandedChange
+                }
+                // ou null si paramètre nullable, car on charge via onExpandedChange
             )
 
             DropdownField(
@@ -323,8 +322,7 @@ fun ConfirmationScreen(
                 onSelected = {
                     precision3 = it
                     resetBelow("precision3")
-                },
-                onRequestOptions = { emptyList() }
+                }
             )
 
             DropdownField(
@@ -357,8 +355,7 @@ fun ConfirmationScreen(
                 onSelected = {
                     subSystem = it
                     resetBelow("subSystem")
-                },
-                onRequestOptions = { emptyList() }
+                }
             )
 
             DropdownField(
@@ -392,12 +389,13 @@ fun ConfirmationScreen(
                 onSelected = {
                     failure = it
                     resetBelow("failure")
-                },
-                onRequestOptions = { emptyList() }
+                }
             )
 
             // Pass navigateToNewReport to SubmitIncidentButton
             val incidentToSubmit = IncidentAnalysisResponse(
+                uuid = response.uuid,
+                timestamp = response.timestamp,
                 location = location,
                 precision1 = precision1,
                 category = category,
@@ -425,8 +423,7 @@ fun DropdownField(
     options: List<String>,
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    onSelected: (String) -> Unit,
-    onRequestOptions: () -> List<String> = { emptyList() } // Optionnel, pas forcément suspend ici
+    onSelected: (String) -> Unit
 ) {
     ExposedDropdownMenuBox(
         expanded = expanded,

@@ -4,14 +4,22 @@ import com.example.appv1.BuildConfig
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.GET
+import java.time.Instant
+import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 data class IncidentAnalysisRequest(
+    val uuid: UUID,
+    val timestamp: Instant,
     val trainType : String,
     val trainCar : String,
     val transcription : String
 )
 
 data class IncidentAnalysisResponse(
+    val uuid: UUID,
+    val timestamp: Instant,
     val location : String,
     val precision1 : String,
     val category : String,

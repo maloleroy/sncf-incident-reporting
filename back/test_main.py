@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+import uuid
 
 from main import app
 from security import get_security_header
@@ -23,6 +24,7 @@ def test_get_health():
 
 def test_create_incident():
     incident_data = model.IncidentAnalysisResponse.model_config["json_schema_extra"]["examples"][0]
+    incident_data["uuid"] = str(uuid.uuid4())  # Ensure a new UUID is generated for the test
     response = client.post("/incidents/", json=incident_data, headers=get_security_header())
     assert response.status_code == 200
     assert response.json() == model.IncidentSubmittingResponse.model_config["json_schema_extra"]["examples"][0]
