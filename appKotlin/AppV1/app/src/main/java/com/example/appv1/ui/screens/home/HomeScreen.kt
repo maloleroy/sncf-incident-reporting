@@ -1,5 +1,7 @@
 package com.example.appv1.ui.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.appv1.data.LocalIncidentSynchronizer
 import com.example.appv1.ui.components.SyncStatusIcon
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(

@@ -1,5 +1,7 @@
 package com.example.appv1.ui.screens.list
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,6 +26,7 @@ import com.example.appv1.data.LocalIncidentSynchronizer
 import com.example.appv1.ui.components.IncidentAnalysisRequestCard
 import com.example.appv1.ui.components.IncidentAnalysisResponseCard
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListReportsScreen(

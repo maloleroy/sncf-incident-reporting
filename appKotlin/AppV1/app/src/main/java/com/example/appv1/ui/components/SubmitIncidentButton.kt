@@ -1,6 +1,8 @@
 package com.example.appv1.ui.components
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.io.IOException // Added for error handling
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SubmitIncidentButton(
     scope: CoroutineScope,

@@ -384,6 +384,7 @@ fun NewReportScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,

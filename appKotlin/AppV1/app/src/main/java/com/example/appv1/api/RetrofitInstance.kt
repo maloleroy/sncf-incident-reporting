@@ -1,5 +1,7 @@
 package com.example.appv1.api
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.appv1.BuildConfig
 import com.example.appv1.R
 import com.google.gson.Gson
@@ -58,8 +60,10 @@ object RetrofitInstance {
     }
 
     // Create a properly configured Gson instance that can handle UUID and Instant
+    @RequiresApi(Build.VERSION_CODES.O)
     private val gson: Gson = GsonTypeAdapters.createGson()
     
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getIncidentApiService(context: Context): IncidentAnalysisApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
@@ -69,6 +73,7 @@ object RetrofitInstance {
             .create(IncidentAnalysisApiService::class.java)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getCompletionApiService(context: Context): IncidentCompletionApiService {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
