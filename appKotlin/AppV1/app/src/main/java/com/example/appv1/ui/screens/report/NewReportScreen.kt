@@ -60,6 +60,9 @@ import androidx.compose.runtime.saveable.rememberSaveable // Import rememberSave
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.heightIn
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
@@ -217,7 +220,8 @@ fun NewReportScreen(
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                onExpandedChange = { expanded = !expanded },
+                modifier = Modifier.heightIn(max = 300.dp)
             ) {
                 OutlinedTextField(
                     value = trainType,
@@ -226,13 +230,14 @@ fun NewReportScreen(
                     label = { Text("Type de train") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
-                        .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                        .menuAnchor() // ✅ Important pour le bon ancrage du menu
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
                 )
+
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier.heightIn(max = 300.dp)
                 ) {
                     trainTypes.keys.forEach { type ->
                         DropdownMenuItem(
@@ -245,6 +250,8 @@ fun NewReportScreen(
                     }
                 }
             }
+
+
             // Champ pour le numéro de rame
             OutlinedTextField(
                 value = trainCar,

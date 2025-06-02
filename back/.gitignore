@@ -10,3 +10,4 @@
 **/.pytest_cache/
 cert.pem
 key.pem
+logs/

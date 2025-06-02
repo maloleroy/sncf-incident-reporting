@@ -58,7 +58,7 @@ def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.Inci
     for key, value in conserved_infos.selections.dict().items():
         logger.info(f"Processing key: {trad[key]}, value: {value}")
         if value:
-            sql_query = sql_query + f" AND {trad[key]} LIKE '%' || ? || '%'"
+            sql_query = sql_query + f" AND {trad[key]} = ?"
             values_params.append(value)
     sql_query = sql_query + ";"
 
