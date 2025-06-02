@@ -134,7 +134,7 @@ class IncidentAnalysisResponse(BaseModel):
             "examples": [
                 {
                     "uuid": "123e4567-e89b-12d3-a456-426614174000",
-                    "timestamp": "2025-05-28T12:00:00+00:00",
+                    "timestamp": "2025-05-28T12:00:00Z",
                     "location": "Place",
                     "precision1": "",
                     "category": "Siège",
