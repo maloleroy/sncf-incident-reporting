@@ -1,14 +1,17 @@
 package com.example.appv1
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.ui.screens.home.HomeScreen
 import com.example.appv1.ui.screens.list.ListReportsScreen
 import com.example.appv1.ui.screens.report.ConfirmationScreen
@@ -17,8 +20,16 @@ import com.example.appv1.ui.screens.report.ReportSharedViewModel
 import com.example.appv1.ui.theme.AppV1Theme
 
 class MainActivity : ComponentActivity() {
+    // Declare the synchronizer as a lateinit var - it will be initialized in onCreate
+    private lateinit var synchronizer: IncidentSynchronizer
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize and start the synchronizer
+        synchronizer = IncidentSynchronizer.getInstance(this)
+        synchronizer.start()
         setContent {
             AppV1Theme(dynamicColor = false) {
                 val navController = rememberNavController()

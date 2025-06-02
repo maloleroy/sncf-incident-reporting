@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.appv1.data.LocalIncidentSynchronizer
+import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.ui.components.SyncStatusIcon
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -41,7 +41,7 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("SNCF Signalements", fontSize = 20.sp) },
                 actions = {
-                    SyncStatusIcon(LocalIncidentSynchronizer.getInstance(LocalContext.current))
+                    SyncStatusIcon(IncidentSynchronizer.getInstance(LocalContext.current))
                 }
             )
         },

@@ -2,6 +2,9 @@ package com.example.appv1.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
@@ -13,30 +16,32 @@ import com.example.appv1.api.RetrofitInstance
 import com.example.appv1.api.IncidentAnalysisApiService
 import com.example.appv1.ui.components.showErrorDialog
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
+import java.util.concurrent.atomic.AtomicBoolean
 
 enum class SynchronizationStatus {
-    IDLE,
+    WAITING_FOR_VALIDATION,
     PENDING,
     IN_PROGRESS,
     COMPLETED,
     FAILED
 }
 
-fun interface SynchronizationCallback {
-    fun onStatusChanged(status: SynchronizationStatus)
-}
+class WithStatus<T>(
+    val value: T,
+    var status: SynchronizationStatus
+)
 
-class WithStatus<T>(t: T) {
-    val value = t
-    val status: SynchronizationStatus = SynchronizationStatus.PENDING
-}
+class IncidentSynchronizer private constructor(private val context: Context) {
 
-class LocalIncidentSynchronizer private constructor(private val context: Context) {
+    private val isActive = AtomicBoolean(false)
+    private val dispatcher = Dispatchers.IO
+    private val syncScope = CoroutineScope(SupervisorJob() + dispatcher)
 
     private val gson = Gson()
     private val sharedPreferences: SharedPreferences by lazy {
@@ -47,19 +52,42 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
     private var pendingIncidentAnalysisResponses: MutableList<WithStatus<IncidentAnalysisResponse>> = mutableListOf()
 
     init {
-        loadIncidents()
+        // If the loading fails, we initialize the lists to avoid null references
+        // and we clear the shared preferences to avoid stale data
+        try {
+            loadIncidents()
+        } catch (_: Exception) {
+            pendingIncidentAnalysisRequests = mutableListOf()
+            pendingIncidentAnalysisResponses = mutableListOf()
+            sharedPreferences.edit {
+                clear()
+            }
+        }
     }
 
     private fun loadIncidents() {
         val requestsJson = sharedPreferences.getString(KEY_INCIDENT_ANALYSIS_REQUESTS, null)
         if (requestsJson != null) {
-            val type = object : TypeToken<MutableList<IncidentAnalysisRequest>>() {}.type
-            pendingIncidentAnalysisRequests = gson.fromJson(requestsJson, type) ?: mutableListOf()
+            try {
+                // Use the correct type with WithStatus wrapper
+                val type = object : TypeToken<MutableList<WithStatus<IncidentAnalysisRequest>>>() {}.type
+                pendingIncidentAnalysisRequests = gson.fromJson(requestsJson, type) ?: mutableListOf()
+            } catch (e: Exception) {
+                // Log the error and reset to empty list
+                pendingIncidentAnalysisRequests = mutableListOf()
+            }
         }
+        
         val responseJson = sharedPreferences.getString(KEY_INCIDENT_ANALYSIS_RESPONSES, null)
         if (responseJson != null) {
-            val type = object : TypeToken<MutableList<IncidentAnalysisResponse>>() {}.type
-            pendingIncidentAnalysisResponses = gson.fromJson(responseJson, type) ?: mutableListOf()
+            try {
+                // Use the correct type with WithStatus wrapper
+                val type = object : TypeToken<MutableList<WithStatus<IncidentAnalysisResponse>>>() {}.type
+                pendingIncidentAnalysisResponses = gson.fromJson(responseJson, type) ?: mutableListOf()
+            } catch (e: Exception) {
+                // Log the error and reset to empty list
+                pendingIncidentAnalysisResponses = mutableListOf()
+            }
         }
     }
 
@@ -77,17 +105,9 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         onResult: (IncidentAnalysisResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        val withStatus = WithStatus(incidentAnalysisRequest)
+        val withStatus = WithStatus(incidentAnalysisRequest, SynchronizationStatus.PENDING)
         pendingIncidentAnalysisRequests.add(withStatus)
         saveIncidents()
-        syncIncidentAnalysisRequest(
-            withStatus,
-            onResult = { response ->
-                saveIncidents()
-                onResult(response)
-            },
-            onError
-        )
     }
 
     fun addIncidentAnalysisResponse(
@@ -95,44 +115,73 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         onResult: (String) -> Unit,
         onError: (String) -> Unit
     ) {
-        val withStatus = WithStatus(incidentAnalysisResponse)
+        val withStatus = WithStatus(incidentAnalysisResponse, SynchronizationStatus.WAITING_FOR_VALIDATION)
         pendingIncidentAnalysisResponses.add(withStatus)
         saveIncidents()
-        syncIncidentAnalysisResponse(
-            withStatus,
-            onResult = { response ->
-                saveIncidents()
-                onResult(response)
-            },
-            onError
-        )
     }
 
-    suspend fun synchronize() {
-        withContext(Dispatchers.IO) {
-            for (request in pendingIncidentAnalysisRequests) {
+    fun start() {
+        if (isActive.compareAndSet(false, true)) {
+            syncScope.launch {
+                while (isActive.get()) {
+                    synchronizeOnce()
+                    delay(500) // Brief pause between cycles
+                }
+            }
+        }
+    }
+
+    private fun setIncidentAnalysisRequestStatus(
+        incidentAnalysisRequest: WithStatus<IncidentAnalysisRequest>,
+        status: SynchronizationStatus
+    ) {
+        // Update the status of the request
+        incidentAnalysisRequest.status = status
+        saveIncidents()
+    }
+
+    private fun setIncidentAnalysisResponseStatus(
+        incidentAnalysisResponse: WithStatus<IncidentAnalysisResponse>,
+        status: SynchronizationStatus
+    ) {
+        // Update the status of the response
+        incidentAnalysisResponse.status = status
+        saveIncidents()
+    }
+
+    private suspend fun synchronizeOnce() {
+        withContext(dispatcher) {
+            pendingIncidentAnalysisRequests.filter { 
+                it.status == SynchronizationStatus.FAILED || 
+                it.status == SynchronizationStatus.PENDING 
+            }.forEach { request ->
+                setIncidentAnalysisRequestStatus(request, SynchronizationStatus.IN_PROGRESS)
                 syncIncidentAnalysisRequest(
                     request,
                     onResult = { response ->
-                        pendingIncidentAnalysisResponses.add(WithStatus(response))
-                        pendingIncidentAnalysisRequests.remove(request)
+                        setIncidentAnalysisRequestStatus(request, SynchronizationStatus.COMPLETED)
+                        pendingIncidentAnalysisResponses.add(WithStatus(response, SynchronizationStatus.WAITING_FOR_VALIDATION))
                         saveIncidents()
                     },
                     onError = { errorMessage ->
+                        setIncidentAnalysisRequestStatus(request, SynchronizationStatus.FAILED)
                         showErrorDialog(context, "Erreur lors de l'analyse de l'incident : $errorMessage")
                     }
                 )
             }
 
-            for (response in pendingIncidentAnalysisResponses) {
+            pendingIncidentAnalysisResponses.filter {
+                it.status == SynchronizationStatus.FAILED || 
+                it.status == SynchronizationStatus.PENDING 
+            }.forEach { response ->
+                setIncidentAnalysisResponseStatus(response, SynchronizationStatus.IN_PROGRESS)
                 syncIncidentAnalysisResponse(response,
                     onResult = { status ->
-                        // Log or handle the status
-                        println("Statut de l'incident soumis : $status")                    
-                        pendingIncidentAnalysisResponses.remove(response)
+                        setIncidentAnalysisResponseStatus(response, SynchronizationStatus.COMPLETED)
+                        Toast.makeText(context, "Incident soumis avec succès", Toast.LENGTH_SHORT).show()
                     },
                     onError = { errorMessage ->
-                        // Log or handle the error message
+                        setIncidentAnalysisResponseStatus(response, SynchronizationStatus.FAILED)
                         showErrorDialog(context, "Erreur lors de la soumission de l'incident : $errorMessage")
                     }
                 )
@@ -141,18 +190,31 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         }
     }
 
+    fun stop() {
+        isActive.set(false)
+        syncScope.coroutineContext.cancelChildren()
+    }
+
     private fun syncIncidentAnalysisRequest(
         incidentAnalysisRequest: WithStatus<IncidentAnalysisRequest>,
         onResult: (IncidentAnalysisResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        syncScope.launch {
             try {
                 val response = API_SERVICE_INSTANCE!!.generateIncidentAnalysis(incidentAnalysisRequest.value)
                 withContext(Dispatchers.Main) {
                     onResult(response)
                 }
-            } catch (e: IOException) { // Catch only network errors (IOException)
+            } catch (e: HttpException) { // Handle HTTP errors (4xx, 5xx status codes)
+                withContext(Dispatchers.Main) {
+                    when (e.code()) {
+                        404 -> onError("Aucun incident correspondant trouvé (404)")
+                        503 -> onError("Le serveur d'IA est indisponible (503)")
+                        else -> onError("Erreur HTTP ${e.code()}: ${e.message()}")
+                    }
+                }
+            } catch (e: IOException) { // Catch network errors (IOException)
                 withContext(Dispatchers.Main) {
                     onError("Erreur de réseau lors de l'appel API : ${e.message}")
                 }
@@ -169,13 +231,21 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         onResult: (String) -> Unit,
         onError: (String) -> Unit
     ) {
-        CoroutineScope(Dispatchers.IO).launch {
+        syncScope.launch {
             try {
                 val response = API_SERVICE_INSTANCE!!.submitIncident(incidentAnalysisResponse.value)
                 withContext(Dispatchers.Main) {
                     onResult(response.status)
                 }
-            } catch (e: IOException) { // Catch only network errors (IOException)
+            } catch (e: HttpException) { // Handle HTTP errors (4xx, 5xx status codes)
+                withContext(Dispatchers.Main) {
+                    when (e.code()) {
+                        404 -> onError("Le serveur n'a pas pu traiter l'incident (404)")
+                        503 -> onError("Le serveur est actuellement indisponible (503)")
+                        else -> onError("Erreur HTTP ${e.code()}: ${e.message()}")
+                    }
+                }
+            } catch (e: IOException) { // Catch network errors (IOException)
                 withContext(Dispatchers.Main) {
                     onError("Erreur de réseau lors de l'appel API : ${e.message}")
                 }
@@ -203,31 +273,19 @@ class LocalIncidentSynchronizer private constructor(private val context: Context
         }
     }
 
-    fun attachCallback(callback: SynchronizationCallback) {
-        TODO("Not yet implemented")
-    }
-
-    fun getStatusFlow(): Flow<SynchronizationStatus> {
-        return flow {
-            while (true) {
-                emit(getStatus())
-                delay(500) // Update every half second
-            }
-        }
-    }
-
     companion object {
         @Volatile
-        private var INSTANCE: LocalIncidentSynchronizer? = null
+        private var INSTANCE: IncidentSynchronizer? = null
 
         private var API_SERVICE_INSTANCE: IncidentAnalysisApiService? = null
         
-        fun getInstance(context: Context): LocalIncidentSynchronizer {
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getInstance(context: Context): IncidentSynchronizer {
             if (API_SERVICE_INSTANCE == null) {
                 API_SERVICE_INSTANCE = RetrofitInstance.getIncidentApiService(context)
             }
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: LocalIncidentSynchronizer(context.applicationContext).also { INSTANCE = it }
+                INSTANCE ?: IncidentSynchronizer(context.applicationContext).also { INSTANCE = it }
             }
         }
 

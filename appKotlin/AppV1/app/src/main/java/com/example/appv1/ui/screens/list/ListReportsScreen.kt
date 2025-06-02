@@ -22,7 +22,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.appv1.data.LocalIncidentSynchronizer
+import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.ui.components.IncidentAnalysisRequestCard
 import com.example.appv1.ui.components.IncidentAnalysisResponseCard
 
@@ -59,7 +59,7 @@ fun ListReportsScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            for (incidents in LocalIncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisRequests()) {
+            for (incidents in IncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisRequests()) {
                 IncidentAnalysisRequestCard(
                     incidents,
                     scope = coroutineScope,
@@ -73,7 +73,7 @@ fun ListReportsScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            for (incidents in LocalIncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisResponses()) {
+            for (incidents in IncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisResponses()) {
                 IncidentAnalysisResponseCard(
                     incidents,
                     onClick = {}

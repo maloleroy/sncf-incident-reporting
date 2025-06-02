@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.appv1.api.IncidentAnalysisRequest
-import com.example.appv1.data.LocalIncidentSynchronizer
+import com.example.appv1.data.IncidentSynchronizer
 import com.example.appv1.data.WithStatus
 import com.example.appv1.domain.model.getTrainTypeByCode
 import kotlinx.coroutines.CoroutineScope
@@ -42,7 +42,6 @@ fun IncidentAnalysisRequestCard(
         onClick = {
             inProgress = true
             scope.launch {
-                LocalIncidentSynchronizer.getInstance(context).synchronize()
                 inProgress = false
             }
         },
@@ -53,12 +52,14 @@ fun IncidentAnalysisRequestCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Train,
-                contentDescription = "Train",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(40.dp).padding(end = 16.dp)
+                imageVector = getIconFromStatus(incident.status),
+                contentDescription = "Status",
+                modifier = Modifier
+                    .size(40.dp)
+                    .padding(end = 16.dp),
+                tint = getIconColorFromStatus(incident.status)
             )
-            
+
             Column(
                 modifier = Modifier.weight(1f).padding(end = 8.dp)
             ) {
