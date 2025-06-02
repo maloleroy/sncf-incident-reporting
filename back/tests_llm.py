@@ -5,7 +5,7 @@ from model import ChatRequest
 from env import load_dotenv
 load_dotenv()
 from incident import find_incident
-from incidents_schema import get_db
+from incidents_schema import get_db, INCIDENTS_SCHEMA_DB_PATH
 import time
 MODEL = ModelName.MISTRAL
 
@@ -28,7 +28,7 @@ def choose_incidents(db):
     return cursor.fetchall()
 
 def tests():
-    db = sqlite3.connect("../arborescence_analyse/DBs/incidents.db", check_same_thread=False)
+    db = sqlite3.connect(INCIDENTS_SCHEMA_DB_PATH, check_same_thread=False)
     incidents = choose_incidents(db)
     
     # Ouvre les fichiers en mode ajout (append)

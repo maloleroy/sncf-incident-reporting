@@ -5,8 +5,10 @@ from uuid import UUID
 
 import model
 
+INCIDENTS_DB_PATH = 'incidents.db'
+
 def initialize_db():
-    conn = connect('incidents.db')
+    conn = connect(INCIDENTS_DB_PATH, check_same_thread=False)
     cursor = conn.cursor()
     # Create tables if they don't exist
     with open('sql/create_tables.sql', 'r') as file:
@@ -17,9 +19,9 @@ def initialize_db():
 
 # Dependency to get a new database connection for each request
 def get_db() -> Connection:
-    if not os.path.exists('incidents.db'):
+    if not os.path.exists(INCIDENTS_DB_PATH):
         initialize_db()
-    conn = connect('incidents.db', check_same_thread=False)
+    conn = connect(INCIDENTS_DB_PATH, check_same_thread=False)
     conn.row_factory = Row  # Enable row factory to access columns by name
     try:
         yield conn

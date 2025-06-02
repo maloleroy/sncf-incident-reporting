@@ -13,7 +13,7 @@ client = OpenAI(api_key=getenv("OPENAI_API_KEY"))
 
 # --- BDD et GPT ---
 def get_incidents_voiture():
-    conn = sqlite3.connect("../DBs/incidents.db")
+    conn = sqlite3.connect("../incidents_schema.db")
     cursor = conn.cursor()
     return conn, cursor
 

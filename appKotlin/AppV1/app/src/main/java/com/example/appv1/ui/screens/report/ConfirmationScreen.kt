@@ -2,6 +2,8 @@
 package com.example.appv1.ui.screens.report
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfirmationScreen(
@@ -42,21 +45,6 @@ fun ConfirmationScreen(
         return
     }
     val scope = rememberCoroutineScope()
-    val loadOptions: (String, Map<String, String>) -> List<String> = { level, selections ->
-        val options = mutableListOf<String>()
-        loadOptionsWithContext(
-            scope,
-            context,
-            trainType,
-            trainCar,
-            seatNumber,
-            level,
-            selections,
-            onSuccess = { options.addAll(it) },
-            onError = { error -> showErrorDialog(context, "Erreur lors du chargement des options : $error") }
-        )
-        options
-    }
 
     var location by remember { mutableStateOf(response.location) }
     var locationOptions by remember { mutableStateOf(listOf(response.location)) }
@@ -436,7 +424,7 @@ fun DropdownField(
             label = { Text(label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             modifier = Modifier
-                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
+                .menuAnchor(MenuAnchorType.PrimaryEditable, !options.isEmpty())
                 .fillMaxWidth()
                 .padding(vertical = 4.dp)
         )
@@ -460,6 +448,7 @@ fun DropdownField(
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun loadOptionsWithContext(
     scope: CoroutineScope,
     context: Context,
@@ -508,6 +497,7 @@ fun loadOptionsWithContext(
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 suspend fun loadOptionsSuspend(
     context: Context,
     trainType: String,

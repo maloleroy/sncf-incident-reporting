@@ -14,7 +14,7 @@ client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 def get_incidents_voiture():
     
-    conn = sqlite3.connect("arborescence_analyse/DBs/incidents.db")
+    conn = sqlite3.connect("arborescence_analyse/incidents_schema.db")
     cursor = conn.cursor()
     return conn, cursor 
 
