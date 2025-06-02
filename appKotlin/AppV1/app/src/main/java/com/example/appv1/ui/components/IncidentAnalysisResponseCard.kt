@@ -7,10 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.appv1.api.IncidentAnalysisResponse
+import com.example.appv1.data.WithStatus
 
 @Composable
 fun IncidentAnalysisResponseCard(
-    incident: IncidentAnalysisResponse,
+    incident: WithStatus<IncidentAnalysisResponse>,
     onClick: () -> Unit
 ) {
     Card(
@@ -31,7 +32,7 @@ fun IncidentAnalysisResponseCard(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "${incident.location} ${incident.precision1.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
+                text = "${incident.value.location} ${incident.value.precision1.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -43,7 +44,7 @@ fun IncidentAnalysisResponseCard(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "${incident.category} ${incident.precision2.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
+                text = "${incident.value.category} ${incident.value.precision2.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -55,7 +56,7 @@ fun IncidentAnalysisResponseCard(
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "${incident.system} ${incident.precision3.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
+                text = "${incident.value.system} ${incident.value.precision3.takeIf { it.isNotBlank() }?.let { "- $it" } ?: ""}",
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -72,7 +73,7 @@ fun IncidentAnalysisResponseCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = incident.subSystem,
+                        text = incident.value.subSystem,
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -84,7 +85,7 @@ fun IncidentAnalysisResponseCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = incident.failure,
+                        text = incident.value.failure,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold
                     )

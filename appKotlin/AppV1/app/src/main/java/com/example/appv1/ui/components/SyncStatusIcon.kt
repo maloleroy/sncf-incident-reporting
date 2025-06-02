@@ -1,4 +1,4 @@
-package com.example.appv1.ui.screens.home
+package com.example.appv1.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CloudDone
@@ -11,13 +11,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import com.example.appv1.data.IncidentSynchronizer
+import com.example.appv1.data.LocalIncidentSynchronizer
 import com.example.appv1.data.SynchronizationStatus
-import com.example.appv1.data.local.LocalIncidentSynchronizer
 import kotlinx.coroutines.launch
 
 @Composable
-fun SyncStatusIcon(synchronizer: IncidentSynchronizer) {
+fun SyncStatusIcon(synchronizer: LocalIncidentSynchronizer) {
     val syncStatus = synchronizer.getStatus()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()

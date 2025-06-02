@@ -24,7 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.appv1.data.local.LocalIncidentSynchronizer
+import com.example.appv1.data.LocalIncidentSynchronizer
+import com.example.appv1.ui.components.SyncStatusIcon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

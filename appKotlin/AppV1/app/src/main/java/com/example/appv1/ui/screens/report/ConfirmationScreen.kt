@@ -394,6 +394,8 @@ fun ConfirmationScreen(
 
             // Pass navigateToNewReport to SubmitIncidentButton
             val incidentToSubmit = IncidentAnalysisResponse(
+                uuid = response.uuid,
+                timestamp = response.timestamp,
                 location = location,
                 precision1 = precision1,
                 category = category,

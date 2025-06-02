@@ -24,14 +24,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.appv1.api.IncidentAnalysisRequest
-import com.example.appv1.data.local.LocalIncidentSynchronizer
+import com.example.appv1.data.LocalIncidentSynchronizer
+import com.example.appv1.data.WithStatus
 import com.example.appv1.domain.model.getTrainTypeByCode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun IncidentAnalysisRequestCard(
-    incident: IncidentAnalysisRequest,
+    incident: WithStatus<IncidentAnalysisRequest>,
     scope: CoroutineScope,
 ) {
     val context = LocalContext.current
@@ -62,14 +63,14 @@ fun IncidentAnalysisRequestCard(
                 modifier = Modifier.weight(1f).padding(end = 8.dp)
             ) {
                 Text(
-                    text = "Train ${getTrainTypeByCode(incident.trainType)} - Rame ${incident.trainCar}",
+                    text = "Train ${getTrainTypeByCode(incident.value.trainType)} - Rame ${incident.value.trainCar}",
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
 
                 // Description preview
                 Text(
-                    text = incident.transcription,
+                    text = incident.value.transcription,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
