@@ -1,5 +1,6 @@
 stages:
   - test
+  - deploy
 
 test:
   stage: test
@@ -11,3 +12,24 @@ test:
     - cp .env.example .env
   script:
     - uv run pytest
+
+deploy_to_vm:
+  stage: deploy
+  only:
+    - main
+    - backend-continuous-deployment # Only while developing the feature
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $VM_HOST >> ~/.ssh/known_hosts
+  script:
+    - ssh $VM_USER@$VM_HOST << 'EOF'
+        set -e
+        cd ~/s2025p2-mobile-app-incidents/back
+        git pull origin main
+        pkill -f "uv" || true
+        nohup uv run fastapi run > console.log 2>&1 &
+      EOF
