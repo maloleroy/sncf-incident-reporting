@@ -4,7 +4,41 @@ Backend for the incident reporting app. Includes two main features
 - The ability to report incidents (and secondarily, to retrieve the list of reported incidents)
 - The ability to call LLMs (ChatGPT, Mistral), in a secured way
 
-## Configuration
+## Prerequisites
+
+### Redis
+This project requires Redis to be installed and running for caching LLM responses. 
+
+**For MacOS (using Homebrew):**
+```bash
+# Install Redis
+brew install redis
+
+# Start Redis service
+brew services start redis
+```
+
+**For Debian/Ubuntu (using apt):**
+```bash
+# Update package list
+sudo apt update
+
+# Install Redis
+sudo apt install redis-server -y
+
+# Start and enable Redis service
+sudo systemctl start redis-server
+sudo systemctl enable redis-server
+```
+
+You can verify Redis is running with:
+```bash
+redis-cli ping
+```
+
+If successful, it should reply with "PONG".
+
+### Environment Configuration
 
 Running this project requires having a valid `.env` file at its root. To get a grasp of the environment variables needed, look at the `.env.example` file.
 
