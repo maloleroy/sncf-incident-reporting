@@ -5,11 +5,13 @@ from sqlite3 import Connection, connect, Row
 import os
 import json
 
+from env import load_dotenv
+load_dotenv()
+
 import model
 from incident import find_incident
 from security import validate_token
 from llm import get_completions
-from env import load_dotenv
 import incidents_db
 import incidents_schema
 from health import ensure_health
@@ -36,7 +38,6 @@ logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger("app")
 
 app = FastAPI()
-load_dotenv()
 
 @app.post("/incidents/", response_model=model.IncidentSubmittingResponse)
 async def save_incident(incident: model.IncidentAnalysisResponse, db: Connection = Depends(incidents_db.get_db), _ = Depends(validate_token)):
