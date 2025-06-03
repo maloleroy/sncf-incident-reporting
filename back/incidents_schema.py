@@ -54,13 +54,14 @@ def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.Inci
     with open('sql/get_incidents_.sql', 'r') as file:
         sql_query = file.read()
     
-    sql_query = sql_query.replace("{train}", conserved_infos.trainType)
-    sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
-    values_params = [conserved_infos.trainCar]
+    sql_query = sql_query.replace("{train}", "?")
+    sql_query = sql_query.replace("{level}", "?")
+    values_params = [trad[conserved_infos.level], conserved_infos.trainType, conserved_infos.trainCar]
     for key, value in conserved_infos.selections.dict().items():
         logger.info(f"Processing key: {trad[key]}, value: {value}")
         if value:
-            sql_query = sql_query + f" AND {trad[key]} = ?"
+            sql_query = sql_query + f" AND ? = ?"
+            values_params.append(trad[key])
             values_params.append(value)
     sql_query = sql_query + ";"
 
