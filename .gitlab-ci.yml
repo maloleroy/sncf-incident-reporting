@@ -29,7 +29,7 @@ deploy_to_vm:
     - chmod 700 ~/.ssh
     - ssh-keyscan $VM_HOST >> ~/.ssh/known_hosts
   script:
-    - ssh $VM_USER@$VM_HOST << 'EOF'
+    - ssh "$VM_USER@$VM_HOST" << 'EOF'
         set -e
         cd ~/s2025p2-mobile-app-incidents/back
         git pull origin main
