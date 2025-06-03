@@ -17,10 +17,8 @@ trad = {
     "category" : "categorie"
 }
 
-INCIDENTS_SCHEMA_DB_PATH = '../arborescence_analyse/incidents_schema.db'
-
 def get_db() -> sqlite3.Connection:
-    conn = sqlite3.connect(INCIDENTS_SCHEMA_DB_PATH, check_same_thread=False)
+    conn = sqlite3.connect("../arborescence_analyse/incidents_schema.db", check_same_thread=False)
     try:
         yield conn
     finally:
@@ -51,16 +49,24 @@ def get_incidents(db: sqlite3.Connection, train: str, voiture: str) -> list:
 
 def get_incidents_completion(db: sqlite3.Connection, conserved_infos: model.IncidentCompletionRequest) -> model.IncidentCompletionResponse:
     cursor = db.cursor()
+    
     with open('sql/get_incidents_.sql', 'r') as file:
         sql_query = file.read()
-    
+    if conserved_infos.trainType not in [t.value for t in model.TrainType]:
+        raise ValueError(f"Invalid argument provided : {conserved_infos.trainType}")
     sql_query = sql_query.replace("{train}", conserved_infos.trainType)
+    if conserved_infos.level not in trad:
+        raise ValueError(f"Invalid argument provided : {conserved_infos.level}")
     sql_query = sql_query.replace("{level}", trad[conserved_infos.level])
     values_params = [conserved_infos.trainCar]
     for key, value in conserved_infos.selections.dict().items():
+        if key not in trad:
+            raise ValueError(f"Invalid argument provided : {key}")
         logger.info(f"Processing key: {trad[key]}, value: {value}")
         if value:
             sql_query = sql_query + f" AND {trad[key]} = ?"
+            #sql_query = sql_query + f" AND {trad[key]} = ?"
+            #values_params.append(trad[key])
             values_params.append(value)
     sql_query = sql_query + ";"
 
