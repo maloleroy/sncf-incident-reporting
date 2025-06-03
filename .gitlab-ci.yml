@@ -12,6 +12,8 @@ test:
     - cd /builds/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME/back
     - uv sync
     - cp .env.example .env
+    # Configure Redis connection for test environment - localhost won't work in CI
+    - sed -i 's|redis://localhost:6379/0|redis://redis:6379/0|g' .env
   script:
     - uv run pytest
 
