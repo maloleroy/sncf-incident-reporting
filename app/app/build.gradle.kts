@@ -19,11 +19,11 @@ fun getEnvVar(propertyKey: String, default: String = ""): String {
 }
 
 android {
-    namespace = "com.example.appv1"
+    namespace = "com.sncf.reports"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.appv1"
+        applicationId = "com.sncf.reports"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
