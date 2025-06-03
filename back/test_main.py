@@ -16,10 +16,10 @@ def test_get_root():
 
 def test_get_health():
     response = client.get("/health/", headers=get_security_header())
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}, detail: {response.json().get('detail', 'No detail provided')}"
     assert response.json() == {"status": "ok"}
     response = client.get("/health/") # we should be able to access it without auth
-    assert response.status_code == 200
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}, detail: {response.json().get('detail', 'No detail provided')}"
     assert response.json() == {"status": "ok"}
 
 def test_create_incident():
