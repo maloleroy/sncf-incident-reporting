@@ -20,6 +20,7 @@ deploy_to_vm:
     - backend-continuous-deployment # Only while developing the feature
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY_B64" | base64 -d > ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - eval $(ssh-agent -s)
