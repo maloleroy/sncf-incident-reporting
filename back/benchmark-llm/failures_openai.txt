@@ -1,0 +1,15 @@
+Incident réel:
+('R8B', 'Place', '41, 42, 43, 44', 'Pack inoui', '', 'Film Baie', '', 'NoFilter', 'Abîmé, dégradé, manquant', 'OCEANE_LIKE_incidents')
+Transcription donnée:
+Ouais, salut, c’est pour signaler sur la R8B, sur les places 41 à 44, y’a le film de la baie qui est abîmé, il manque des morceaux, enfin bref, c’est bien dégradé le pack inoui… Voilà.
+Réponse find_incident:
+location='Place' precision1='41, 42, 43, 44' category='Pack inoui' precision2='' system='Film Baie' precision3='' subSystem='' failure='Abîmé, dégradé, manquant'
+----------------------------------------
+
+Incident réel:
+('R7H', 'Nurserie', '', 'Lave-mains', '', "Ecoulement de l'eau", '', '', "L'eau coule en permanence, éclabousse", 'TRAIN_2N2_3UA_LYRIA_incidents')
+Transcription donnée:
+Ouais, sur la rame R7H, côté nurserie, t’as le lave-mains qui fuit, l’eau coule tout le temps, et ça éclabousse partout. À voir vite.
+Réponse find_incident:
+location='Nurserie' precision1='' category='Lave-mains' precision2='' system='"Ecoulement de l\'eau"' precision3='' subSystem='' failure='"L\'eau coule en permanence'
+----------------------------------------

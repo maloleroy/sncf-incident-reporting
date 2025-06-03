@@ -7,7 +7,7 @@ load_dotenv()
 from incident import find_incident
 from incidents_schema import get_db, INCIDENTS_SCHEMA_DB_PATH
 import time
-MODEL = ModelName.MISTRAL
+MODEL = ModelName.OPENAI
 
 def generate_false_transcription(incident):
     prompt = f"""Tu es un agent SNCF qui souhaite déclarer un incident.
@@ -32,8 +32,8 @@ def tests():
     incidents = choose_incidents(db)
     
     # Ouvre les fichiers en mode ajout (append)
-    with open("successes.txt", "a", encoding="utf-8") as success_file, \
-         open("failures.txt", "a", encoding="utf-8") as failure_file:
+    with open("successes_openai.txt", "a", encoding="utf-8") as success_file, \
+         open("failures_openai.txt", "a", encoding="utf-8") as failure_file:
         
         for incident in incidents:
             time.sleep(10)

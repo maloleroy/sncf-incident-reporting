@@ -1,4 +1,27 @@
 Incident:
+('R1', 'Plateforme Intercirculation', 'Espace Restauration Droit', 'Equipements froids', 'Meuble Rep 4 sup - (6°C)', 'Réfrigération', '', '', 'Condensation excessive, prise en glace', 'POS_incidents')
+Transcription générée:
+Salut, c'est pour signaler un problème sur le train R1, dans l'espace restauration droit, sur la plateforme intercirculation. C'est au niveau des équipements froids, le meuble réfrigéré supérieur à 6 degrés. Y'a trop de condensation et ça commence à geler. Faut faire quelque chose. Merci.
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Habillage', '', 'Sol', '', '', 'Inondé', 'DUPLEX_WC_eau_incidents')
+Transcription générée:
+"Bonjour, c'est pour signaler une inondation dans le Duplex WC, au niveau de la salle bar, voiture R4H. L'eau vient du sol, je crois que c'est lié à l'habillage."
+----------------------------------------
+Incident:
+('R2B, R3B, R5B, R6B, R7B, R8B', 'Sanitaire', '', 'Pack inoui', '', 'Mon beau miroir', '', '', 'Abîmé, dégradé, manquant', 'TRAIN_2N2_3UFC_incidents')
+Transcription générée:
+Allô, oui, c'est pour signaler un souci dans les trains R2B, R3B, R5B, R6B, R7B, R8B. C'est au niveau des sanitaires, le pack Inoui, y'a un miroir détérioré, manquant ou cassé. C'est le train 2N2, 3UFC, incidents. Merci.
+----------------------------------------
+Incident:
+('R1', 'Plateforme Accès', 'Gauche', 'Info/Communication', '', 'Signalétique', '', 'Extincteur', 'Dégradée, décollée, manquante', 'TGV_R_TRI_FO_incidents')
+Transcription générée:
+Incident:
+('R4', 'Plateforme Accès', 'Espace Restauration Gauche', 'Accessoires/ Environnement', '', 'Etagère', 'Supérieure', '', 'Cassée, dégradée, manquante', 'PLT_incidents')
+Transcription générée:
+Salut, ici l'agent SNCF. On a un souci sur la plateforme d'accès, côté espace restauration à gauche. C'est une étagère en haut qui est cassée ou abîmée. Merci de checker ça rapidement.
+----------------------------------------
+Incident:
 ('R4', 'Plateforme Accès', 'Espace Restauration Gauche', 'Equipements froids', 'Meuble Rep 9 - (3°C)', 'Réfrigération', '', '', 'Ne fonctionne pas et Z(RFG) est sur ARRET', 'PLT_incidents')
 Transcription générée:
 "Bonjour, ici un agent de la SNCF. On a un problème avec un frigo au niveau de l'espace restauration gauche sur la plateforme d'accès R4. C'est le meuble Rep 9, normalement réglé à 3 degrés. La réfrigération ne marche pas et le voyant Z(RFG) est sur arrêt. Pourriez-vous intervenir rapidement ? Merci."

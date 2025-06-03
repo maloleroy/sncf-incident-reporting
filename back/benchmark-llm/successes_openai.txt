@@ -1,0 +1,182 @@
+Incident:
+('R4H', 'Local ASCT', '', 'Equipements chauds', '', 'Machine à café', '', 'Clapet', 'Clapet gauche à capsule manquant, cassé', 'OUIGO1_incidents')
+Transcription générée:
+Oui, pour le R4H, local ASCT, la machine à café a encore un souci, y’a le clapet de gauche pour les capsules qui est pété, il manque un bout, ça tient pas.
+Réponse:
+location='Local ASCT' precision1='' category='Equipements chauds' precision2='' system='Machine à café' precision3='' subSystem='Clapet' failure='Clapet gauche à capsule manquant, cassé'
+----------------------------------------
+Incident:
+('R4H', 'Office bar', '', 'Equipements froids', 'Meuble Rep 9 - (6°C)', 'Réfrigération', '', '', 'Ne fonctionne pas et Z(RFG) est sur ARRET', 'TRAIN_2N2_3UF_incidents')
+Transcription générée:
+Oui, euh, le meuble réfrigéré Rep 9 du bar voiture R4H marche plus, il est à l’arrêt, la réfrigération répond pas, ZRFG en arrêt aussi. Faudra voir pour réparer, merci.
+Réponse:
+location='Office bar' precision1='' category='Equipements froids' precision2='Meuble Rep 9 - (6°C)' system='Réfrigération' precision3='' subSystem='' failure='Ne fonctionne pas et Z(RFG) est sur ARRET'
+----------------------------------------
+Incident:
+('R1B, R2B, R3B', 'Plateforme Accès', 'Droite', 'Equipements SECURITE', '', 'Marteau brise vitre', '', '', 'Marteau manquant', 'DASYE_eau_incidents')
+Transcription générée:
+Ouais, j’signale juste qu’il manque un marteau brise-vitre côté droit, sur la plateforme d’accès, R1B à R3B. À voir pour remplacement, c’est côté sécurité.
+Réponse:
+location='Plateforme Accès' precision1='Droite' category='Equipements SECURITE' precision2='' system='Marteau brise vitre' precision3='' subSystem='' failure='Marteau manquant'
+----------------------------------------
+Incident:
+('R8', 'Salle', 'Douane', 'Habillage', '', 'Cloison', 'Fond de salle', '', 'Souillée, taguée', 'PLT_incidents')
+Transcription générée:
+Oui, voilà, euh… R8, salle douane, habillage côté fond, la cloison est taguée, y a des saletés dessus.
+Réponse:
+location='Salle' precision1='Douane' category='Habillage' precision2='' system='Cloison' precision3='Fond de salle' subSystem='' failure='Souillée, taguée'
+----------------------------------------
+Incident réel:
+('R4H', 'Salle', 'Voyageurs', 'Porte de salle', 'Côté espace bagages', "Bouton/poignée d'ouverture", '', '', ' Ne fonctionne pas, cassé, dégradé', 'OUIGO2_incidents')
+Transcription donnée:
+Oui, salut, petit souci côté espace bagages en R4H, la poignée ou le bouton pour ouvrir la porte de la salle voyageurs est pété, ça marche plus, à voir rapidement.
+Réponse find_incident:
+location='Salle' precision1='Voyageurs' category='Porte de salle' precision2='Côté espace bagages' system='"Bouton/poignée d\'ouverture"' precision3='' subSystem='' failure='Ne fonctionne pas, cassé, dégradé'
+----------------------------------------
+Incident:
+('R1B, R2B, R3B', 'Plateforme Accès', 'Droite', 'Habillage', '', 'Capot', 'Commande de porte accès', '', 'Cassé, dégradé, manquant', 'TRAIN_2N2_3UH_incidents')
+Transcription générée:
+Ouais, bonjour, j’signale sur les R1B, R2B, R3B, côté droit sur la plateforme d’accès, le capot de la commande d’ouverture porte est pété, cassé. Voilà, à voir rapidement.
+Réponse:
+location='Plateforme Accès' precision1='Droite' category='Habillage' precision2='' system='Capot' precision3='Commande de porte accès' subSystem='' failure='Cassé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R6, R7', 'Plateforme Accès', 'Espace Bureau', 'Habillage', '', 'Grille', 'Au sol', '', 'Cassée, dégradée, manquante', 'TGV_R_TRI_incidents')
+Transcription générée:
+Ouais, j’ai une grille au sol côté plateforme, espace bureau, qui est pétée ou manque carrément. Faudrait voir pour la réparer, c’est au niveau de l’habillage.
+Réponse:
+location='Plateforme Accès' precision1='Espace Bureau' category='Habillage' precision2='' system='Grille' precision3='Au sol' subSystem='' failure='Cassée, dégradée, manquante'
+----------------------------------------
+Incident:
+('R1B, R2B, R3B, R5B, R6B, R7B, R8B', 'Salle', 'Principale', 'Habillage', '', 'Bagagerie', 'G entrée de salle', 'Cloison G', 'Cassée, dégradée', 'OUIGO2_incidents')
+Transcription générée:
+Oui, bonjour, euh, sur la principale, côté bagagerie, entrée de salle à gauche, la cloison est cassée, dégradée, à voir rapidement.
+Réponse:
+location='Salle' precision1='Principale' category='Habillage' precision2='' system='Bagagerie' precision3='G entrée de salle' subSystem='Cloison G' failure='Cassée, dégradée'
+----------------------------------------
+Incident:
+('R2, R3, R5, R6, R8,R10', 'Sanitaire', 'G', 'Pack inoui', '', 'Mon beau miroir', '', '', 'Abîmé, dégradé, manquant', 'RITA_incidents')
+Transcription générée:
+Oui, donc sur les rames R2, R3, R5, R6, R8 et R10, y a un souci côté sanitaire en première, sur le pack Inoui, le miroir il est abîmé, voire manquant sur certains, voilà, à voir pour remplacement.
+Réponse:
+location='Sanitaire' precision1='G' category='Pack inoui' precision2='' system='Mon beau miroir' precision3='' subSystem='' failure='Abîmé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R1B, R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R8B, R8H', 'Salle', 'Principale', 'Climatisation', '', 'Trop froid', '', 'Absence de ventilation', 'CC-SM(E) déclenché', 'OCEANE_LIKE_incidents')
+Transcription générée:
+Ouais, salut, juste pour signaler dans la salle principale, côté Océane, la clim tourne à fond, il fait vraiment trop froid, et on dirait qu’y a pas de ventilation. Plusieurs rangées concernées, R1 à R8, B et H. Aussi, le CC-SM(E) s’est déclenché. Voilà, à voir rapidement.
+Réponse:
+location='Salle' precision1='Principale' category='Climatisation' precision2='' system='Trop froid' precision3='' subSystem='Absence de ventilation' failure='CC-SM(E) déclenché'
+----------------------------------------
+Incident:
+('R1, R2, R3, R5, R6, R7, R8, R9, R10', 'Salle', 'Principale', 'Info/Communication', '', 'Numérotation de place', '', '', 'Numérotation erronée sur toute la remorque', 'RITA_incidents')
+Transcription générée:
+Oui, bonjour, je signale un souci dans la salle principale, là, sur les remorques R1 à R10 : la numérotation des places est pas correcte du tout, c’est erroné partout sur toute la remorque. Merci.
+Réponse:
+location='Salle' precision1='Principale' category='Info/Communication' precision2='' system='Numérotation de place' precision3='' subSystem='' failure='Numérotation erronée sur toute la remorque'
+----------------------------------------
+Incident:
+('R1B, R1H, R2B, R2H, R3B, R3H, R5B, R6B, R6H, R7B, R7H, R8B, R8H', 'Salle', 'Principale', 'Accessoires/ Environnement', '', 'Porte bagage', 'D', '', 'Problème de fixation, cassé, dégradé, manquant', 'DASYE_eau_incidents')
+Transcription générée:
+Ouais, bonjour, j’signale un souci sur plusieurs rames là, en salle principale, c’est encore les porte-bagages côté D, y’en a qui sont pétés ou mal fixés... Faudra jeter un œil, c’est pas top.
+Réponse:
+location='Salle' precision1='Principale' category='Accessoires/ Environnement' precision2='' system='Porte bagage' precision3='D' subSystem='' failure='Problème de fixation, cassé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Climatisation', '', 'Trop chaud', '', 'Présence de ventilation', 'La clim est en mode secours', 'DASYE_eau_incidents')
+Transcription générée:
+Oui bonjour, sur la rame R4H, en salle bar, il fait vraiment trop chaud, la clim tourne en mode secours, y’a quand même un peu de ventilation mais c’est pas suffisant.
+Réponse:
+location='Salle bar' precision1='' category='Climatisation' precision2='' system='Trop chaud' precision3='' subSystem='Présence de ventilation' failure='La clim est en mode secours'
+----------------------------------------
+Incident réel:
+('R1H, R2B, R2H, R3B, R3H, R5B, R5H, R6B, R6H, R7B, R7H, R6H, R8B, R8H', 'Sanitaire', '', 'WC', '', "Chasse d'eau", '', 'Pédale/bouton', 'Cassé, dégradé', 'TRAIN_2N2_3UF_incidents')
+Transcription donnée:
+Oui bonjour, euh, sur plusieurs rames là, les WC posent souci, y'a encore des problèmes avec la chasse, la pédale ou le bouton sont pétés ou abîmés, impossible d'utiliser correctement, faudrait voir ça, merci.
+Réponse find_incident:
+location='Sanitaire' precision1='' category='WC' precision2='' system='"Chasse d\'eau"' precision3='' subSystem='Pédale/bouton' failure='Cassé, dégradé'
+----------------------------------------
+Incident:
+('R4', 'Office bar', '', 'Equipements chauds', '', 'Machine à café', '', 'Machine à café', 'Ne fonctionne pas', 'RITA_incidents')
+Transcription générée:
+Ouais, bonjour, c’est pour signaler, euh, la machine à café dans l’office bar du R4, elle marche plus du tout, impossible de faire chauffer quoi que ce soit. Faudra voir ça rapidement, merci.
+Réponse:
+location='Office bar' precision1='' category='Equipements chauds' precision2='' system='Machine à café' precision3='' subSystem='Machine à café' failure='Ne fonctionne pas'
+----------------------------------------
+Incident:
+('R2, R3', 'Compartiment', '4', 'Habillage', '', 'Vitre cloison couloir', 'Côté Gauche', '', 'Problème de fixation, cassée, dégradée, manquante', 'RITA_incidents')
+Transcription générée:
+Oui, salut, c'est pour signaler sur la rame R2 R3, compartiment 4 côté gauche, la vitre de la cloison du couloir, elle est mal fixée, voire cassée, il manque des morceaux je pense, faudrait voir ça rapidement.
+Réponse:
+location='Compartiment' precision1='4' category='Habillage' precision2='' system='Vitre cloison couloir' precision3='Côté Gauche' subSystem='' failure='Problème de fixation, cassée, dégradée, manquante'
+----------------------------------------
+Incident:
+('R2, R3, R5, R6, R8', 'Sanitaire', 'G', 'Info/Communication', '', 'Signalétique', '', 'Sanitaire (sur la porte)', 'Dégradée, décollée, manquante', 'RDOM_incidents')
+Transcription générée:
+Oui, bonjour, je signale un souci sur les sanitaires, secteur G, il manque ou alors la signalétique est abîmée sur la porte. C'est sur plusieurs rames, R2 à R8. Faudrait refaire la plaque ou la remettre, merci.
+Réponse:
+location='Sanitaire' precision1='G' category='Info/Communication' precision2='' system='Signalétique' precision3='' subSystem='Sanitaire (sur la porte)' failure='Dégradée, décollée, manquante'
+----------------------------------------
+Incident:
+('R8', 'Salle', 'Douane', 'Info/Communication', '', 'Signalétique', '', 'QRCode place géné', 'Dégradée, décollée, manquante', 'PLT_incidents')
+Transcription générée:
+Oui, bonjour, c’est pour signaler en R8, salle Douane, le QR code de la place PMR, il est abîmé, presque plus là, voire manquant. Impossible à scanner. Voilà.
+Réponse:
+location='Salle' precision1='Douane' category='Info/Communication' precision2='' system='Signalétique' precision3='' subSystem='QRCode place géné' failure='Dégradée, décollée, manquante'
+----------------------------------------
+Incident:
+('R5B, R6B, R7B, R8B', 'Plateforme Accès', 'Droite', 'Habillage', '', 'Trappe extincteur', '', '', 'Problème ouverture/ fermeture, cassée, manquante', 'TRAIN_2N2_3UFC_incidents')
+Transcription générée:
+Oui bonjour, je signale une trappe extincteur côté droit sur la plateforme accès, R5B à R8B, y’a l’habillage qui est abîmé, elle s’ouvre mal et je crois qu’elle est cassée voire manquante, à voir sur place.
+Réponse:
+location='Plateforme Accès' precision1='Droite' category='Habillage' precision2='' system='Trappe extincteur' precision3='' subSystem='' failure='Problème ouverture/ fermeture, cassée, manquante'
+----------------------------------------
+Incident:
+('R5B, R6B, R7B, R8B', 'Plateforme Accès', 'Droite', 'Equipements SECURITE', '', 'Extincteur', '', '', 'Déplombé', 'TRAIN_2N2_3UH_incidents')
+Transcription générée:
+Oui, euh pour info, sur la rame, modules R5B à R8B, y’a un extincteur côté plateforme accès droite qui est déplombé, donc à vérifier, c’est sur le 2N2, voilà.
+Réponse:
+location='Plateforme Accès' precision1='Droite' category='Equipements SECURITE' precision2='' system='Extincteur' precision3='' subSystem='' failure='Déplombé'
+----------------------------------------
+Incident réel:
+('R4H', 'Salle bar', '', 'Equipements SECURITE', '', 'Vitre latérale', 'D-2ème baie (face au comptoir bar)', '', "Problème d'étanchéité, Infiltration d'eau", 'NEODUPLEX_chimique_incidents')
+Transcription donnée:
+Oui, salut, j’remonte une info là sur la rame R4H, côté salle bar, t’as la deuxième baie côté comptoir, la vitre latérale prend l’eau, problème d’étanchéité, y’a des infiltrations... Voilà, à voir rapidement.
+Réponse find_incident:
+location='Salle bar' precision1='' category='Equipements SECURITE' precision2='' system='Vitre latérale' precision3='G-baie côté comptoir bar' subSystem='' failure='"Problème d\'étanchéité'
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Equipements SECURITE', '', 'Vitre latérale', 'G-baie côté comptoir bar', '', 'Bruyante, vibrations, sifflement, embuée', 'DASYE_eau_incidents')
+Transcription générée:
+Ouais, pour le R4H, en salle bar, j’ai la vitre côté comptoir qui fait pas mal de bruit, y’a des vibrations, un peu de sifflement, puis elle s’embue aussi, tu peux checker ça ?
+Réponse:
+location='Salle bar' precision1='' category='Equipements SECURITE' precision2='' system='Vitre latérale' precision3='G-baie côté comptoir bar' subSystem='' failure='Bruyante, vibrations, sifflement, embuée'
+----------------------------------------
+Incident:
+('R4H', 'Local ASCT', '', 'Siège', 'côté case à bagages', 'Accoudoir', 'Côté couloir', '', 'Cassé, dégradé, manquant', 'TANGO_incidents')
+Transcription générée:
+Ouais, salut, euh juste pour signaler un souci, là, sur le R4H, dans le local ASCT, y a un accoudoir côté couloir, proche de la case à bagages, il est pété, cassé, voilà.
+Réponse:
+location='Local ASCT' precision1='' category='Siège' precision2='côté case à bagages' system='Accoudoir' precision3='Côté couloir' subSystem='' failure='Cassé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R4, R5, R6, R7, R8', 'Plateforme Intercirculation', 'Couloir', 'Info/Communication', '', 'Cadre publicitaire', 'Côté Droit', '', 'Cassé, dégradé, manquant', 'TGV_R_TRI_incidents')
+Transcription générée:
+Oui, bonjour, juste pour signaler sur la rame, côté droit dans le couloir intercirculation, le cadre pub est cassé, voire manquant sur plusieurs voitures, R4 à R8. À voir pour intervention, merci.
+Réponse:
+location='Plateforme Intercirculation' precision1='Couloir' category='Info/Communication' precision2='' system='Cadre publicitaire' precision3='Côté Droit' subSystem='' failure='Cassé, dégradé, manquant'
+----------------------------------------
+Incident:
+('R4H', 'Salle bar', '', 'Habillage', '', 'Grille ventilation', 'D-5ème baie', '', 'Cassée, dégradée, manquante, dégagement de poussières', 'DASYE_eau_incidents')
+Transcription générée:
+Ouais, salut, c’est pour signaler qu’à bord du R4H, dans la salle bar, la grille de ventilation, cinquième baie côté D, ben elle est abîmée, voire cassée, y’a de la poussière qui sort, faudrait jeter un œil.
+Réponse:
+location='Salle bar' precision1='' category='Habillage' precision2='' system='Grille ventilation' precision3='D-5ème baie' subSystem='' failure='Cassée, dégradée, manquante, dégagement de poussières'
+----------------------------------------
+Incident:
+('R2, R3, R5, R6, R8', 'Sanitaire', 'G', 'Lave-mains', '', 'Lavabo', '', '', 'Cassé, dégradé, bouché', 'TGV_R_TRI_FO_incidents')
+Transcription générée:
+Ouais, bonjour, c’est pour signaler aux toilettes, là, sur les voitures R2 à R8, y’a le lavabo qui est complètement HS, cassé ou bouché, faut passer voir ça rapide, merci.
+Réponse:
+location='Sanitaire' precision1='G' category='Lave-mains' precision2='' system='Lavabo' precision3='' subSystem='' failure='Cassé, dégradé, bouché'
+----------------------------------------
