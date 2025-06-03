@@ -18,7 +18,7 @@ trad = {
 }
 
 def get_db() -> sqlite3.Connection:
-    conn = sqlite3.connect("../arborescence_analyse/DBs/incidents.db", check_same_thread=False)
+    conn = sqlite3.connect("../arborescence_analyse/incidents_schema.db", check_same_thread=False)
     try:
         yield conn
     finally:
