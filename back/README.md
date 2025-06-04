@@ -56,9 +56,18 @@ Note that this is not required if you don't want the backend to have HTTPS suppo
 
 ## Running
 
+### Development
+
 Once you completed all the configuration steps once, run the server as many times as you want with
 ```bash
 uv run uvicorn main:app --host 0.0.0.0 --port 8000 --ssl-keyfile key.pem --ssl-certfile cert.pem
+```
+
+### Production
+
+In a production environment, you should use a reverse proxy (like Nginx) to handle SSL termination. In this case, you can run the backend without SSL:
+```bash
+uv run fastapi run
 ```
 
 ## Testing
