@@ -68,8 +68,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import com.sncf.reports.api.IncidentAnalysisRequest
-import com.sncf.reports.api.IncidentAnalysisResponse
+import com.sncf.reports.model.IncidentAnalysisRequest
+import com.sncf.reports.model.IncidentAnalysisResponse
 import com.sncf.reports.api.RetrofitInstance
 import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.model.trainTypes
@@ -331,7 +331,7 @@ fun NewReportScreen(
                                 timestamp = Instant.now(),
                                 trainTypes[trainType]!!,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 transcription,
                             ),
                         )

@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.ui.components.IncidentAnalysisRequestCard
 import com.sncf.reports.ui.components.IncidentAnalysisResponseCard
-import com.sncf.reports.ui.screens.report.ReportSharedViewModel
+import com.sncf.reports.model.ReportSharedViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,25 +83,21 @@ fun ListReportsScreen(
                 IncidentAnalysisResponseCard(
                     incidents,
                     onClick = {
-                        // If we have both the navController and sharedViewModel,
-                        // we can navigate to the confirmation screen
-                        if (navController != null && sharedViewModel != null) {
-                            // Set the data in the shared view model
-                            sharedViewModel.lastIncidentAnalysisResponse = incidents.value
-                            
-                            // Get request with the same UUID to access train info
-                            val matchingRequest = IncidentSynchronizer.getInstance(context)
-                                .getIncidentAnalysisRequests()
-                                .find { it.value.uuid == incidents.value.uuid }
-                                
-                            // Default values if no matching request is found
-                            sharedViewModel.trainType = ""
-                            sharedViewModel.trainCar = ""
-                            sharedViewModel.seatNumber = null
+                        // Set the data in the shared view model
+                        sharedViewModel.lastIncidentAnalysisResponse = incidents.value
 
-                            // Navigate to confirmation screen
-                            navController.navigate("confirm_report")
-                        }
+                        // Get request with the same UUID to access train info
+                        val matchingRequest = IncidentSynchronizer.getInstance(context)
+                            .getIncidentAnalysisRequests()
+                            .find { it.value.uuid == incidents.value.uuid }
+
+                        // Default values if no matching request is found
+                        sharedViewModel.trainType = ""
+                        sharedViewModel.trainCar = ""
+                        sharedViewModel.seatNumber = null
+
+                        // Navigate to confirmation screen
+                        navController.navigate("confirm_report")
                     }
                 )
             }

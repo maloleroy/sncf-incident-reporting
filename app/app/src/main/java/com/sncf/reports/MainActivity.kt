@@ -16,7 +16,7 @@ import com.sncf.reports.ui.screens.home.HomeScreen
 import com.sncf.reports.ui.screens.list.ListReportsScreen
 import com.sncf.reports.ui.screens.report.ConfirmationScreen
 import com.sncf.reports.ui.screens.report.NewReportScreen
-import com.sncf.reports.ui.screens.report.ReportSharedViewModel
+import com.sncf.reports.model.ReportSharedViewModel
 import com.sncf.reports.ui.theme.AppV1Theme
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +28,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         // Initialize and start the synchronizer
-        synchronizer = IncidentSynchronizer.getInstance(this)
-        synchronizer.start()
         setContent {
             AppV1Theme(dynamicColor = false) {
                 val navController = rememberNavController()
@@ -95,5 +93,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        synchronizer = IncidentSynchronizer.getInstance(this)
+        synchronizer.start()
     }
 }
