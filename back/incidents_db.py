@@ -30,30 +30,59 @@ def get_db() -> Connection:
 
 def insert_incident(incident: model.IncidentAnalysisResponse, db: Connection):
     cursor = db.cursor()
-
-    with open('sql/insert_incident.sql', 'r') as file:
-        sql_query = file.read()
-        cursor.execute(
-            sql_query,
-            (
-                str(incident.uuid),
-                incident.timestamp.isoformat(),
-                incident.location,
-                incident.precision1,
-                incident.category,
-                incident.precision2,
-                incident.system,
-                incident.precision3,
-                incident.subSystem,
-                incident.failure
+    
+    # First check if incident with this UUID already exists
+    with open('sql/check_incident_exists.sql', 'r') as file:
+        check_sql = file.read()
+        cursor.execute(check_sql, (str(incident.uuid),))
+        result = cursor.fetchone()
+        
+    if result and result['count'] > 0:
+        # Incident exists, update it
+        with open('sql/update_incident.sql', 'r') as file:
+            sql_query = file.read()
+            cursor.execute(
+                sql_query,
+                (
+                    incident.timestamp.isoformat(),
+                    incident.location,
+                    incident.precision1,
+                    incident.category,
+                    incident.precision2,
+                    incident.system,
+                    incident.precision3,
+                    incident.subSystem,
+                    incident.failure,
+                    str(incident.uuid)  # WHERE clause parameter
+                )
             )
-        )
+        message = "Incident successfully updated"
+    else:
+        # Incident doesn't exist, insert it
+        with open('sql/insert_incident.sql', 'r') as file:
+            sql_query = file.read()
+            cursor.execute(
+                sql_query,
+                (
+                    str(incident.uuid),
+                    incident.timestamp.isoformat(),
+                    incident.location,
+                    incident.precision1,
+                    incident.category,
+                    incident.precision2,
+                    incident.system,
+                    incident.precision3,
+                    incident.subSystem,
+                    incident.failure
+                )
+            )
+        message = "Incident successfully submitted"
 
     db.commit()
 
     return model.IncidentSubmittingResponse(
         status=model.IncidentSubmittingResponseStatus.SUCCESS,
-        message="Incident successfully submitted",
+        message=message,
     )
 
 def list_incidents(db: Connection):
