@@ -396,9 +396,6 @@ fun ConfirmationScreen(
                 scope = scope,
                 context = context,
                 incident = incidentToSubmit,
-                onSubmissionSuccess = {
-                    IncidentSynchronizer.getInstance(context).submitIncidentAnalysisResponse(incidentToSubmit)
-                },
                 modifier = Modifier.fillMaxWidth()
             )
         }

@@ -18,11 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.model.IncidentAnalysisResponse
-import com.sncf.reports.api.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.io.IOException // Added for error handling
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -30,7 +29,6 @@ fun SubmitIncidentButton(
     scope: CoroutineScope,
     context: Context,
     incident: IncidentAnalysisResponse,
-    onSubmissionSuccess: () -> Unit, // Added parameter
     modifier: Modifier = Modifier // Added parameter with default
 ) {
     Spacer(Modifier.height(56.dp))
@@ -38,19 +36,9 @@ fun SubmitIncidentButton(
         onClick = {
             scope.launch {
                 try {
-                    // Assuming submitIncident now takes IncidentAnalysisResponse
-                    // and returns something that indicates success/failure
-                    // You might need to adjust the API service and response handling
-                    val response = RetrofitInstance.getIncidentApiService(context).submitIncident(incident)
-                    // TODO: Check response to confirm success before calling onSubmissionSuccess
-                    // For now, assuming any response means success
-                    onSubmissionSuccess()
-                } catch (e: IOException) {
-                    // Handle network errors
-                    showErrorDialog(context, "Network Error: Could not submit incident. Please check your connection.")
+                    IncidentSynchronizer.getInstance(context).submitIncidentAnalysisResponse(incident)
                 } catch (e: Exception) {
-                    // Handle other errors (e.g., server errors, unexpected response)
-                    showErrorDialog(context, "Error: Could not submit incident. ${e.message}")
+                    showErrorDialog(context, "Unexpected Error: Could not submit incident. ${e.message}")
                 }
             }
         },

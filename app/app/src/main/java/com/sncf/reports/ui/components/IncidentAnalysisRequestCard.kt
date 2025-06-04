@@ -32,7 +32,6 @@ fun IncidentAnalysisRequestCard(
     incident: WithStatus<IncidentAnalysisRequest>,
     scope: CoroutineScope,
 ) {
-    val context = LocalContext.current
     var inProgress by remember { mutableStateOf(false) }
 
     Card(

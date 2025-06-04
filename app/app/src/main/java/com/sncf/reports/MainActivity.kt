@@ -28,8 +28,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         
         // Initialize and start the synchronizer
-        synchronizer = IncidentSynchronizer.getInstance(this)
-        synchronizer.start()
         setContent {
             AppV1Theme(dynamicColor = false) {
                 val navController = rememberNavController()
@@ -95,5 +93,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        synchronizer = IncidentSynchronizer.getInstance(this)
+        synchronizer.start()
     }
 }
