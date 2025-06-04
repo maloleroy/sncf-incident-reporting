@@ -54,6 +54,9 @@ class IncidentSynchronizer private constructor(private val context: Context) {
     // Navigation callback for when an IncidentAnalysisResponse is received
     private var onNavigationToConfirmation: ((IncidentAnalysisResponse, String, String, Int?) -> Unit)? = null
 
+    // Navigation callback for going back to home after successful incident submission
+    private var onNavigateToHome: (() -> Unit)? = null
+
     init {
         // If the loading fails, we initialize the lists to avoid null references
         // and we clear the shared preferences to avoid stale data
@@ -115,6 +118,11 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         onNavigationToConfirmation: (IncidentAnalysisResponse, String, String, Int?) -> Unit
     ) {
         this.onNavigationToConfirmation = onNavigationToConfirmation
+    }
+
+    // Permet de définir le callback de navigation vers l'accueil
+    fun setHomeNavigationCallback(onNavigateToHome: () -> Unit) {
+        this.onNavigateToHome = onNavigateToHome
     }
 
     // Set the IncidentAnalysisResponse as PENDING given their UUID
@@ -207,6 +215,12 @@ class IncidentSynchronizer private constructor(private val context: Context) {
                     onResult = { status ->
                         setIncidentAnalysisResponseStatus(response.value.uuid, SynchronizationStatus.COMPLETED)
                         Toast.makeText(context, "Incident soumis avec succès", Toast.LENGTH_SHORT).show()
+                        // Naviguer vers l'accueil après le toast
+                        syncScope.launch {
+                            withContext(Dispatchers.Main) {
+                                onNavigateToHome?.invoke()
+                            }
+                        }
                     },
                     onError = { errorMessage ->
                         setIncidentAnalysisResponseStatus(response.value.uuid, SynchronizationStatus.FAILED)

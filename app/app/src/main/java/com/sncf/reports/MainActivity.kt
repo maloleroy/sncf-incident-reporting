@@ -43,6 +43,13 @@ class MainActivity : ComponentActivity() {
                     sharedViewModel.seatNumber = seatNumber
                     navController.navigate("confirm_report")
                 }
+                // Ajout : callback pour retour à l'accueil après soumission
+                synchronizer.setHomeNavigationCallback {
+                    navController.navigate("home") {
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
                 
                 NavHost(navController, startDestination = "home") {
                     composable("home") {
