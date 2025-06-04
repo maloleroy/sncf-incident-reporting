@@ -80,6 +80,8 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("list_reports") {
                         ListReportsScreen(
+                            navController = navController,
+                            sharedViewModel = sharedViewModel,
                             onBack = { navController.popBackStack() }
                         )
                     }

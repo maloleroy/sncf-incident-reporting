@@ -22,19 +22,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.ui.components.IncidentAnalysisRequestCard
 import com.sncf.reports.ui.components.IncidentAnalysisResponseCard
+import com.sncf.reports.ui.screens.report.ReportSharedViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListReportsScreen(
     onBack: () -> Unit,
+    navController: NavController,
+    sharedViewModel: ReportSharedViewModel
 )
 {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,11 +61,11 @@ fun ListReportsScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = "Incidents en attente d'analyse",
+                text = "Analyses d'incidents",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            for (incidents in IncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisRequests()) {
+            for (incidents in IncidentSynchronizer.getInstance(context).getIncidentAnalysisRequests()) {
                 IncidentAnalysisRequestCard(
                     incidents,
                     scope = coroutineScope,
@@ -69,14 +75,34 @@ fun ListReportsScreen(
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
             Text(
-                text = "Incidents en attente d'envoi",
+                text = "Incidents",
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            for (incidents in IncidentSynchronizer.getInstance(context).getPendingIncidentAnalysisResponses()) {
+            for (incidents in IncidentSynchronizer.getInstance(context).getIncidentAnalysisResponses()) {
                 IncidentAnalysisResponseCard(
                     incidents,
-                    onClick = {}
+                    onClick = {
+                        // If we have both the navController and sharedViewModel,
+                        // we can navigate to the confirmation screen
+                        if (navController != null && sharedViewModel != null) {
+                            // Set the data in the shared view model
+                            sharedViewModel.lastIncidentAnalysisResponse = incidents.value
+                            
+                            // Get request with the same UUID to access train info
+                            val matchingRequest = IncidentSynchronizer.getInstance(context)
+                                .getIncidentAnalysisRequests()
+                                .find { it.value.uuid == incidents.value.uuid }
+                                
+                            // Default values if no matching request is found
+                            sharedViewModel.trainType = ""
+                            sharedViewModel.trainCar = ""
+                            sharedViewModel.seatNumber = null
+
+                            // Navigate to confirmation screen
+                            navController.navigate("confirm_report")
+                        }
+                    }
                 )
             }
         }

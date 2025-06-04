@@ -19,13 +19,11 @@ import com.sncf.reports.api.ConservedInformations
 import com.sncf.reports.api.IncidentAnalysisResponse
 import com.sncf.reports.api.IncidentCompletionRequest
 import com.sncf.reports.api.RetrofitInstance
+import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.domain.model.trainTypes
 import com.sncf.reports.ui.components.showErrorDialog
 import com.sncf.reports.ui.components.SubmitIncidentButton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.IOException
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -398,12 +396,15 @@ fun ConfirmationScreen(
                 scope = scope,
                 context = context,
                 incident = incidentToSubmit,
-                onSubmissionSuccess = navigateToNewReport, // Keep this as it was intended
-                modifier = Modifier.fillMaxWidth() // Keep this as it was intended
+                onSubmissionSuccess = {
+                    IncidentSynchronizer.getInstance(context).submitIncidentAnalysisResponse(incidentToSubmit)
+                },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
 }
+
 @Composable
 fun DropdownField(
     label: String,
@@ -441,62 +442,11 @@ fun DropdownField(
                     }
                 )
             }
-
         }
     }
 }
 
 
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun loadOptionsWithContext(
-    scope: CoroutineScope,
-    context: Context,
-    trainType: String,
-    trainCar: String,
-    seatNumber: Int?,
-    level: String,
-    selections: Map<String, String>,
-    onSuccess: (List<String>) -> Unit,
-    onError: (String) -> Unit = { error -> showErrorDialog(context, "Erreur lors du chargement des options : ${error}") }
-) {
-    scope.launch {
-        try {
-            onSuccess(
-                RetrofitInstance.getCompletionApiService(context).findCompletion(
-                    IncidentCompletionRequest(
-                        trainTypes[trainType]!!,
-                        trainCar,
-                        seatNumber,
-                        level,
-                        ConservedInformations(
-                            location = selections["location"],
-                            category = selections["category"],
-                            system = selections["system"],
-                            precision1 = selections["precision1"],
-                            precision2 = selections["precision2"],
-                            precision3 = selections["precision3"],
-                            subSystem = selections["subSystem"],
-                            failure = selections["failure"]
-                        )
-                    )
-                ).options
-            )
-        } catch (e: retrofit2.HttpException) {
-            withContext(Dispatchers.Main) {
-                onError("Erreur HTTP ${e.code()}")
-            }
-        } catch (e: IOException) {
-            withContext(Dispatchers.Main) {
-                onError("Erreur réseau : ${e.message}")
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                onError("Erreur inattendue : ${e.message}")
-            }
-        }
-    }
-}
 @RequiresApi(Build.VERSION_CODES.O)
 suspend fun loadOptionsSuspend(
     context: Context,
