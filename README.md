@@ -14,16 +14,15 @@ The SNCF Incidents Mobile App is a comprehensive solution that enables:
 Here are some of the most important files and directories of the project
 ```
 .
-├── appKotlin/AppV1   # Kotlin application
-│   └── app/src/main/java/com/example/appv1/
-│       ├── api/      # API calls logic
-│       ├── data/     # Incident synchronization
-│       ├── domain/   # Data models and structures
-│       └── ui/       # User interface
-│           ├── components/
-│           ├── screens/
-│           ├── theme/
-│           └── util/
+├── app/app/src/main/java/com/sncf/reports/
+│   ├── api/      # API calls logic
+│   ├── data/     # Incident synchronization
+│   ├── domain/   # Data models and structures
+│   └── ui/       # User interface
+│       ├── components/
+│       ├── screens/
+│       ├── theme/
+│       └── util/
 ├── back              # FastAPI backend
 │   ├── main.py       # Definition of the routes
 │   └── sql/          # SQL scripts
@@ -33,8 +32,8 @@ Here are some of the most important files and directories of the project
 
 ## Getting Started
 
-- For detailed setup instructions, development guidelines, and technical documentation on the Kotlin app, please refer to the app's [README.md](appKotlin/AppV1//README.md) file.
-- For instructions on the 
+- For detailed setup instructions, development guidelines, and technical documentation on the Kotlin app, please refer to the app's [README.md](app//README.md) file.
+- For instructions on the FastAPI backend, please refer to the back's [README.md](back/README.md) file.
 
 ## License
 
