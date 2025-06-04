@@ -2,8 +2,22 @@ from sqlite3 import Connection, connect, Row
 import os
 from datetime import datetime, UTC
 from uuid import UUID
-
 import model
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+trad = {
+    "location" : "localisation",
+    "precision1": "precision_n1",
+    "precision2": "precision_n2",
+    "precision3": "precision_n3",
+    "subSystem" : "sous_organe",
+    'system' : 'organe',
+    "failure" : "defaillance",
+    "category" : "categorie"
+}
 
 INCIDENTS_DB_PATH = 'incidents.db'
 
@@ -120,3 +134,42 @@ def list_incidents(db: Connection):
             continue
     
     return incidents
+
+def check_incident_in_db(db: Connection, incident:model.IncidentAnalysisResponse, voiture, train):
+    cursor = db.cursor()
+    
+    with open('sql/check_incident.sql', 'r') as file:
+        sql_query = file.read()
+
+    if train not in [t.value for t in model.TrainType]:
+        raise ValueError(f"Invalid argument provided : {train}")
+    sql_query = sql_query.replace("{train}", train)
+    values_params = [voiture]
+    for key, value in incident.dict().items():
+        if key not in trad:
+            pass#raise ValueError(f"Invalid argument provided : {key}")
+        if value and key in trad:
+            sql_query = sql_query + f" AND {trad[key]} = ?"
+            #sql_query = sql_query + f" AND {trad[key]} = ?"
+            #values_params.append(trad[key])
+            values_params.append(value)
+    sql_query = sql_query + ";"
+
+    # Compter combien de paramètres sont attendus
+    expected_params_count = sql_query.count("?")
+    # S'assurer que values_params contient exactement le bon nombre
+    if len(values_params) != expected_params_count:
+        raise ValueError(f"Nombre de paramètres incorrect : SQL attend {expected_params_count}, mais {len(values_params)} fournis.\n"
+                        f"SQL : {sql_query}\nParams : {values_params}")
+
+    # Exécuter la requête avec les bons paramètres
+    response = cursor.execute(sql_query, tuple(values_params)).fetchall()
+    logger.info("Verification: %s", incident)
+    rep_tries = []
+    if not response:
+         raise ValueError(f"No incident found")
+    
+    valid_incident = response[0]#.split(',')
+    logger.info("Checked incident: %s", valid_incident)
+    return model.IncidentAnalysisResponse(uuid=incident.uuid, timestamp=incident.timestamp, location=valid_incident[0], 
+        precision1=valid_incident[1], category=valid_incident[2], precision2=valid_incident[3], system=valid_incident[4], precision3=valid_incident[5], subSystem=valid_incident[6], failure=valid_incident[7])

@@ -32,8 +32,8 @@ def tests():
     incidents = choose_incidents(db)
     
     # Ouvre les fichiers en mode ajout (append)
-    with open("successes_openai.txt", "a", encoding="utf-8") as success_file, \
-         open("failures_openai.txt", "a", encoding="utf-8") as failure_file:
+    with open("benchmark-llm/successes_openai.txt", "a", encoding="utf-8") as success_file, \
+         open("benchmark-llm/failures_openai.txt", "a", encoding="utf-8") as failure_file:
         
         for incident in incidents:
             time.sleep(10)

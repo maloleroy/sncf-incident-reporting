@@ -7,7 +7,7 @@ import logging
 from uuid import uuid4
 from datetime import datetime, UTC
 from cache import get_cached_response, set_cached_response  # <-- Ajout
-
+from incidents_db import check_incident_in_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -35,7 +35,8 @@ def find_incident(db, train, voiture, transcription) -> IncidentAnalysisResponse
         raise HTTPException(status_code=500, detail="Parsing error: %s" % e)
     response_cleared = create_incident_response(response_parsed)
     logger.info("LLM Response Parsed: %s", response_cleared)
-    return response_cleared
+    response_checked = check_incident_in_db(db, response_cleared, voiture, train)
+    return response_checked
 
 
 def create_incident_response(response_parsed):
