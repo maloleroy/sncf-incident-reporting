@@ -50,6 +50,9 @@ class IncidentSynchronizer private constructor(private val context: Context) {
 
     private var pendingIncidentAnalysisRequests: MutableList<WithStatus<IncidentAnalysisRequest>> = mutableListOf()
     private var pendingIncidentAnalysisResponses: MutableList<WithStatus<IncidentAnalysisResponse>> = mutableListOf()
+    
+    // Navigation callback for when an IncidentAnalysisResponse is received
+    private var onNavigationToConfirmation: ((IncidentAnalysisResponse, String, String, Int?) -> Unit)? = null
 
     init {
         // If the loading fails, we initialize the lists to avoid null references
@@ -102,18 +105,20 @@ class IncidentSynchronizer private constructor(private val context: Context) {
 
     fun addIncidentAnalysisRequest(
         incidentAnalysisRequest: IncidentAnalysisRequest,
-        onResult: (IncidentAnalysisResponse) -> Unit,
-        onError: (String) -> Unit
     ) {
         val withStatus = WithStatus(incidentAnalysisRequest, SynchronizationStatus.PENDING)
         pendingIncidentAnalysisRequests.add(withStatus)
         saveIncidents()
     }
+    
+    fun setNavigationCallback(
+        onNavigationToConfirmation: (IncidentAnalysisResponse, String, String, Int?) -> Unit
+    ) {
+        this.onNavigationToConfirmation = onNavigationToConfirmation
+    }
 
     fun addIncidentAnalysisResponse(
         incidentAnalysisResponse: IncidentAnalysisResponse,
-        onResult: (String) -> Unit,
-        onError: (String) -> Unit
     ) {
         val withStatus = WithStatus(incidentAnalysisResponse, SynchronizationStatus.WAITING_FOR_VALIDATION)
         pendingIncidentAnalysisResponses.add(withStatus)
@@ -124,6 +129,8 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         if (isActive.compareAndSet(false, true)) {
             syncScope.launch {
                 while (isActive.get()) {
+                    // Log the start of synchronization
+                    println("Starting synchronization with ${pendingIncidentAnalysisRequests.size} requests and ${pendingIncidentAnalysisResponses.size} responses")
                     synchronizeOnce()
                     delay(500) // Brief pause between cycles
                 }
@@ -162,6 +169,18 @@ class IncidentSynchronizer private constructor(private val context: Context) {
                         setIncidentAnalysisRequestStatus(request, SynchronizationStatus.COMPLETED)
                         pendingIncidentAnalysisResponses.add(WithStatus(response, SynchronizationStatus.WAITING_FOR_VALIDATION))
                         saveIncidents()
+                        
+                        // Navigate to ConfirmationScreen with the received response on main thread
+                        syncScope.launch {
+                            withContext(Dispatchers.Main) {
+                                onNavigationToConfirmation?.invoke(
+                                    response,
+                                    request.value.trainType,
+                                    request.value.trainCar,
+                                    request.value.seatNumber
+                                )
+                            }
+                        }
                     },
                     onError = { errorMessage ->
                         setIncidentAnalysisRequestStatus(request, SynchronizationStatus.FAILED)
