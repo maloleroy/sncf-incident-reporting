@@ -331,7 +331,7 @@ fun NewReportScreen(
                                 timestamp = Instant.now(),
                                 trainTypes[trainType]!!,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 transcription,
                             ),
                         )

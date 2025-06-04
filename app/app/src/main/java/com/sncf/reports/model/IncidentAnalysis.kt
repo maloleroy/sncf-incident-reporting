@@ -8,7 +8,7 @@ data class IncidentAnalysisRequest(
     val timestamp: Instant,
     val trainType : String,
     val trainCar : String,
-    val seatNumber : Int?,
+    val seatNumber : Int,
     val transcription : String
 )
 
