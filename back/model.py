@@ -87,6 +87,7 @@ class IncidentAnalysisRequest(BaseModel):
     timestamp: datetime
     trainType: TrainType = TrainType.DASYE
     trainCar: str = "R6H"
+    seatNumber: Optional[int] = None
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
 class ConservedInformations(BaseModel):
