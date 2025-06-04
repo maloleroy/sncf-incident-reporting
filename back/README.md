@@ -47,7 +47,7 @@ To run the project with `uv` in a HTTPS-compatible way, start by generating (onl
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   -keyout key.pem -out cert.pem \
   -config openssl.conf -extensions v3_req
-cp cert.pem ../appKotlin/AppV1/app/src/main/res/raw/cert.pem
+cp cert.pem ../app/app/src/main/res/raw/cert.pem
 ```
 
 Note that this is not required if you don't want the backend to have HTTPS support, or if you are using an externally-provided SSL certificate (typically, a DNS domain-bound certificate in the case of a production environment).

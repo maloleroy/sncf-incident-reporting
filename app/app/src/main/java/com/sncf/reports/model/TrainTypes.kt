@@ -1,4 +1,4 @@
-package com.sncf.reports.domain.model
+package com.sncf.reports.model
 
 val trainTypes = mapOf(
     "Dasye" to "DASYE_eau_incidents",
