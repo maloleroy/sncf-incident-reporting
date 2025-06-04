@@ -20,7 +20,7 @@ import com.sncf.reports.api.IncidentAnalysisResponse
 import com.sncf.reports.api.IncidentCompletionRequest
 import com.sncf.reports.api.RetrofitInstance
 import com.sncf.reports.data.IncidentSynchronizer
-import com.sncf.reports.domain.model.trainTypes
+import com.sncf.reports.model.trainTypes
 import com.sncf.reports.ui.components.showErrorDialog
 import com.sncf.reports.ui.components.SubmitIncidentButton
 import kotlinx.coroutines.launch

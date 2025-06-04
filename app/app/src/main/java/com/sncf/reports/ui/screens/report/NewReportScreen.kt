@@ -72,9 +72,8 @@ import com.sncf.reports.api.IncidentAnalysisRequest
 import com.sncf.reports.api.IncidentAnalysisResponse
 import com.sncf.reports.api.RetrofitInstance
 import com.sncf.reports.data.IncidentSynchronizer
-import com.sncf.reports.domain.model.trainTypes
+import com.sncf.reports.model.trainTypes
 import com.sncf.reports.ui.components.NewReportScreenDivider
-import com.sncf.reports.ui.components.showErrorDialog
 import com.sncf.reports.ui.util.launchSpeech
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
