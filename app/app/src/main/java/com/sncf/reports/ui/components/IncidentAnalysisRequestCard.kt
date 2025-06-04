@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.sncf.reports.api.IncidentAnalysisRequest
+import com.sncf.reports.model.IncidentAnalysisRequest
 import com.sncf.reports.data.WithStatus
 import com.sncf.reports.model.getTrainTypeByCode
 import kotlinx.coroutines.CoroutineScope

@@ -15,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.sncf.reports.api.ConservedInformations
-import com.sncf.reports.api.IncidentAnalysisResponse
-import com.sncf.reports.api.IncidentCompletionRequest
+import com.sncf.reports.model.ConservedInformations
+import com.sncf.reports.model.IncidentAnalysisResponse
+import com.sncf.reports.model.IncidentCompletionRequest
 import com.sncf.reports.api.RetrofitInstance
 import com.sncf.reports.data.IncidentSynchronizer
 import com.sncf.reports.model.trainTypes

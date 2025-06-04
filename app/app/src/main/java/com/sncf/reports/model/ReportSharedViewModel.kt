@@ -1,7 +1,6 @@
-package com.sncf.reports.ui.screens.report
+package com.sncf.reports.model
 
 import androidx.lifecycle.ViewModel
-import com.sncf.reports.api.IncidentAnalysisResponse
 
 class ReportSharedViewModel : ViewModel() {
     var lastIncidentAnalysisResponse: IncidentAnalysisResponse? = null

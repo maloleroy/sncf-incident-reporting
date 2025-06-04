@@ -10,8 +10,8 @@ import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import androidx.core.content.edit
-import com.sncf.reports.api.IncidentAnalysisRequest
-import com.sncf.reports.api.IncidentAnalysisResponse
+import com.sncf.reports.model.IncidentAnalysisRequest
+import com.sncf.reports.model.IncidentAnalysisResponse
 import com.sncf.reports.api.RetrofitInstance
 import com.sncf.reports.api.IncidentAnalysisApiService
 import com.sncf.reports.ui.components.showErrorDialog

@@ -16,7 +16,7 @@ import com.sncf.reports.ui.screens.home.HomeScreen
 import com.sncf.reports.ui.screens.list.ListReportsScreen
 import com.sncf.reports.ui.screens.report.ConfirmationScreen
 import com.sncf.reports.ui.screens.report.NewReportScreen
-import com.sncf.reports.ui.screens.report.ReportSharedViewModel
+import com.sncf.reports.model.ReportSharedViewModel
 import com.sncf.reports.ui.theme.AppV1Theme
 
 class MainActivity : ComponentActivity() {

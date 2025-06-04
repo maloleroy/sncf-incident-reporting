@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sncf.reports.api.IncidentAnalysisResponse
+import com.sncf.reports.model.IncidentAnalysisResponse
 import com.sncf.reports.api.RetrofitInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

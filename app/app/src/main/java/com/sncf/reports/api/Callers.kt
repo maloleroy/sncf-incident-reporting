@@ -1,12 +1,20 @@
 package com.sncf.reports.api
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.sncf.reports.model.IncidentAnalysisRequest
+import com.sncf.reports.model.IncidentAnalysisResponse
+import com.sncf.reports.model.IncidentCompletionRequest
+import com.sncf.reports.model.IncidentCompletionResponse
+import com.sncf.reports.model.IncidentSubmittingResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun getIncidentAnalysis(
     incidentAnalysisRequest: IncidentAnalysisRequest,
     context: Context,
@@ -54,6 +62,7 @@ fun getIncidentAnalysis(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun getCompletion(
     informations: IncidentCompletionRequest,
     context: Context,
@@ -87,6 +96,7 @@ fun getCompletion(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun submitIncident(
     incident: IncidentAnalysisResponse,
     context: Context,
