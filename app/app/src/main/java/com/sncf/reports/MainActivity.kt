@@ -34,6 +34,16 @@ class MainActivity : ComponentActivity() {
             AppV1Theme(dynamicColor = false) {
                 val navController = rememberNavController()
                 val sharedViewModel: ReportSharedViewModel = viewModel()
+                
+                // Set up the navigation callback for the synchronizer
+                synchronizer.setNavigationCallback { response, trainType, trainCar, seatNumber ->
+                    sharedViewModel.lastIncidentAnalysisResponse = response
+                    sharedViewModel.trainType = trainType
+                    sharedViewModel.trainCar = trainCar
+                    sharedViewModel.seatNumber = seatNumber
+                    navController.navigate("confirm_report")
+                }
+                
                 NavHost(navController, startDestination = "home") {
                     composable("home") {
                         HomeScreen(
@@ -48,13 +58,6 @@ class MainActivity : ComponentActivity() {
                         val showSuccess = backStackEntry.arguments?.getBoolean("showSuccess") ?: false
                         NewReportScreen(
                             onBack = { navController.popBackStack() },
-                            onSuccess = { response, trainType, trainCar, seatNumber ->
-                                sharedViewModel.lastIncidentAnalysisResponse = response
-                                sharedViewModel.trainType = trainType
-                                sharedViewModel.trainCar = trainCar
-                                sharedViewModel.seatNumber = seatNumber
-                                navController.navigate("confirm_report")
-                            },
                             showSuccessMessage = showSuccess
                         )
                     }
@@ -77,6 +80,8 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("list_reports") {
                         ListReportsScreen(
+                            navController = navController,
+                            sharedViewModel = sharedViewModel,
                             onBack = { navController.popBackStack() }
                         )
                     }

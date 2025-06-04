@@ -83,8 +83,11 @@ class TrainType(str, Enum):
     TRAIN_2N2_3UH = "TRAIN_2N2_3UH_incidents"
 
 class IncidentAnalysisRequest(BaseModel):
+    uuid: UUID
+    timestamp: datetime
     trainType: TrainType = TrainType.DASYE
     trainCar: str = "R6H"
+    seatNumber: Optional[int] = None
     transcription: str = "L'accoudoir de la place 76 est cassé."
 
 class ConservedInformations(BaseModel):

@@ -48,8 +48,11 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    private var pendingIncidentAnalysisRequests: MutableList<WithStatus<IncidentAnalysisRequest>> = mutableListOf()
-    private var pendingIncidentAnalysisResponses: MutableList<WithStatus<IncidentAnalysisResponse>> = mutableListOf()
+    private var incidentAnalysisRequests: MutableList<WithStatus<IncidentAnalysisRequest>> = mutableListOf()
+    private var incidentAnalysisResponses: MutableList<WithStatus<IncidentAnalysisResponse>> = mutableListOf()
+    
+    // Navigation callback for when an IncidentAnalysisResponse is received
+    private var onNavigationToConfirmation: ((IncidentAnalysisResponse, String, String, Int?) -> Unit)? = null
 
     init {
         // If the loading fails, we initialize the lists to avoid null references
@@ -57,8 +60,8 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         try {
             loadIncidents()
         } catch (_: Exception) {
-            pendingIncidentAnalysisRequests = mutableListOf()
-            pendingIncidentAnalysisResponses = mutableListOf()
+            incidentAnalysisRequests = mutableListOf()
+            incidentAnalysisResponses = mutableListOf()
             sharedPreferences.edit {
                 clear()
             }
@@ -71,10 +74,10 @@ class IncidentSynchronizer private constructor(private val context: Context) {
             try {
                 // Use the correct type with WithStatus wrapper
                 val type = object : TypeToken<MutableList<WithStatus<IncidentAnalysisRequest>>>() {}.type
-                pendingIncidentAnalysisRequests = gson.fromJson(requestsJson, type) ?: mutableListOf()
+                incidentAnalysisRequests = gson.fromJson(requestsJson, type) ?: mutableListOf()
             } catch (e: Exception) {
                 // Log the error and reset to empty list
-                pendingIncidentAnalysisRequests = mutableListOf()
+                incidentAnalysisRequests = mutableListOf()
             }
         }
         
@@ -83,17 +86,17 @@ class IncidentSynchronizer private constructor(private val context: Context) {
             try {
                 // Use the correct type with WithStatus wrapper
                 val type = object : TypeToken<MutableList<WithStatus<IncidentAnalysisResponse>>>() {}.type
-                pendingIncidentAnalysisResponses = gson.fromJson(responseJson, type) ?: mutableListOf()
+                incidentAnalysisResponses = gson.fromJson(responseJson, type) ?: mutableListOf()
             } catch (e: Exception) {
                 // Log the error and reset to empty list
-                pendingIncidentAnalysisResponses = mutableListOf()
+                incidentAnalysisResponses = mutableListOf()
             }
         }
     }
 
     private fun saveIncidents() {
-        val requestsJson = gson.toJson(pendingIncidentAnalysisRequests)
-        val responsesJson = gson.toJson(pendingIncidentAnalysisResponses)
+        val requestsJson = gson.toJson(incidentAnalysisRequests)
+        val responsesJson = gson.toJson(incidentAnalysisResponses)
         sharedPreferences.edit {
             putString(KEY_INCIDENT_ANALYSIS_REQUESTS, requestsJson)
             putString(KEY_INCIDENT_ANALYSIS_RESPONSES, responsesJson)
@@ -102,21 +105,27 @@ class IncidentSynchronizer private constructor(private val context: Context) {
 
     fun addIncidentAnalysisRequest(
         incidentAnalysisRequest: IncidentAnalysisRequest,
-        onResult: (IncidentAnalysisResponse) -> Unit,
-        onError: (String) -> Unit
     ) {
         val withStatus = WithStatus(incidentAnalysisRequest, SynchronizationStatus.PENDING)
-        pendingIncidentAnalysisRequests.add(withStatus)
+        incidentAnalysisRequests.add(withStatus)
         saveIncidents()
     }
-
-    fun addIncidentAnalysisResponse(
-        incidentAnalysisResponse: IncidentAnalysisResponse,
-        onResult: (String) -> Unit,
-        onError: (String) -> Unit
+    
+    fun setNavigationCallback(
+        onNavigationToConfirmation: (IncidentAnalysisResponse, String, String, Int?) -> Unit
     ) {
-        val withStatus = WithStatus(incidentAnalysisResponse, SynchronizationStatus.WAITING_FOR_VALIDATION)
-        pendingIncidentAnalysisResponses.add(withStatus)
+        this.onNavigationToConfirmation = onNavigationToConfirmation
+    }
+
+    // Set the IncidentAnalysisResponse as PENDING given their UUID
+    // and save the changes
+    fun submitIncidentAnalysisResponse(
+        incidentAnalysisResponse: IncidentAnalysisResponse,
+    ) {
+        // Remove any existing response with the same UUID
+        incidentAnalysisResponses.removeAll { it.value.uuid == incidentAnalysisResponse.uuid }
+        val withStatus = WithStatus(incidentAnalysisResponse, SynchronizationStatus.PENDING)
+        incidentAnalysisResponses.add(withStatus)
         saveIncidents()
     }
 
@@ -124,6 +133,8 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         if (isActive.compareAndSet(false, true)) {
             syncScope.launch {
                 while (isActive.get()) {
+                    // Log the start of synchronization
+                    println("Starting synchronization with ${incidentAnalysisRequests.size} requests and ${incidentAnalysisResponses.size} responses")
                     synchronizeOnce()
                     delay(500) // Brief pause between cycles
                 }
@@ -132,56 +143,73 @@ class IncidentSynchronizer private constructor(private val context: Context) {
     }
 
     private fun setIncidentAnalysisRequestStatus(
-        incidentAnalysisRequest: WithStatus<IncidentAnalysisRequest>,
+        uuid: java.util.UUID,
         status: SynchronizationStatus
     ) {
-        // Update the status of the request
-        incidentAnalysisRequest.status = status
-        saveIncidents()
+        // Find the request by UUID and update its status
+        val request = incidentAnalysisRequests.find { it.value.uuid == uuid }
+        if (request != null) {
+            request.status = status
+            saveIncidents()
+        }
     }
 
     private fun setIncidentAnalysisResponseStatus(
-        incidentAnalysisResponse: WithStatus<IncidentAnalysisResponse>,
+        uuid: java.util.UUID,
         status: SynchronizationStatus
     ) {
-        // Update the status of the response
-        incidentAnalysisResponse.status = status
-        saveIncidents()
+        val response = incidentAnalysisResponses.find { it.value.uuid == uuid }
+        if (response != null) {
+            response.status = status
+            saveIncidents()
+        }
     }
 
     private suspend fun synchronizeOnce() {
         withContext(dispatcher) {
-            pendingIncidentAnalysisRequests.filter { 
+            incidentAnalysisRequests.filter {
                 it.status == SynchronizationStatus.FAILED || 
                 it.status == SynchronizationStatus.PENDING 
             }.forEach { request ->
-                setIncidentAnalysisRequestStatus(request, SynchronizationStatus.IN_PROGRESS)
+                setIncidentAnalysisRequestStatus(request.value.uuid, SynchronizationStatus.IN_PROGRESS)
                 syncIncidentAnalysisRequest(
                     request,
                     onResult = { response ->
-                        setIncidentAnalysisRequestStatus(request, SynchronizationStatus.COMPLETED)
-                        pendingIncidentAnalysisResponses.add(WithStatus(response, SynchronizationStatus.WAITING_FOR_VALIDATION))
+                        setIncidentAnalysisRequestStatus(request.value.uuid, SynchronizationStatus.COMPLETED)
+                        incidentAnalysisResponses.add(WithStatus(response, SynchronizationStatus.WAITING_FOR_VALIDATION))
                         saveIncidents()
+                        
+                        // Navigate to ConfirmationScreen with the received response on main thread
+                        syncScope.launch {
+                            withContext(Dispatchers.Main) {
+                                onNavigationToConfirmation?.invoke(
+                                    response,
+                                    request.value.trainType,
+                                    request.value.trainCar,
+                                    request.value.seatNumber
+                                )
+                            }
+                        }
                     },
                     onError = { errorMessage ->
-                        setIncidentAnalysisRequestStatus(request, SynchronizationStatus.FAILED)
+                        setIncidentAnalysisRequestStatus(request.value.uuid, SynchronizationStatus.FAILED)
                         showErrorDialog(context, "Erreur lors de l'analyse de l'incident : $errorMessage")
                     }
                 )
             }
 
-            pendingIncidentAnalysisResponses.filter {
+            incidentAnalysisResponses.filter {
                 it.status == SynchronizationStatus.FAILED || 
                 it.status == SynchronizationStatus.PENDING 
             }.forEach { response ->
-                setIncidentAnalysisResponseStatus(response, SynchronizationStatus.IN_PROGRESS)
+                setIncidentAnalysisResponseStatus(response.value.uuid, SynchronizationStatus.IN_PROGRESS)
                 syncIncidentAnalysisResponse(response,
                     onResult = { status ->
-                        setIncidentAnalysisResponseStatus(response, SynchronizationStatus.COMPLETED)
+                        setIncidentAnalysisResponseStatus(response.value.uuid, SynchronizationStatus.COMPLETED)
                         Toast.makeText(context, "Incident soumis avec succès", Toast.LENGTH_SHORT).show()
                     },
                     onError = { errorMessage ->
-                        setIncidentAnalysisResponseStatus(response, SynchronizationStatus.FAILED)
+                        setIncidentAnalysisResponseStatus(response.value.uuid, SynchronizationStatus.FAILED)
                         showErrorDialog(context, "Erreur lors de la soumission de l'incident : $errorMessage")
                     }
                 )
@@ -257,16 +285,16 @@ class IncidentSynchronizer private constructor(private val context: Context) {
         }
     }
 
-    fun getPendingIncidentAnalysisRequests(): List<WithStatus<IncidentAnalysisRequest>> {
-        return pendingIncidentAnalysisRequests.toList()
+    fun getIncidentAnalysisRequests(): List<WithStatus<IncidentAnalysisRequest>> {
+        return incidentAnalysisRequests.toList()
     }
 
-    fun getPendingIncidentAnalysisResponses(): List<WithStatus<IncidentAnalysisResponse>> {
-        return pendingIncidentAnalysisResponses.toList()
+    fun getIncidentAnalysisResponses(): List<WithStatus<IncidentAnalysisResponse>> {
+        return incidentAnalysisResponses.toList()
     }
 
     fun getStatus(): SynchronizationStatus {
-        return if (pendingIncidentAnalysisRequests.isEmpty() && pendingIncidentAnalysisResponses.isEmpty()) {
+        return if (incidentAnalysisRequests.isEmpty() && incidentAnalysisResponses.isEmpty()) {
             SynchronizationStatus.COMPLETED
         } else {
             SynchronizationStatus.PENDING

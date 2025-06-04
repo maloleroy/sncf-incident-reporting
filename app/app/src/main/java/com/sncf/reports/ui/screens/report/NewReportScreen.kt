@@ -91,7 +91,6 @@ import java.util.UUID
 @Composable
 fun NewReportScreen(
     onBack: () -> Unit,
-    onSuccess: (IncidentAnalysisResponse, String, String, Int?) -> Unit,
     showSuccessMessage: Boolean // Parameter from navigation
 ) {
     val context = LocalContext.current
@@ -333,17 +332,9 @@ fun NewReportScreen(
                                 timestamp = Instant.now(),
                                 trainTypes[trainType]!!,
                                 trainCar,
-                                transcription
+                                seatNumber,
+                                transcription,
                             ),
-                            onResult = { result ->
-                                generatedReportText = result.failure
-                                isOnlineAILoading = false
-                                onSuccess(result, trainType, trainCar, seatNumber)
-                            },
-                            onError = { errorMessage ->
-                                isOnlineAILoading = false
-                                showErrorDialog(context, errorMessage)
-                            }
                         )
                     } else {
                         Toast.makeText(
