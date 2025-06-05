@@ -3,6 +3,7 @@ package com.sncf.reports.ui.screens.report
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -34,7 +35,7 @@ fun ConfirmationScreen(
     onBack: () -> Unit,
     trainType: String,
     trainCar: String,
-    seatNumber: Int?,
+    seatNumber: Int,
     navigateToNewReport: () -> Unit // Added this parameter
 ) {
     val context = LocalContext.current
@@ -150,7 +151,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "location",
                                 mapOf()
                             )
@@ -177,7 +178,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "precision1",
                                 mapOf(
                                     "location" to location,
@@ -203,7 +204,7 @@ fun ConfirmationScreen(
                     if (isExpanded && location.isNotBlank()) {
                         scope.launch {
                             try {
-                                val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "category",
+                                val result = loadOptionsSuspend(context, trainType, trainCar, seatNumber ?: 0, "category",
                                     mapOf(
                                         "location" to location,
                                         "precision1" to precision1,
@@ -235,7 +236,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "precision2",
                                 mapOf(
                                     "location" to location,
@@ -261,7 +262,7 @@ fun ConfirmationScreen(
                     expandedSystem = expanded
                     if (expanded) {
                         scope.launch {
-                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, seatNumber, "system",
+                            systemOptions = loadOptionsSuspend(context, trainType, trainCar, seatNumber ?: 0, "system",
                                 mapOf(
                                     "location" to location,
                                     "precision1" to precision1,
@@ -292,7 +293,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "precision3",
                                 mapOf(
                                     "location" to location,
@@ -324,7 +325,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "subSystem",
                                 mapOf(
                                     "location" to location,
@@ -357,7 +358,7 @@ fun ConfirmationScreen(
                                 context,
                                 trainType,
                                 trainCar,
-                                seatNumber,
+                                seatNumber ?: 0,
                                 "failure",
                                 mapOf(
                                     "location" to location,
@@ -449,14 +450,25 @@ suspend fun loadOptionsSuspend(
     context: Context,
     trainType: String,
     trainCar: String,
-    seatNumber: Int?,
+    seatNumber: Int,
     level: String,
     selections: Map<String, String>
 ): List<String> {
     return try {
+        var trainTypeId = trainTypes[trainType]
+        if (trainTypeId == null) {
+            // Log for debugging
+            Log.e(
+                "ConfirmationScreen",
+                "Invalid trainType: '$trainType'. Available keys: ${trainTypes.keys}"
+            )
+            Log.e("ConfirmationScreen", "Le type de train '$trainType' est invalide ou non configuré.")
+            trainTypeId = "DASYE_eau_incidents" // Fallback to a default value
+        }
+
         RetrofitInstance.getCompletionApiService(context).findCompletion(
             IncidentCompletionRequest(
-                trainTypes[trainType]!!,
+                trainTypeId, // Use the validated, non-null trainTypeId
                 trainCar,
                 seatNumber,
                 level,
@@ -473,10 +485,28 @@ suspend fun loadOptionsSuspend(
             )
         ).options
     } catch (e: retrofit2.HttpException) {
-        throw Exception("Erreur HTTP ${e.code()}")
+        val errorBody = try {
+            e.response()?.errorBody()?.string()
+        } catch (ioe: IOException) {
+            null
+        }
+        val errorMessage = errorBody ?: e.message()
+        android.util.Log.e("ConfirmationScreen", "HTTP error ${e.code()} in loadOptionsSuspend: $errorMessage", e)
+        showErrorDialog(context, "Erreur HTTP ${e.code()}: $errorMessage")
+        return emptyList() // Return an empty list in case of error
     } catch (e: IOException) {
-        throw Exception("Erreur réseau : ${e.message}")
+        android.util.Log.e("ConfirmationScreen", "Network error in loadOptionsSuspend: ${e.message}", e)
+        showErrorDialog(context, "Erreur réseau : ${e.message ?: "Cause non spécifiée"}")
+        return emptyList() // Return an empty list in case of error
+    } catch (e: IllegalArgumentException) {
+        // This will catch the specific exception thrown for invalid trainType
+        android.util.Log.e("ConfirmationScreen", "Configuration error in loadOptionsSuspend: ${e.message}", e)
+        showErrorDialog(context, "Erreur de configuration : ${e.message}")
+        return emptyList() // Return an empty list in case of error
     } catch (e: Exception) {
-        throw Exception("Erreur inattendue : ${e.message}")
+        // Log the original exception type and message for better debugging
+        android.util.Log.e("ConfirmationScreen", "Unexpected error in loadOptionsSuspend", e)
+        showErrorDialog(context, "Erreur inattendue (${e.javaClass.simpleName}): ${e.message ?: "Cause d'origine non spécifiée"}")
+        return emptyList() // Return an empty list in case of error
     }
 }
