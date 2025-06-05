@@ -4,8 +4,12 @@ import uuid
 from main import app
 from security import get_security_header
 import model
-
+from incidents_db import check_incident_in_db
 from env import load_dotenv
+from incidents_schema import get_db
+from incidents_db import INCIDENTS_SCHEMA_DB_PATH
+import sqlite3
+
 load_dotenv()
 
 client = TestClient(app)
@@ -52,3 +56,19 @@ def test_read_incidents():
                     assert key not in incident
     else:
         assert incidents == []
+
+def test_check_incident_in_db():
+    db = sqlite3.connect(INCIDENTS_SCHEMA_DB_PATH, check_same_thread=False)
+    incident_test = model.IncidentAnalysisResponse.model_config["json_schema_extra"]["examples"][0]
+    incident_test = model.IncidentAnalysisResponse(**incident_test)
+    response = check_incident_in_db(db, incident_test, "R6H", "DASYE_eau_incidents")
+    assert isinstance(response, model.IncidentAnalysisResponse)
+    response = response.model_dump()
+    incident_test = incident_test.model_dump()
+    for key in incident_test:
+        if isinstance(response[key], str):
+            assert str(incident_test[key]) in response[key]
+        else:
+            assert incident_test[key] == response[key]
+    
+

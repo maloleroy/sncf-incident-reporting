@@ -20,6 +20,7 @@ trad = {
 }
 
 INCIDENTS_DB_PATH = 'incidents.db'
+INCIDENTS_SCHEMA_DB_PATH = '../arborescence_analyse/incidents_schema.db'
 
 def initialize_db():
     conn = connect(INCIDENTS_DB_PATH, check_same_thread=False)
