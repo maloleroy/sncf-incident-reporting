@@ -17,7 +17,7 @@ import com.sncf.reports.ui.screens.list.ListReportsScreen
 import com.sncf.reports.ui.screens.report.ConfirmationScreen
 import com.sncf.reports.ui.screens.report.NewReportScreen
 import com.sncf.reports.model.ReportSharedViewModel
-import com.sncf.reports.ui.theme.AppV1Theme
+import com.sncf.reports.ui.theme.ReportsTheme
 
 class MainActivity : ComponentActivity() {
     // Declare the synchronizer as a lateinit var - it will be initialized in onCreate
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
         
         // Initialize and start the synchronizer
         setContent {
-            AppV1Theme(dynamicColor = false) {
+            ReportsTheme(dynamicColor = false) {
                 val navController = rememberNavController()
                 val sharedViewModel: ReportSharedViewModel = viewModel()
                 
@@ -70,9 +70,9 @@ class MainActivity : ComponentActivity() {
                         ConfirmationScreen(
                             response = sharedViewModel.lastIncidentAnalysisResponse,
                             onBack = { navController.popBackStack() },
-                            trainType = sharedViewModel.trainType ?: "", // Fournir une valeur par défaut si null
+                            trainType = sharedViewModel.trainType ?: "Dasye", // Fournir une valeur par défaut si null
                             trainCar = sharedViewModel.trainCar ?: "",   // Fournir une valeur par défaut si null
-                            seatNumber = sharedViewModel.seatNumber,
+                            seatNumber = sharedViewModel.seatNumber ?: 0,
                             navigateToNewReport = {
                                 navController.navigate("new_report?showSuccess=true") {
                                     popUpTo(navController.graph.startDestinationId) {
